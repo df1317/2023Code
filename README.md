@@ -43,7 +43,7 @@ Imported by Robot (probably)
 ### Programming
 
 - [ ] Planning
-  - [ ] Fix Erin's editor
+  - [x] Fix Erin's editor
   - [ ] Install Markdown editor extension on Erin's editor and explain
   - [ ] Finalize TODO
 - [ ] Pre-Robot Code
