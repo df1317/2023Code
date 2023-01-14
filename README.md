@@ -44,7 +44,7 @@ Imported by Robot (probably)
 
 - [ ] Planning
   - [x] Fix Erin's editor
-  - [ ] Install Markdown editor extension on Erin's editor and explain
+  - [x] Install Markdown editor extension on Erin's editor and explain
   - [ ] Finalize TODO
 - [ ] Pre-Robot Code
   - [ ] Decide methods for each class (can be changed later)
