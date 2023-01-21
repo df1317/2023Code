@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Robot extends TimedRobot {
 
-    private final Joystick joyE = new Joystick(0);
-    private final Joystick joyL = new Joystick(2);
-    private final Joystick joyR = new Joystick(1);
 
     /**
      * This function is run when the robot is first started up and should be used

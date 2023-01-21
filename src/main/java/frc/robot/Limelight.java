@@ -7,7 +7,10 @@ public class Limelight {
     private double limelightTV;
     private double limelightTA;
     private double limelightTX;
-    private double limelightTY;
+    private double limelightTY;    
+    
+    private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+
 
     public Limelight() {
         updateLimelightVariables();
