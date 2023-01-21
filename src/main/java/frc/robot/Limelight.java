@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.*;
+
 public class Limelight {
 
     private double limelightTV;

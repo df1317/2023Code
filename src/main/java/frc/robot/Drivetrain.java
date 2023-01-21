@@ -19,4 +19,21 @@ public class Drivetrain {
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
     }
+
+    public void drive(double joyL, double joyR) {
+        if (Math.abs(joyL) > DEADZONE || Math.abs(joyR) > DEADZONE) {
+            if (halfsiesL) {
+                robotDrive.tankDrive(joyL.getY() * SPEED_MOD * 0.5, joyR.getY() * SPEED_MOD);
+            } else if (halfsiesR) {
+                robotDrive.tankDrive(joyL.getY() * SPEED_MOD, joyR.getY() * SPEED_MOD * 0.5);
+            } else {
+                robotDrive.tankDrive(joyL.getY() * SPEED_MOD, joyR.getY() * SPEED_MOD);
+            }
+        } else {
+            robotDrive.tankDrive(0, 0);
+        }
+    }
+
+
+
 }
