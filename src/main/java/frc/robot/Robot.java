@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 0.5);
+        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
     }
 
     @Override
