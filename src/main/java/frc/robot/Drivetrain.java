@@ -15,25 +15,52 @@ public class Drivetrain {
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
     private final DifferentialDrive robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
+
     public Drivetrain() {
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
+
     }
 
-    public void drive(double joyL, double joyR) {
-        if (Math.abs(joyL) > DEADZONE || Math.abs(joyR) > DEADZONE) {
-            if (halfsiesL) {
-                robotDrive.tankDrive(joyL.getY() * SPEED_MOD * 0.5, joyR.getY() * SPEED_MOD);
-            } else if (halfsiesR) {
-                robotDrive.tankDrive(joyL.getY() * SPEED_MOD, joyR.getY() * SPEED_MOD * 0.5);
-            } else {
-                robotDrive.tankDrive(joyL.getY() * SPEED_MOD, joyR.getY() * SPEED_MOD);
-            }
-        } else {
-            robotDrive.tankDrive(0, 0);
+    /**Sets left and right motor groups to input speeds.
+     * @param leftSpeed     Speed of left side motor group
+     * @param rightSpeed    Speed of right side motor group
+    **/
+    public void drive(double leftSpeed, double rightSpeed) {
+        robotDrive.tankDrive(leftSpeed, rightSpeed);
+    }
+    
+     /**Sets left and right motor groups to input speeds, with a speed multiplier.
+     * @param leftSpeed     Speed of left side motor group
+     * @param rightSpeed    Speed of right side motor group
+     * @param speedMod      Speed multiplier / Max speed
+    **/
+    public void drive(double leftSpeed, double rightSpeed, double speedMod){
+        robotDrive.tankDrive(leftSpeed*speedMod, rightSpeed*speedMod);
+    }
+
+    /**Stops all driving.**/
+    public void stop(){
+        robotDrive.stopMotor();
+    }
+
+    /**Sets drivetain to rotate at input direction and speed. 
+     * @param speedMod  Speed of rotation
+     * @param counterclockwise True to rotate CCW, false to rotate CW
+     * **/
+    public void startRotate(double speedMod, boolean counterclockwise){
+        if(counterclockwise){
+            drive(-speedMod,speedMod);
+        }else{
+            drive(speedMod,-speedMod);
         }
     }
+    
+    public void driveDistance(){
 
+    }
 
+    public void rotateDegrees(){
 
+    }
 }
