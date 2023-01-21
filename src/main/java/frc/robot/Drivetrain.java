@@ -19,7 +19,6 @@ public class Drivetrain {
     public Drivetrain() {
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
-
     }
 
     /**Sets left and right motor groups to input speeds.
