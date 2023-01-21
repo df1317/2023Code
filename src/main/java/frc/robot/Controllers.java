@@ -9,18 +9,18 @@ public class Controllers {
     private final Joystick joyR = new Joystick(2);
 
     public double getLeftDrive() {
-        return insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
+        return drivePrecision(insideDeadzone(joyL.getY(), DRIVE_DEADZONE));
     }
 
     public double getRightDrive() {
-        return insideDeadzone(joyR.getY(), DRIVE_DEADZONE);
+        return drivePrecision(insideDeadzone(joyR.getY(), DRIVE_DEADZONE));
     }
 
     private double drivePrecision(double joystickVal) {
         if (joystickVal >= 0) {
-            return joystickVal * joystickVal;
+            return Math.pow(joystickVal, 2);
         } else {
-            return joystickVal * joystickVal * -1;
+            return -Math.pow(joystickVal, 2);
         }
     }
 
