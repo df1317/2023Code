@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Robot extends TimedRobot {
 
-
+    public Drivetrain drivetrain = new Drivetrain();
+    public Controllers controllers = new Controllers();
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 0.5);
     }
 
     @Override
