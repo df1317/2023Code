@@ -8,8 +8,6 @@ public class Gyro {
 
     AHRS gyro = new AHRS(SPI.Port.kMXP);
     
-    double pitchAngleDegrees = gyro.getPitch();
-    double rollAngleDegrees = gyro.getRoll();
     static final double kOffBalanceAngleThresholdDegrees = 10;
     static final double kOonBalanceAngleThresholdDegrees  = 5;
     boolean autoBalanceXMode;
@@ -19,22 +17,22 @@ public class Gyro {
 
     public void updateAutoBalance() {
     if ( !autoBalanceXMode && 
-                 (Math.abs(pitchAngleDegrees) >= 
+             (Math.abs(gyro.getPitch()) >= 
                   Math.abs(kOffBalanceAngleThresholdDegrees))) {
                 autoBalanceXMode = true;
             }
             else if ( autoBalanceXMode && 
-                      (Math.abs(pitchAngleDegrees) <= 
+                      (Math.abs(gyro.getPitch()) <= 
                        Math.abs(kOonBalanceAngleThresholdDegrees))) {
                 autoBalanceXMode = false;
             }
     if ( !autoBalanceYMode && 
-                 (Math.abs(pitchAngleDegrees) >= 
+                 (Math.abs(gyro.getPitch()) >= 
                   Math.abs(kOffBalanceAngleThresholdDegrees))) {
                 autoBalanceYMode = true;
             }
             else if ( autoBalanceYMode && 
-                      (Math.abs(pitchAngleDegrees) <= 
+                      (Math.abs(gyro.getPitch()) <= 
                        Math.abs(kOonBalanceAngleThresholdDegrees))) {
                 autoBalanceYMode = false;
             }
@@ -45,19 +43,17 @@ public class Gyro {
             // with a magnitude based upon the angle
         public double getGyroX() {
             if ( autoBalanceXMode ) {
-                double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+                double pitchAngleRadians = gyro.getPitch() * (Math.PI / 180.0);
                 xAxisRate = Math.sin(pitchAngleRadians) * -1;
             }
             return xAxisRate;
         }
         public double getGyroY() {
             if ( autoBalanceYMode ) {
-                double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
+                double rollAngleRadians = gyro.getRoll() * (Math.PI / 180.0);
                 yAxisRate = Math.sin(rollAngleRadians) * -1;
             }
             return yAxisRate;
         }
-        
-    
-    
+            
 }
