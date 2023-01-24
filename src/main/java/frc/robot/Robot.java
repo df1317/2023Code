@@ -2,11 +2,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
 
     public Drivetrain drivetrain = new Drivetrain();
     public Controllers controllers = new Controllers();
+    public Gyro gyro = new Gyro();
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -34,7 +36,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putNumber("Gyro X", gyro.gyro.getPitch());
+        System.out.println(gyro.gyro.getPitch());
+        SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
+        SmartDashboard.putBoolean("Auto Balance", controllers.autoBalanceXMode);
+        /*if (controllers.autoBalanceXMode) {
+            drivetrain.rotateDegrees();
+        } else {*/
         drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
+        
     }
 
     @Override

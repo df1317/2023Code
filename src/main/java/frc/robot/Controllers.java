@@ -7,6 +7,7 @@ public class Controllers {
     private final Joystick joyE = new Joystick(2);
     private final Joystick joyL = new Joystick(0);
     private final Joystick joyR = new Joystick(1);
+    public final boolean autoBalanceXMode = joyE.getRawButton(1);
 
     public double getLeftDrive() {
         return insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
