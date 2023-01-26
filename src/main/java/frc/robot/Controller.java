@@ -32,7 +32,7 @@ public class Controller extends GenericHID{
     //Updates controller settings and button mappings to match the config file
     public void runConfig() throws FileNotFoundException, IOException {
         config = new Properties();
-        config.load(new FileInputStream("src\\main\\java\\frc\\robot\\ControllerConfig.cfg"));
+        config.load(new FileInputStream("src\\main\\deploy\\ControllerConfig.cfg"));
         Constants.sensitivity = Integer.parseInt(config.getProperty("sensitivity"));
         
         for(int i = 1; i < map.length; i++){
@@ -42,12 +42,8 @@ public class Controller extends GenericHID{
         System.out.println("Map: " + Arrays.toString(map));
     }
     
-    public boolean getButton(int id){
-        return buttons[id].getOutput();
-    }
-
     public boolean getButtonState(int id){
-        return buttons[id].getState();
+        return buttons[map[id]].getState();
     }
 
 
@@ -59,5 +55,13 @@ public class Controller extends GenericHID{
 
     public boolean getButtonOutput(int id){
         return buttons[map[id]].getOutput();
+    }
+
+    public boolean onButtonPress(int id){
+        return buttons[map[id]].onPress();
+    }
+
+    public boolean onButtonRelease(int id){
+        return buttons[map[id]].onRelease();
     }
 }

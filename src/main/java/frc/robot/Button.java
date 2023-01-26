@@ -18,6 +18,10 @@ public class Button{
     private boolean output;
     /**Toggle state**/
     private boolean state;
+    /**True on press frame**/
+    private boolean onPress;
+    /**True on release frame **/
+    private boolean onRelease;
 
     public Button(GenericHID owner, int id){
         this.id = id;
@@ -29,6 +33,8 @@ public class Button{
     
     /** **/
     public void update(){
+        onPress = false;
+        onRelease = false;
         boolean input = owner.getRawButton(id);
         
         //Updates buffer var to the current raw input
@@ -43,9 +49,15 @@ public class Button{
         if(timeSinceChange*Constants.sensitivity > 1000){
            if(provisionalOutput != output){
                 output = provisionalOutput;
-                if(output){state = !state;}
+           if(output){
+                state = !state; 
+                onPress = true;
+                /*System.out.println(state);*/
+            }else{
+                onRelease = true;
             }
             lastChange = System.currentTimeMillis();
+            }
         }
     }
 
@@ -55,5 +67,13 @@ public class Button{
 
     public boolean getOutput(){
         return output;
+    }
+
+    public boolean onPress(){
+        return onPress;
+    }
+
+    public boolean onRelease(){
+        return onRelease;
     }
 }
