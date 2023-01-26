@@ -1,12 +1,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Robot extends TimedRobot {
 
     public Drivetrain drivetrain = new Drivetrain();
     public Controllers controllers = new Controllers();
+    Controller controller;
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -30,10 +35,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        controller = new Controller(2);
     }
 
     @Override
     public void teleopPeriodic() {
+    
+        controller.update();
         drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
     }
 
