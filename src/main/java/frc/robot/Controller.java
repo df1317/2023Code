@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 
 /**An instance of a joystick or controller that maps its buttons based on associated config file */
@@ -37,7 +38,7 @@ public class Controller extends GenericHID{
     /**Updates controller settings and button mappings to match its config file**/
     public void runConfig() throws FileNotFoundException, IOException {
         config = new Properties();
-        config.load(new FileInputStream("src\\main\\deploy\\ControllerConfig" + this.getPort() + ".cfg"));
+        config.load(new FileInputStream(Filesystem.getDeployDirectory() + "\\ControllerConfig" + this.getPort() + ".cfg"));
         Constants.sensitivity = Integer.parseInt(config.getProperty("sensitivity"));
         
         for(int i = 1; i < map.length; i++){
