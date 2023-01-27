@@ -1,6 +1,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 
+/**A wrapper for a joystick or controller button that supports toggle, press and release detection, and sensitivity adjustment */
 public class Button{
     
     /**Joystick/controller associated with button**/
@@ -8,7 +9,6 @@ public class Button{
     /**Button number on joystick/controller**/
     private int id;
     
-    //
     /**Buffer variable for raw input**/
     private boolean provisionalOutput;
     /**Time of last change to input**/
@@ -31,7 +31,7 @@ public class Button{
         this.lastChange = System.currentTimeMillis();
     }
     
-    /** **/
+    /**Updates the button state and outputs**/
     public void update(){
         onPress = false;
         onRelease = false;
@@ -61,18 +61,34 @@ public class Button{
         }
     }
 
+    /** 
+     *This method returns true if the button is in an "on" toggle  (or false if in an "off" toggle) at the time that this method is being called.
+     * @return The toggle state of the button.
+    */
     public boolean getState(){
         return state;
     }
 
+    /** 
+     *This method returns true if the button is being held down at the time that this method is being called.
+     * @return The raw output of the button.
+    */
     public boolean getOutput(){
         return output;
     }
 
+    /** 
+     *This method returns true if the button is pressed exactly at the frame this method is called.
+     * @return true on press of the button.
+    */
     public boolean onPress(){
         return onPress;
     }
 
+    /** 
+     *This method returns true if the button is released exactly at the frame this method is called.
+     * @return true on release of the button.
+    */
     public boolean onRelease(){
         return onRelease;
     }
