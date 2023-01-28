@@ -47,6 +47,8 @@ public class Gyro {
             // Control drive system automatically, 
             // driving in reverse direction of pitch/roll angle,
             // with a magnitude based upon the angle
+
+        /** @return accumulated gyro pitch in degrees */
         public double getGyroX() {
             /*if ( autoBalanceXMode ) {
                 double pitchAngleRadians = Constants.gyro.getGyroAngleX() * (Math.PI / 180.0);
@@ -54,12 +56,38 @@ public class Gyro {
             }*/
             return Constants.gyro.getGyroAngleX();
         }
+
+        /** @return accumulated gyro roll in degrees */
         public double getGyroY() {
             /*if ( autoBalanceYMode ) {
                 double rollAngleRadians = Constants.gyro.getGyroAngleY() * (Math.PI / 180.0);
                 yAxisRate = Math.sin(rollAngleRadians) * -1;
             }*/
             return Constants.gyro.getGyroAngleY();
+        }
+
+        /** @return accumulated gyro yaw in degrees */
+        public double getGyroZ() {
+            /*if ( autoBalanceYMode ) {
+                double rollAngleRadians = Constants.gyro.getGyroAngleY() * (Math.PI / 180.0);
+                yAxisRate = Math.sin(rollAngleRadians) * -1;
+            }*/
+            return Constants.gyro.getGyroAngleZ();
+        }
+
+        /** @return instantaneous acceleration in X direction (front/back) in m/s/s*/
+        public double getAccelX(){
+            return Constants.gyro.getAccelX();
+        }
+
+        /** @return instantaneous acceleration in Y direction (right/left) in m/s/s*/
+        public double getAccelY(){
+            return Constants.gyro.getAccelY();
+        }
+
+        /** @return instantaneous acceleration in Z direction (up/down) in m/s/s*/
+        public double getAccelZ(){
+            return Constants.gyro.getAccelZ();
         }
             
 }
