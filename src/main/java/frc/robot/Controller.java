@@ -42,7 +42,7 @@ public class Controller extends GenericHID{
         Constants.sensitivity = Integer.parseInt(config.getProperty("sensitivity"));
         
         for(int i = 1; i < map.length; i++){
-            map[i] = Integer.parseInt(config.getProperty("button" + i));
+            map[Integer.parseInt(config.getProperty("button" + i))] = i;
         }
 
         System.out.println("Map: " + Arrays.toString(map));

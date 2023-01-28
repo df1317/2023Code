@@ -52,7 +52,6 @@ public class Button{
            if(output){
                 state = !state; 
                 onPress = true;
-                /*System.out.println(state);*/
             }else{
                 onRelease = true;
             }
