@@ -30,21 +30,24 @@ public class Controller extends GenericHID{
         
         //Configures intial button mapping
         map = new int[buttons.length];
-        try {
-            runConfig();
-        } catch (FileNotFoundException e) { e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
+        runConfig();
     }
     
     /**Updates controller settings and button mappings to match its config file**/
-    public void runConfig() throws FileNotFoundException, IOException {
+    public void runConfig(){
         config = new Properties();
-        config.load(new FileInputStream(Filesystem.getDeployDirectory() + "\\ControllerConfig" + this.getPort() + ".cfg"));
-        Constants.sensitivity = Integer.parseInt(config.getProperty("sensitivity"));
+        try{
+            config.load(new FileInputStream(Filesystem.getDeployDirectory() + "\\ControllerConfig" + this.getPort() + ".cfg"));
+            Constants.sensitivity = Integer.parseInt(config.getProperty("sensitivity"));
         
-        for(int i = 1; i < map.length; i++){
-            map[Integer.parseInt(config.getProperty("button" + i))] = i;
+            for(int i = 1; i < map.length; i++){
+                map[Integer.parseInt(config.getProperty("button" + i))] = i;
+            }
+        } catch (IOException e) {
+            for(int i = 1; i < map.length; i++){
+                map[i] = i;
+            }
         }
-
         System.out.println("Map: " + Arrays.toString(map));
     }
     
