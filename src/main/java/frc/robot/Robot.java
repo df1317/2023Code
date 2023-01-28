@@ -3,12 +3,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.*;
 
 public class Robot extends TimedRobot {
 
     public Drivetrain drivetrain = new Drivetrain();
     public Controllers controllers = new Controllers();
     public Gyro gyro = new Gyro();
+    public Limelight limelight = new Limelight();
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -43,8 +45,28 @@ public class Robot extends TimedRobot {
         /*if (controllers.autoBalanceXMode) {
             drivetrain.rotateDegrees();
         } else {*/
-        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
+
+        //drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
         
+        // Limelight testing
+        limelight.updateLimelightVariables();
+        SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
+
+        // testing only 
+        double leftDrive;
+        double rightDrive;
+
+        if (controllers.joyL.getRawButton(3)) {
+            leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            System.out.println(limelight.calculateLimelightAngle());
+        } else {
+            leftDrive = controllers.getLeftDrive();
+            rightDrive = controllers.getRightDrive();
+        }
+
+        drivetrain.drive(leftDrive, rightDrive);
+
     }
 
     @Override
