@@ -36,8 +36,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putNumber("Gyro X", gyro.gyro.getPitch());
-        System.out.println(gyro.gyro.getPitch());
+        SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
+        //System.out.println(gyro.gyro.getAngle());
         SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
         SmartDashboard.putBoolean("Auto Balance", controllers.autoBalanceXMode);
         /*if (controllers.autoBalanceXMode) {
