@@ -18,6 +18,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        Constants.gyro.reset();
+        System.out.println(gyro.getGyroY());
     }
 
     @Override
@@ -66,6 +68,8 @@ public class Robot extends TimedRobot {
         }
 
         drivetrain.drive(leftDrive, rightDrive);
+
+        System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
 
     }
 

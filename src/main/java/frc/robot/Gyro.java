@@ -90,4 +90,17 @@ public class Gyro {
             return Constants.gyro.getAccelZ();
         }
             
+        public double gyroAdjust(double gyroY) {
+            double gyroDriveAdjustment = 0.0;
+            if (gyroY > 5) {
+                gyroDriveAdjustment = 0.25;
+            } else if (gyroY < -5) {
+                gyroDriveAdjustment = -0.25;
+            } else {
+                gyroDriveAdjustment = 0;
+            }
+            return gyroDriveAdjustment;
+        }
+
+
 }

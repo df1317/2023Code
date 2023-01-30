@@ -10,7 +10,7 @@ public class Limelight {
     public double limelightTX;
     public double limelightTY;
     
-    private double limelightKP = -0.1;
+    private double limelightKP = -0.05;
     private double limelightMinCommand = 0.1;
     
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -56,7 +56,7 @@ public class Limelight {
 
         if (limelightTX > 1.0) {
             limelightAlignmentAdjust = (limelightKP * limelightHeadingError) - limelightMinCommand;
-        } else if (limelightTX < 1.0) {
+        } else if (limelightTX < -1.0) {
             limelightAlignmentAdjust = (limelightKP * limelightHeadingError) + limelightMinCommand;
         }
 
