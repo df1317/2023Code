@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Controllers {
-    private final double DRIVE_DEADZONE = 0;
+    public final double DRIVE_DEADZONE = 0.05;
     private final Joystick joyE = new Joystick(2);
     private final Joystick joyL = new Joystick(0);
     private final Joystick joyR = new Joystick(1);

@@ -60,7 +60,7 @@ public class Limelight {
             limelightAlignmentAdjust = (limelightKP * limelightHeadingError) + limelightMinCommand;
         }
 
-        return limelightAlignmentAdjust;
+        return Math.abs(limelightAlignmentAdjust) > limelightMinCommand ? limelightAlignmentAdjust : 0;
     }
 
     public void configLimelight() {
