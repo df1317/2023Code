@@ -19,7 +19,6 @@ public class Gyro {
         System.out.println("why even");
     }
 
-
             // Control drive system automatically, 
             // driving in reverse direction of pitch/roll angle,
             // with a magnitude based upon the angle

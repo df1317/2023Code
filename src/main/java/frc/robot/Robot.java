@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
         double leftDrive;
         double rightDrive;
 
-        if (controllers.joyL.getRawButton(3)) {
+        if (controllers.getLimelightAutoAlign()) {
             leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
             rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
             System.out.println(limelight.calculateLimelightAngle());

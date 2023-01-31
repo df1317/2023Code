@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Controllers {
     private final double DRIVE_DEADZONE = 0;
     private final Joystick joyE = new Joystick(2);
-    public final Joystick joyL = new Joystick(0);
+    private final Joystick joyL = new Joystick(0);
     private final Joystick joyR = new Joystick(1);
     public final boolean autoBalanceXMode = joyE.getRawButton(1);
 
@@ -30,6 +30,10 @@ public class Controllers {
 
     private double insideDeadzone(double joystickVal, double driveDeadzone) {
         return Math.abs(joystickVal) > driveDeadzone ? joystickVal : 0;
+    }
+
+    public boolean getLimelightAutoAlign() {
+        return joyL.getRawButton(3);
     }
 
 }
