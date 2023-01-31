@@ -7,6 +7,10 @@ public class Controllers {
     private final Joystick joyE = new Joystick(2);
     private final Joystick joyL = new Joystick(0);
     private final Joystick joyR = new Joystick(1);
+    public final boolean autoBalanceXMode = joyE.getRawButton(1);
+
+    // temporary button for temporary testing temporary temporary!.
+    public boolean LLalignButton = joyL.getRawButton(3);
 
     public double getLeftDrive() {
         return insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
@@ -26,6 +30,14 @@ public class Controllers {
 
     private double insideDeadzone(double joystickVal, double driveDeadzone) {
         return Math.abs(joystickVal) > driveDeadzone ? joystickVal : 0;
+    }
+
+    public boolean getLimelightAutoAlign() {
+        return joyL.getRawButton(3);
+    }
+
+    public boolean getAutoBalance() {
+        return joyL.getRawButton(4);
     }
 
 }

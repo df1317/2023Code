@@ -2,11 +2,15 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.*;
 
 public class Robot extends TimedRobot {
 
     public Drivetrain drivetrain = new Drivetrain();
     public Controllers controllers = new Controllers();
+    public Gyro gyro = new Gyro();
+    public Limelight limelight = new Limelight();
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -14,6 +18,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        gyro.gyro.reset();
+        System.out.println(gyro.getGyroY());
     }
 
     @Override
@@ -22,6 +28,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        gyro.gyro.reset();
     }
 
     @Override
@@ -34,7 +41,41 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
+        SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
+        //System.out.println(gyro.gyro.getAngle());
+        SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
+        SmartDashboard.putBoolean("Auto Balance", controllers.autoBalanceXMode);
+        /*if (controllers.autoBalanceXMode) {
+            drivetrain.rotateDegrees();
+        } else {*/
+
+        //drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
+        
+        // Limelight testing
+        limelight.updateLimelightVariables();
+        SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
+
+        // testing only 
+        double leftDrive;
+        double rightDrive;
+
+        if (controllers.getLimelightAutoAlign()) {
+            leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            System.out.println(limelight.calculateLimelightAngle());
+        } else if (controllers.getAutoBalance()) {
+            leftDrive = gyro.gyroAdjust(gyro.getGyroY());
+            rightDrive = gyro.gyroAdjust(gyro.getGyroY());
+        } else {
+            leftDrive = controllers.getLeftDrive();
+            rightDrive = controllers.getRightDrive();
+        }
+
+        drivetrain.drive(leftDrive, rightDrive);
+
+        //System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
+        System.out.println(controllers.getAutoBalance);
+
     }
 
     @Override
