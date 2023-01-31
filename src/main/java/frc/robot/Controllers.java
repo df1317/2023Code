@@ -36,4 +36,8 @@ public class Controllers {
         return joyL.getRawButton(3);
     }
 
+    public boolean getAutoBalance() {
+        return joyL.getRawButton(4);
+    }
+
 }

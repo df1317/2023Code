@@ -63,6 +63,9 @@ public class Robot extends TimedRobot {
             leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
             rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
             System.out.println(limelight.calculateLimelightAngle());
+        } else if (controllers.getAutoBalance()) {
+            leftDrive = gyro.gyroAdjust(gyro.getGyroY());
+            rightDrive = gyro.gyroAdjust(gyro.getGyroY());
         } else {
             leftDrive = controllers.getLeftDrive();
             rightDrive = controllers.getRightDrive();
@@ -70,7 +73,8 @@ public class Robot extends TimedRobot {
 
         drivetrain.drive(leftDrive, rightDrive);
 
-        System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
+        //System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
+        System.out.println(controllers.getAutoBalance);
 
     }
 
