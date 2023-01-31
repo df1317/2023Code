@@ -17,8 +17,6 @@ public class Drivetrain {
 
     Gyro gyro = new Gyro();
 
-
-
     public Drivetrain() {
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
@@ -61,8 +59,8 @@ public class Drivetrain {
     public void driveDistance(){
 
     }
-
+/* 
     public void rotateDegrees(){
         robotDrive.tankDrive(gyro.getGyroX(), gyro.getGyroX());
-    }
+    } */
 }

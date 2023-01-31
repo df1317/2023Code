@@ -18,7 +18,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        Constants.gyro.reset();
+        gyro.gyro.reset();
         System.out.println(gyro.getGyroY());
     }
 
@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        gyro.gyro.reset();
     }
 
     @Override
