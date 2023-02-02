@@ -79,15 +79,15 @@ Imported by Robot (probably)
 
 ### Programming
 
-- [ ] Planning
+- [x] Planning
   - [x] Fix Erin's editor
   - [x] Install Markdown editor extension on Erin's editor and explain
-  - [ ] Finalize TODO
+  - [x] Finalize TODO
 - [ ] Pre-Robot Code
   - [ ] Decide methods for each class (can be changed later)
-  - [ ] Create config file
+  - [x] Create config file
   - [ ] Translate methods into code with empty methods
-  - [ ] Write code for moment using joystick class and configurable motor controllers
+  - [x] Write code for moment using joystick class and configurable motor controllers
   - [ ] Document all the methods using comments
 - [ ] Post-Robot Code
   - [ ] Fill out the rest of the methods already declared using finalized concept

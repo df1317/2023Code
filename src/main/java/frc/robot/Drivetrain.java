@@ -15,6 +15,7 @@ public class Drivetrain {
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
     private final DifferentialDrive robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
+    Gyro gyro = new Gyro();
 
     public Drivetrain() {
         leftMotorGroup.setInverted(true);
@@ -65,8 +66,8 @@ public class Drivetrain {
     public void driveDistance(){
 
     }
-
+/* 
     public void rotateDegrees(){
-
-    }
+        robotDrive.tankDrive(gyro.getGyroX(), gyro.getGyroX());
+    } */
 }
