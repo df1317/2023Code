@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
         drivetrain.drive(leftDrive, rightDrive);
 
         //System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
-        System.out.println(controllers.getAutoBalance);
+        System.out.println(controllers.getAutoBalance());
 
     }
 
