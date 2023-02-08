@@ -12,6 +12,7 @@ public class Robot extends TimedRobot {
     public Controllers controllers = new Controllers();
     public Gyro gyro = new Gyro();
     public Limelight limelight = new Limelight();
+    public Auto auto = new Auto();
 
     // temporary encoder setup
     private final Encoder leftEncoder = new Encoder(0, 1);
@@ -31,6 +32,8 @@ public class Robot extends TimedRobot {
         rightEncoder.reset();
         leftEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
         rightEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
+
+        auto.trajectoryInit();
     }
 
     @Override
@@ -40,6 +43,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         gyro.gyro.reset();
+        auto.autonomousStartup(); 
     }
 
     @Override
