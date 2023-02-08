@@ -23,9 +23,13 @@ import java.nio.file.*;
 
 public class Auto {
     Drivetrain drivetrain = new Drivetrain();
+    Limelight limelight = new Limelight();
 
-    String trajectoryJSON = "paths/Unnamed.wpilib.json";
-    Trajectory trajectory = new Trajectory();
+    // trajectory setup
+    String trajectoryJSON_AtoMid = "paths/Unnamed.wpilib.json";
+    Trajectory trajectoryAtoMid = new Trajectory();
+    String trajectoryJSON_MidtoBalance = "PLACEHOLDER";
+    Trajectory trajectoryMidtoBalance = new Trajectory();
 
     private final RamseteController m_ramseteController = new RamseteController();
 
@@ -35,24 +39,26 @@ public class Auto {
 
   public void trajectoryInit(){
     try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        Path trajectoryPath_AtoMid = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON_AtoMid);
+        trajectoryAtoMid = TrajectoryUtil.fromPathweaverJson(trajectoryPath_AtoMid);
+
+        Path trajectoryPath_MidtoBalance = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON_MidtoBalance);
+        trajectoryMidtoBalance = TrajectoryUtil.fromPathweaverJson(trajectoryPath_MidtoBalance);
      } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+        DriverStation.reportError("Unable to open trajectoryAtoMid: " + trajectoryJSON_AtoMid, ex.getStackTrace());
      }
     
       field = new Field2d();
       SmartDashboard.putData(field);
   
-      field.getObject("traj").setTrajectory(trajectory);
+      field.getObject("traj").setTrajectory(trajectoryAtoMid);
 }
 
 public void autonomousStartup(){
     timer = new Timer();
     timer.start();
 
-    drivetrain.resetOdometry(trajectory.getInitialPose());
-
+    drivetrain.resetOdometry(trajectoryAtoMid.getInitialPose());
 }
 
 public void runAutonomous(){
@@ -60,20 +66,30 @@ public void runAutonomous(){
 
     field.setRobotPose(drivetrain.getPose());
 
-    if (timer.get() < trajectory.getTotalTimeSeconds()) {
-      
-      var desiredPose =trajectory.sample(timer.get());
+    if (timer.get() < trajectoryAtoMid.getTotalTimeSeconds()) {
 
-
+      var desiredPose = trajectoryAtoMid.sample(timer.get());
       var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
     
       drivetrain.drive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-    } else {
-      drivetrain.drive(0, 0);
-    }
+      System.out.println("Running A to Mid");
 
+    } else if (Math.abs(limelight.limelightSteeringAlign(limelight.calculateLimelightAngle())) > limelight.limelightMinCommand) {
+        double autoLeftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+        double autoRightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+
+        drivetrain.drive(autoLeftDrive, autoRightDrive);
+        System.out.println("Limelight aligning");
+
+    } else if (Math.abs(limelight.limelightSteeringAlign(limelight.calculateLimelightAngle())) <= limelight.limelightMinCommand && timer.get() < trajectoryMidtoBalance.getTotalTimeSeconds()) {
+        var desiredPose = trajectoryMidtoBalance.sample(timer.get());
+        var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+        System.out.println("Running Mid to Balance");
+
+    } else {
+        drivetrain.drive(0, 0);
+        System.out.println("Finished Auto");
+    }
 }
 
-    
 }

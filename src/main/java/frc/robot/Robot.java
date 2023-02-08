@@ -70,23 +70,7 @@ public class Robot extends TimedRobot {
         limelight.updateLimelightVariables();
         SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
 
-        // testing only 
-        double leftDrive;
-        double rightDrive;
-
-        if (controllers.getLimelightAutoAlign()) {
-            leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-            rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-            System.out.println(limelight.calculateLimelightAngle());
-        } else if (controllers.getAutoBalance()) {
-            leftDrive = -gyro.gyroAdjust(gyro.getGyroY());
-            rightDrive = -gyro.gyroAdjust(gyro.getGyroY());
-        } else {
-            leftDrive = controllers.getLeftDrive();
-            rightDrive = controllers.getRightDrive();
-        }
-
-        drivetrain.drive(leftDrive, rightDrive);
+        drivetrain.driveTeleop();
 
         //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
         //System.out.println(leftDrive + " " + rightDrive);

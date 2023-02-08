@@ -11,7 +11,7 @@ public class Limelight {
     public double limelightTY;
     
     private double limelightKP = -0.05;
-    private double limelightMinCommand = 0.1;
+    public double limelightMinCommand = 0.1;
     
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 

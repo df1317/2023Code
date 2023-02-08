@@ -54,6 +54,8 @@ public class Drivetrain {
     private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(0.77217, 3.1527, 1.5513);
 
     Gyro gyro = new Gyro();
+    Limelight limelight = new Limelight();
+    Controllers controllers = new Controllers();
 
     public Drivetrain() {
         // make sure to reset gyro when we start auto and when robot init please!!!
@@ -137,4 +139,24 @@ public class Drivetrain {
     public void rotateDegrees(){
         robotDrive.tankDrive(gyro.getGyroX(), gyro.getGyroX());
     } */
+
+
+    public void driveTeleop() {
+    double leftDrive;
+    double rightDrive;
+
+        if (controllers.getLimelightAutoAlign()) {
+            leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            System.out.println(limelight.calculateLimelightAngle());
+        } else if (controllers.getAutoBalance()) {
+            leftDrive = -gyro.gyroAdjust(gyro.getGyroY());
+            rightDrive = -gyro.gyroAdjust(gyro.getGyroY());
+        } else {
+            leftDrive = controllers.getLeftDrive();
+            rightDrive = controllers.getRightDrive();
+        }
+
+        drive(leftDrive, rightDrive);
+    }
 }
