@@ -11,6 +11,8 @@ public class Robot extends TimedRobot {
     public Controllers controllers = new Controllers();
     public Gyro gyro = new Gyro();
     public Limelight limelight = new Limelight();
+    public static Kinematics kinematics;
+    private int z = 0;
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -19,11 +21,12 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         gyro.gyro.reset();
-        System.out.println(gyro.getGyroY());
+        kinematics =new Kinematics(gyro);
     }
 
     @Override
     public void robotPeriodic() {
+        kinematics.update();
     }
 
     @Override
@@ -41,6 +44,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putNumber("X Pos", kinematics.getX());
+        SmartDashboard.putNumber("Y Pos", kinematics.getY());
+        SmartDashboard.putNumber("Gyro Z", gyro.getGyroZ());
         SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
         //System.out.println(gyro.gyro.getAngle());
         SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
@@ -74,7 +80,7 @@ public class Robot extends TimedRobot {
         drivetrain.drive(leftDrive, rightDrive);
 
         //System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
-        System.out.println(controllers.getAutoBalance());
+        //System.out.println(controllers.getAutoBalance());
 
     }
 
