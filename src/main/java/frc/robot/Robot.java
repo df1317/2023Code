@@ -21,6 +21,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         gyro.gyro.reset();
+        gyro.gyro.calibrate();
         kinematics =new Kinematics(gyro);
     }
 
@@ -31,7 +32,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        gyro.gyro.reset();
     }
 
     @Override
@@ -40,12 +40,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        kinematics.init();
     }
 
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("X Pos", kinematics.getX());
         SmartDashboard.putNumber("Y Pos", kinematics.getY());
+        SmartDashboard.putNumber("acc", gyro.getAccelX());
         SmartDashboard.putNumber("Gyro Z", gyro.getGyroZ());
         SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
         //System.out.println(gyro.gyro.getAngle());

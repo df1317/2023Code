@@ -1,12 +1,23 @@
 package frc.robot;
 
+import java.io.DataOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.FileSystem;
+import java.util.Properties;
+
+import edu.wpi.first.wpilibj.Filesystem;
+
 public class Kinematics {
     
     private Gyro g;
     public double x,y,dx,dy,vx,vy,ax,ay,angle,time,deltaTime;
+    private Properties vals;
     
     public Kinematics(Gyro g){
         this.g = g;
+        vals = new Properties();
         init();
     }
 
@@ -70,8 +81,16 @@ public class Kinematics {
             vy = -vy;
             ay = 0;
         }*/
-
-        
+        vals.setProperty("x", "" + x);
+        vals.setProperty("y", "" + y);
+        vals.setProperty("theta", "" + angle);
+        System.out.println(vals.getProperty("x"));
+        try {
+            vals.store(new FileWriter(Filesystem.getDeployDirectory() + "\\KinematicsVals.txt"), null);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
