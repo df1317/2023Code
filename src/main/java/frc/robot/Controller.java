@@ -1,6 +1,8 @@
 package frc.robot;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
@@ -37,17 +39,19 @@ public class Controller extends GenericHID{
     public void runConfig(){
         config = new Properties();
         try{
-            config.load(new FileInputStream(Filesystem.getDeployDirectory() + "\\ControllerConfig" + this.getPort() + ".cfg"));
+            config.load(new FileReader(new File(Filesystem.getDeployDirectory() + "/ControllerConfig" + this.getPort() + ".cfg")));
             Constants.sensitivity = Integer.parseInt(config.getProperty("sensitivity"));
-        
+
             for(int i = 1; i < map.length; i++){
                 map[Integer.parseInt(config.getProperty("button" + i))] = i;
             }
         } catch (IOException e) {
+            System.out.println("fail");
             for(int i = 1; i < map.length; i++){
                 map[i] = i;
             }
         }
+        System.out.println(Filesystem.getDeployDirectory() + "/ControllerConfig" + this.getPort() + ".cfg");
         System.out.println("Map: " + Arrays.toString(map));
     }
     
