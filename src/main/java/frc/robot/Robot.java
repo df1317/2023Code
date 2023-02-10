@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         
         controller.update();
-        System.out.println(controller.onButtonPress(1) ? "go" : "");
+        SmartDashboard.putBoolean("toggle", controller.getButtonState(1));
         drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
     }
 
