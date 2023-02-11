@@ -18,6 +18,10 @@ import java.io.IOException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathConstraints;
+
 import java.nio.file.Path;
 import java.nio.file.*;
 
@@ -26,8 +30,9 @@ public class Auto {
     Limelight limelight = new Limelight();
 
     // trajectory setup
-    String trajectorySerpentine = "output/Move.wpilib.json";
-    Trajectory Move = new Trajectory();
+    //String trajectorySerpentine = "output/Move.wpilib.json";
+    PathPlannerTrajectory SimpleCurve4 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
+    //Trajectory Move = new Trajectory();
     //String trajectoryJSON_MidtoBalance = "PLACEHOLDER";
     //Trajectory trajectoryMidtoBalance = new Trajectory();
 
@@ -38,40 +43,40 @@ public class Auto {
   private Field2d field;
 
   public void trajectoryInit(){
-    try {
-        Path trajectoryPath_Move = Filesystem.getDeployDirectory().toPath().resolve(trajectorySerpentine);
-        Move = TrajectoryUtil.fromPathweaverJson(trajectoryPath_Move);
+   /* try {
+        //Path trajectoryPath_Move = Filesystem.getDeployDirectory().toPath().resolve(trajectorySerpentine);
+        //Move = TrajectoryUtil.fromPathweaverJson(trajectoryPath_Move);
 
         //Path trajectoryPath_MidtoBalance = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON_MidtoBalance);
         //trajectoryMidtoBalance = TrajectoryUtil.fromPathweaverJson(trajectoryPath_MidtoBalance);
      } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectorySerpentine: " + trajectorySerpentine, ex.getStackTrace());
+       // DriverStation.reportError("Unable to open trajectorySerpentine: " + trajectorySerpentine, ex.getStackTrace());
      }
     
       field = new Field2d();
       SmartDashboard.putData(field);
-  
-      field.getObject("traj").setTrajectory(Move);
+  */
+      //field.getObject("traj").setTrajectory(Move);
 }
 
 public void autonomousStartup(){
     timer = new Timer();
     timer.start();
 
-    drivetrain.resetOdometry(Move.getInitialPose());
+    drivetrain.resetOdometry(SimpleCurve4.getInitialPose());
 }
 
 public void runAutonomous(){
     drivetrain.updateOdometry();
 
-    field.setRobotPose(drivetrain.getPose());
+   // field.setRobotPose(drivetrain.getPose());
 
-    if (timer.get()<Move.getTotalTimeSeconds()){
-        var desiredPose = Move.sample(timer.get());
+    if (timer.get() < SimpleCurve4.getTotalTimeSeconds()){
+        var desiredPose = SimpleCurve4.sample(timer.get());
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-        System.out.println("Running A to Mid");
+        System.out.println(refChassisSpeeds);
 
     } else {
         drivetrain.autoDrive(0,0);
