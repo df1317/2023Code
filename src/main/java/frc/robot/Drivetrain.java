@@ -29,8 +29,8 @@ public class Drivetrain {
     private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(2);
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(3);
 
-    public static final double kMaxSpeed = 0.5; // meters per second
-    public static final double kMaxAngularSpeed = 2 * Math.PI * 0.125; // one rotation per second
+    public static final double kMaxSpeed = 3; // meters per second
+    public static final double kMaxAngularSpeed = 2 * Math.PI * 0.25; // one rotation per second
     public static final double kTrackWidth = 0.381 * 2; // meters
     public static final double kWheelRadius = 0.0508; // meters
     public static final int kEncoderResolution = 4096;
@@ -42,8 +42,8 @@ public class Drivetrain {
     private final PIDController m_leftPIDController = new PIDController(0.14098, 0, 0);
     private final PIDController m_rightPIDController = new PIDController(0.14098, 0, 0);
     
-    private final Encoder m_leftEncoder = new Encoder(0, 1);
-    private final Encoder m_rightEncoder = new Encoder(2, 3);
+    public static final Encoder m_leftEncoder = new Encoder(0, 1);
+    public static final Encoder m_rightEncoder = new Encoder(2, 3);
     
     private final DifferentialDriveKinematics m_kinematics =
         new DifferentialDriveKinematics(kTrackWidth);
