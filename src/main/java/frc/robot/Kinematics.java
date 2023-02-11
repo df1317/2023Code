@@ -42,7 +42,7 @@ public class Kinematics {
          deltaTime = System.currentTimeMillis() - time;
          time += deltaTime;
 
-         propFile = new File(Filesystem.getDeployDirectory() + File.pathSeparator + "KinematicsVals.txt");
+         propFile = new File(Filesystem.getDeployDirectory() + "/KinematicsVals.txt");
          System.out.println(propFile.setWritable(true,false));
  
 
@@ -57,7 +57,7 @@ public class Kinematics {
         double rad  = Math.toRadians(angle + 90);
         double a = Math.sqrt(ax*ax + ay*ay);
         double accAngle = Math.atan2(ay, ax) + rad;
-        System.out.println((accAngle)%6.28);
+        //System.out.println((accAngle)%6.28);
         ax = a*Math.sin(accAngle);
         ay = a*Math.cos(accAngle);
         dx = vx*deltaTime/1000 + 0.5*ax*deltaTime*deltaTime/1000/1000;
@@ -87,13 +87,14 @@ public class Kinematics {
             vy = -vy;
             ay = 0;
         }*/
-        //vals.setProperty("x", "" + x);
-        //vals.setProperty("y", "" + y);
+        vals.setProperty("x", "" + 300);
+        vals.setProperty("y", "" + 200);
         vals.setProperty("theta", "" + angle);
         System.out.println("angle : "+vals.getProperty("theta"));
        
         try {
             vals.store(new FileWriter(propFile), null);
+            //System.out.println(propFile.getAbsolutePath());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
