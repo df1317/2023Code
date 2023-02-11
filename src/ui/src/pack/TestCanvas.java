@@ -26,6 +26,7 @@ public class TestCanvas extends Canvas {
 	private Graphics screen;
 
 	private Image bot;
+	private Image field;
 	
 	private int WIDTH;
 	private int HEIGHT;
@@ -33,6 +34,8 @@ public class TestCanvas extends Canvas {
 	private double x,y;
 
 	private Properties vals;
+	private URLConnection ftp;
+	private InputStream propReader;
 
 	public TestCanvas(int w, int h) {
 		WIDTH = w;
@@ -43,9 +46,10 @@ public class TestCanvas extends Canvas {
 
 		vals =new Properties();
 		try {
-			URLConnection ftp = new URL("ftp://roborio-1317-frc.local/home/lvuser/deploy/KinematicsVals.txt").openConnection();
-			InputStream propReader = ftp.getInputStream();
+			ftp = new URL("ftp://roborio-1317-frc.local/home/lvuser/deploy/KinematicsVals.txt").openConnection();
+			propReader = ftp.getInputStream();
 			File baseFile = new File("src\\pack\\bot.png");
+
 			/*System.out.println(baseFile.getAbsolutePath());
 			String[] temp = baseFile.getAbsolutePath().split(File.pathSeparator);
 			int len = temp.length;
@@ -61,6 +65,7 @@ public class TestCanvas extends Canvas {
 			System.out.println(path);*/
 
 			bot = ImageIO.read(baseFile);
+			field = ImageIO.read(new File("src\\pack\\2023-field.png"));
 			vals.load(propReader);
 			
 		} catch (IOException e) {
@@ -76,11 +81,15 @@ public class TestCanvas extends Canvas {
 	
     
 	public void paint(Graphics window) {
+		screen.drawImage(field,0,0,null);
+		try {
+			vals.load(propReader);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		x = Double.parseDouble(vals.getProperty("x"));
 		y = Double.parseDouble(vals.getProperty("y"));
-		
-		screen.setColor(Color.BLUE);
-		screen.fillRect(0,0,WIDTH,HEIGHT);
 		
 		BufferedImage rotated = rotateImageByDegrees((BufferedImage)bot, Double.parseDouble(vals.getProperty("theta")));
 		screen.drawImage(rotated, (int)x-rotated.getWidth()/2, (int)y-rotated.getHeight()/2, null);

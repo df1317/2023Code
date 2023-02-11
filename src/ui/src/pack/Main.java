@@ -18,7 +18,7 @@ public class Main extends JFrame{
 	public Main() {
 		super("Kinematics Test");
 
-		setSize(WIDTH,HEIGHT);
+		setSize(WIDTH + 15,HEIGHT + 40);
 		
 		canv = new TestCanvas(WIDTH, HEIGHT);
 		getContentPane().add(canv);

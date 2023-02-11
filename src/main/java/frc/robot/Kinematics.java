@@ -90,7 +90,7 @@ public class Kinematics {
         //vals.setProperty("x", "" + x);
         //vals.setProperty("y", "" + y);
         vals.setProperty("theta", "" + angle);
-        System.out.println(vals.getProperty("x"));
+        System.out.println("angle : "+vals.getProperty("theta"));
        
         try {
             vals.store(new FileWriter(propFile), null);
