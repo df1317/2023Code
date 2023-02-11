@@ -15,9 +15,9 @@ public class Robot extends TimedRobot {
     public Auto auto = new Auto();
 
     // temporary encoder setup
-    private final Encoder leftEncoder = new Encoder(0, 1);
+   /*  private final Encoder leftEncoder = new Encoder(0, 1);
     private final Encoder rightEncoder = new Encoder(2, 3);
-
+*/
     /**
      * This function is run when the robot is first started up and should be used
      * for any
@@ -28,10 +28,10 @@ public class Robot extends TimedRobot {
         gyro.gyro.reset();
         System.out.println(gyro.getGyroY());
 
-        leftEncoder.reset();
-        rightEncoder.reset();
-        leftEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
-        rightEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
+        drivetrain.m_leftEncoder.reset();
+        drivetrain.m_rightEncoder.reset();
+        drivetrain.m_leftEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
+        drivetrain.m_rightEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
 
         auto.trajectoryInit();
     }
@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        auto.runAutonomous();
     }
 
     @Override
@@ -75,8 +76,7 @@ public class Robot extends TimedRobot {
         //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
         //System.out.println(leftDrive + " " + rightDrive);
 
-        double leftEncoderValue = leftEncoder.getDistance();
-        System.out.println(leftEncoderValue);
+        
     }
 
     @Override
