@@ -30,10 +30,10 @@ public class Robot extends TimedRobot {
 
         drivetrain.m_leftEncoder.reset();
         drivetrain.m_rightEncoder.reset();
-        drivetrain.m_leftEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
-        drivetrain.m_rightEncoder.setDistancePerPulse(2 * Math.PI * 3 / 360);
+        drivetrain.m_leftEncoder.setDistancePerPulse(2 * Math.PI * 3 / drivetrain.kEncoderResolution);
+        drivetrain.m_rightEncoder.setDistancePerPulse(2 * Math.PI * 3 / drivetrain.kEncoderResolution);
 
-        auto.trajectoryInit();
+        //auto.trajectoryInit();
     }
 
     @Override
@@ -43,12 +43,21 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         gyro.gyro.reset();
-        auto.autonomousStartup(); 
+        //auto.autonomousStartup(); 
+        drivetrain.m_leftEncoder.reset();
+        drivetrain.m_rightEncoder.reset();
+        
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runAutonomous();
+        System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
+        //auto.runAutonomous();
+        if (drivetrain.m_leftEncoder.getDistance() < 1 || drivetrain.m_rightEncoder.getDistance() < 1) {
+            drivetrain.drive(0.5, 0.5);
+        } else {
+            drivetrain.drive(0, 0);
+        }
     }
 
     @Override
