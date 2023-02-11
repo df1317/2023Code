@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,6 +15,7 @@ public class Kinematics {
     private Gyro g;
     public double x,y,dx,dy,vx,vy,ax,ay,angle,time,deltaTime;
     private Properties vals;
+    private File propFile;
     
     public Kinematics(Gyro g){
         this.g = g;
@@ -39,6 +41,10 @@ public class Kinematics {
 
          deltaTime = System.currentTimeMillis() - time;
          time += deltaTime;
+
+         propFile = new File(Filesystem.getDeployDirectory() + File.pathSeparator + "KinematicsVals.txt");
+         System.out.println(propFile.setWritable(true,false));
+ 
 
         update();
     }
@@ -81,12 +87,13 @@ public class Kinematics {
             vy = -vy;
             ay = 0;
         }*/
-        vals.setProperty("x", "" + x);
-        vals.setProperty("y", "" + y);
+        //vals.setProperty("x", "" + x);
+        //vals.setProperty("y", "" + y);
         vals.setProperty("theta", "" + angle);
         System.out.println(vals.getProperty("x"));
+       
         try {
-            vals.store(new FileWriter(Filesystem.getDeployDirectory() + "\\KinematicsVals.txt"), null);
+            vals.store(new FileWriter(propFile), null);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

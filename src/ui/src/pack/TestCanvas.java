@@ -6,10 +6,14 @@ import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -35,13 +39,15 @@ public class TestCanvas extends Canvas {
 		HEIGHT = h;
 		setSize(WIDTH, HEIGHT);
 		
-		String path = "";
+		//String path = "";
 
 		vals =new Properties();
 		try {
+			URLConnection ftp = new URL("ftp://roborio-1317-frc.local/home/lvuser/deploy/KinematicsVals.txt").openConnection();
+			InputStream propReader = ftp.getInputStream();
 			File baseFile = new File("src\\pack\\bot.png");
-			System.out.println(baseFile.getAbsolutePath());
-			String[] temp = baseFile.getAbsolutePath().split("\\\\");
+			/*System.out.println(baseFile.getAbsolutePath());
+			String[] temp = baseFile.getAbsolutePath().split(File.pathSeparator);
 			int len = temp.length;
 			temp[len -1] = "";
 			temp[len -4] = "main";
@@ -49,23 +55,17 @@ public class TestCanvas extends Canvas {
 			temp[len -3] = "deploy";
 
 			for(int i = 0; i < len -2;i++){
-				path += temp[i] +"\\";
+				path += temp[i] + File.pathSeparator;
 			}
 			path += temp[len -2];
-			System.out.println(path);
+			System.out.println(path);*/
 
 			bot = ImageIO.read(baseFile);
+			vals.load(propReader);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		try {
-			vals.load(new FileInputStream(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 	    setVisible(true);
 	}
 
