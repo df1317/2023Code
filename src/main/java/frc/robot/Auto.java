@@ -31,7 +31,7 @@ public class Auto {
 
     // trajectory setup
     //String trajectorySerpentine = "output/Move.wpilib.json";
-    PathPlannerTrajectory SimpleCurve3 = PathPlanner.loadPath("SimpleCurve3", new PathConstraints(4, 3));
+    PathPlannerTrajectory SimpleCurve4 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
     //Trajectory Move = new Trajectory();
     //String trajectoryJSON_MidtoBalance = "PLACEHOLDER";
     //Trajectory trajectoryMidtoBalance = new Trajectory();
@@ -63,7 +63,7 @@ public void autonomousStartup(){
     timer = new Timer();
     timer.start();
 
-    drivetrain.resetOdometry(SimpleCurve3.getInitialPose());
+    drivetrain.resetOdometry(SimpleCurve4.getInitialPose());
 }
 
 public void runAutonomous(){
@@ -71,8 +71,8 @@ public void runAutonomous(){
 
    // field.setRobotPose(drivetrain.getPose());
 
-    if (timer.get() < SimpleCurve3.getTotalTimeSeconds()){
-        var desiredPose = SimpleCurve3.sample(timer.get());
+    if (timer.get() < SimpleCurve4.getTotalTimeSeconds()){
+        var desiredPose = SimpleCurve4.sample(timer.get());
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);

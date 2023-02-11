@@ -61,7 +61,7 @@ public class Drivetrain {
         // make sure to reset gyro when we start auto and when robot init please!!!
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
-        double distancePerPulse = 2.0 * Math.PI * kWheelRadius * 0.25 / kEncoderResolution;
+        double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
         System.out.println("distance per pulse: " + distancePerPulse);
         m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
         m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
