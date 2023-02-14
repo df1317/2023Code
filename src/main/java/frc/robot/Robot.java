@@ -14,15 +14,7 @@ public class Robot extends TimedRobot {
     public Limelight limelight = new Limelight();
     public Auto auto = new Auto();
 
-    // temporary encoder setup
-   /*  private final Encoder leftEncoder = new Encoder(0, 1);
-    private final Encoder rightEncoder = new Encoder(2, 3);
-*/
-    /**
-     * This function is run when the robot is first started up and should be used
-     * for any
-     * initialization code.
-     */
+   
     @Override
     public void robotInit() {
         gyro.gyro.reset();
@@ -51,13 +43,20 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
-        auto.runAutonomous();
-        /*if (drivetrain.m_leftEncoder.getDistance() < 1 || drivetrain.m_rightEncoder.getDistance() < 1) {
-            drivetrain.drive(0.5, 0.5);
+        limelight.updateLimelightVariables();
+        // System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
+        
+        if (!auto.finishedFirstTrajectory) {
+            auto.runAutonomous();
+            System.out.println("Running auto trajectory!!");
+        } else if (!limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
+            drivetrain.driveAutoLimelight();
+            System.out.println("Limelight auto aligning!!.");
         } else {
             drivetrain.drive(0, 0);
-        }*/
+            System.out.println("FINISHED AUTO");
+        }
+        
     }
 
     @Override
@@ -73,8 +72,6 @@ public class Robot extends TimedRobot {
         /*if (controllers.autoBalanceXMode) {
             drivetrain.rotateDegrees();
         } else {*/
-
-        //drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
         
         // Limelight testing
         limelight.updateLimelightVariables();
@@ -84,8 +81,7 @@ public class Robot extends TimedRobot {
 
         //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
         //System.out.println(leftDrive + " " + rightDrive);
-
-        
+ 
     }
 
     @Override

@@ -31,12 +31,14 @@ public class Auto {
 
     // trajectory setup
     //String trajectorySerpentine = "output/Move.wpilib.json";
-    PathPlannerTrajectory SimpleCurve4 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
+    PathPlannerTrajectory SimpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
     //Trajectory Move = new Trajectory();
     //String trajectoryJSON_MidtoBalance = "PLACEHOLDER";
     //Trajectory trajectoryMidtoBalance = new Trajectory();
 
     private final RamseteController m_ramseteController = new RamseteController();
+
+    public boolean finishedFirstTrajectory;
 
   private Timer timer;
 
@@ -63,24 +65,28 @@ public void autonomousStartup(){
     timer = new Timer();
     timer.start();
 
-    drivetrain.resetOdometry(SimpleCurve4.getInitialPose());
+    finishedFirstTrajectory = false;
+
+    drivetrain.resetOdometry(SimpleCurve6.getInitialPose());
 }
 
-public void runAutonomous(){
+public void runAutonomous() {
     drivetrain.updateOdometry();
+    limelight.updateLimelightVariables();
 
    // field.setRobotPose(drivetrain.getPose());
 
-    if (timer.get() < SimpleCurve4.getTotalTimeSeconds()){
-        var desiredPose = SimpleCurve4.sample(timer.get());
+    if (timer.get() < SimpleCurve6.getTotalTimeSeconds()){
+        var desiredPose = SimpleCurve6.sample(timer.get());
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
         System.out.println(refChassisSpeeds);
 
     } else {
-        drivetrain.autoDrive(0,0);
-        System.out.println("finished Auto");
+        finishedFirstTrajectory = true;
+        // drivetrain.autoDrive(0,0);
+        // System.out.println("finished Auto");
     }
 
    /*  if (timer.get() < trajectorySerpentine.getTotalTimeSeconds()) {
