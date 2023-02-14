@@ -15,6 +15,7 @@ public class Limelight {
     
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
+    public double limelightInAlignment = 0;
 
     public Limelight() {
         updateLimelightVariables();
@@ -23,6 +24,14 @@ public class Limelight {
         SmartDashboard.putNumber("Limelight tx", limelightTX);
         SmartDashboard.putNumber("Limelight ty", limelightTY);
         SmartDashboard.putNumber("Limelight ta", limelightTA);
+    }
+
+    public boolean validLimelightTarget() {
+        if (limelightTV == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void updateLimelightVariables () {
@@ -61,6 +70,14 @@ public class Limelight {
         }
 
         return Math.abs(limelightAlignmentAdjust) > limelightMinCommand ? limelightAlignmentAdjust : 0;
+    }
+
+    public boolean limelightInAlignment() {
+        if (limelightSteeringAlign(limelightTX) == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void configLimelight() {

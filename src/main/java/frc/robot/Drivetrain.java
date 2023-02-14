@@ -146,6 +146,12 @@ public class Drivetrain {
         robotDrive.tankDrive(gyro.getGyroX(), gyro.getGyroX());
     } */
 
+    public void driveAutoLimelight() {
+        double leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+        double rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+
+        drive(leftDrive, rightDrive);
+    }
 
     public void driveTeleop() {
     double leftDrive;
