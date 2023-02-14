@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         limelight.updateLimelightVariables();
         // System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
-        
+        System.out.println(limelight.limelightTV);
         if (!auto.finishedFirstTrajectory) {
             auto.runAutonomous();
             System.out.println("Running auto trajectory!!");
