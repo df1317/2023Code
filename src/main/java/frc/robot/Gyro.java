@@ -68,14 +68,13 @@ public class Gyro {
         public double gyroAdjust(double gyroY) {
             double gyroDriveAdjustment = 0.0;
             if (gyroY > 5) {
-                gyroDriveAdjustment = 0.25;
+                gyroDriveAdjustment = 1;
             } else if (gyroY < -5) {
-                gyroDriveAdjustment = -0.25;
+                gyroDriveAdjustment = -1;
             } else {
                 gyroDriveAdjustment = 0;
             }
             return gyroDriveAdjustment;
         }
-
 
 }

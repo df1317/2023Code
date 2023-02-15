@@ -1,0 +1,119 @@
+package frc.robot;
+
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.List;
+import edu.wpi.first.wpilibj.Filesystem;
+import java.io.IOException;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathConstraints;
+
+import java.nio.file.Path;
+import java.nio.file.*;
+
+public class Auto {
+    Drivetrain drivetrain = new Drivetrain();
+    Limelight limelight = new Limelight();
+
+    // trajectory setup
+    //String trajectorySerpentine = "output/Move.wpilib.json";
+    PathPlannerTrajectory SimpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
+    //Trajectory Move = new Trajectory();
+    //String trajectoryJSON_MidtoBalance = "PLACEHOLDER";
+    //Trajectory trajectoryMidtoBalance = new Trajectory();
+
+    private final RamseteController m_ramseteController = new RamseteController();
+
+    public boolean finishedFirstTrajectory;
+
+  private Timer timer;
+
+  private Field2d field;
+
+  public void trajectoryInit(){
+   /* try {
+        //Path trajectoryPath_Move = Filesystem.getDeployDirectory().toPath().resolve(trajectorySerpentine);
+        //Move = TrajectoryUtil.fromPathweaverJson(trajectoryPath_Move);
+
+        //Path trajectoryPath_MidtoBalance = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON_MidtoBalance);
+        //trajectoryMidtoBalance = TrajectoryUtil.fromPathweaverJson(trajectoryPath_MidtoBalance);
+     } catch (IOException ex) {
+       // DriverStation.reportError("Unable to open trajectorySerpentine: " + trajectorySerpentine, ex.getStackTrace());
+     }
+    
+      field = new Field2d();
+      SmartDashboard.putData(field);
+  */
+      //field.getObject("traj").setTrajectory(Move);
+}
+
+public void autonomousStartup(){
+    timer = new Timer();
+    timer.start();
+
+    finishedFirstTrajectory = false;
+
+    drivetrain.resetOdometry(SimpleCurve6.getInitialPose());
+}
+
+public void runAutonomous() {
+    drivetrain.updateOdometry();
+    limelight.updateLimelightVariables();
+
+   // field.setRobotPose(drivetrain.getPose());
+
+    if (timer.get() < SimpleCurve6.getTotalTimeSeconds()){
+        var desiredPose = SimpleCurve6.sample(timer.get());
+        var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+      
+        drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+        System.out.println(refChassisSpeeds);
+
+    } else {
+        finishedFirstTrajectory = true;
+        // drivetrain.autoDrive(0,0);
+        // System.out.println("finished Auto");
+    }
+
+   /*  if (timer.get() < trajectorySerpentine.getTotalTimeSeconds()) {
+
+      var desiredPose = trajectorySerpentine.sample(timer.get());
+      var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+    
+      drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+      System.out.println("Running A to Mid");
+
+    } else if (Math.abs(limelight.limelightSteeringAlign(limelight.calculateLimelightAngle())) > limelight.limelightMinCommand) {
+        double autoLeftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+        double autoRightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+
+        drivetrain.autoDrive(autoLeftDrive, autoRightDrive);
+        System.out.println("Limelight aligning");
+
+    } else if (Math.abs(limelight.limelightSteeringAlign(limelight.calculateLimelightAngle())) <= limelight.limelightMinCommand && timer.get() < trajectoryMidtoBalance.getTotalTimeSeconds()) {
+        var desiredPose = trajectoryMidtoBalance.sample(timer.get());
+        var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+        drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+        System.out.println("Running Mid to Balance");
+
+    } else {
+        drivetrain.autoDrive(0, 0);
+        System.out.println("Finished Auto");
+    }*/
+}
+
+}

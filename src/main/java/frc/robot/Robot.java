@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class Robot extends TimedRobot {
 
@@ -11,18 +12,22 @@ public class Robot extends TimedRobot {
     public Controllers controllers = new Controllers();
     public Gyro gyro = new Gyro();
     public Limelight limelight = new Limelight();
-    public static Kinematics kinematics;
-    private int z = 0;
-    /**
-     * This function is run when the robot is first started up and should be used
-     * for any
-     * initialization code.
-     */
+    public Auto auto = new Auto();
+    public Kinematics kinematics;
+
+   
     @Override
     public void robotInit() {
         gyro.gyro.reset();
-        gyro.gyro.calibrate();
         kinematics =new Kinematics(gyro);
+        System.out.println(gyro.getGyroY());
+
+        drivetrain.m_leftEncoder.reset();
+        drivetrain.m_rightEncoder.reset();
+        drivetrain.m_leftEncoder.setDistancePerPulse(2 * Math.PI * drivetrain.kWheelRadius / drivetrain.kEncoderResolution);
+        drivetrain.m_rightEncoder.setDistancePerPulse(2 * Math.PI * drivetrain.kWheelRadius / drivetrain.kEncoderResolution);
+
+        auto.trajectoryInit();
     }
 
     @Override
@@ -32,10 +37,29 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        gyro.gyro.reset();
+        auto.autonomousStartup(); 
+        drivetrain.m_leftEncoder.reset();
+        drivetrain.m_rightEncoder.reset();
+        
     }
 
     @Override
     public void autonomousPeriodic() {
+        limelight.updateLimelightVariables();
+        // System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
+        System.out.println(limelight.limelightTV);
+        if (!auto.finishedFirstTrajectory) {
+            auto.runAutonomous();
+            System.out.println("Running auto trajectory!!");
+        } else if (!limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
+            drivetrain.driveAutoLimelight();
+            System.out.println("Limelight auto aligning!!.");
+        } else {
+            drivetrain.drive(0, 0);
+            System.out.println("FINISHED AUTO");
+        }
+        
     }
 
     @Override
@@ -56,34 +80,14 @@ public class Robot extends TimedRobot {
         /*if (controllers.autoBalanceXMode) {
             drivetrain.rotateDegrees();
         } else {*/
-
-        //drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
         
         // Limelight testing
         limelight.updateLimelightVariables();
         SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
-
         // testing only 
         double leftDrive;
-        double rightDrive;
-
-        if (controllers.getLimelightAutoAlign()) {
-            leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-            rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-            //System.out.println(limelight.calculateLimelightAngle());
-        } else if (controllers.getAutoBalance()) {
-            leftDrive = gyro.gyroAdjust(gyro.getGyroY());
-            rightDrive = gyro.gyroAdjust(gyro.getGyroY());
-        } else {
-            leftDrive = controllers.getLeftDrive();
-            rightDrive = controllers.getRightDrive();
-        }
-
-        drivetrain.drive(leftDrive, rightDrive);
-
-        //System.out.println(gyro.gyroAdjust(gyro.getGyroY()));
-        //System.out.println(controllers.getAutoBalance());
-
+        //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
+ 
     }
 
     @Override
