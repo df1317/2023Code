@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
         // testing only 
         double leftDrive;
+        drivetrain.driveTeleop();
         //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
  
     }
