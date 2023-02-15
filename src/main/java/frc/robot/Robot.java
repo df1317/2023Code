@@ -18,8 +18,10 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         gyro.gyro.reset();
-        System.out.println(gyro.getGyroY());
+        // System.out.println(gyro.getGyroY());
 
+
+        // TODO: make a method that resets encoders and sets distance per pulse (in drivetrain)
         drivetrain.m_leftEncoder.reset();
         drivetrain.m_rightEncoder.reset();
         drivetrain.m_leftEncoder.setDistancePerPulse(2 * Math.PI * drivetrain.kWheelRadius / drivetrain.kEncoderResolution);
@@ -46,6 +48,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        // TODO: set all motors to 0 here, 3 second wait period between auto and teleop for checking balance
     }
 
     @Override

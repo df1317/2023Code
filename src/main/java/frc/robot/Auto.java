@@ -77,6 +77,9 @@ public void autonomousStartup() {
 }
 
 public void runAutonomous() {
+
+    // TODO: clean up unused comments, make an independent timer method, add time variables for each trajectoy/scoring/aligning event
+
     drivetrain.updateOdometry();
     limelight.updateLimelightVariables();
     //System.out.println(limelight.limelightTV);
@@ -90,7 +93,7 @@ public void runAutonomous() {
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
         // System.out.println(refChassisSpeeds);
 
-    } else if (!finishedAligning && !limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
+    /* } else if (!finishedAligning && !limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
 
         // System.out.println("align " + limelight.limelightInAlignment());
         // System.out.println("valid " + limelight.validLimelightTarget());
@@ -99,12 +102,12 @@ public void runAutonomous() {
         // System.out.println("Limelight auto aligning!!.");
         finishedFirstTrajectory = true;
         //timerScoring.start();
-
+*/
     } else if (timer.get() < (2.5 + SimpleCurve6.getTotalTimeSeconds())) {
         finishedAligning = true;
         drivetrain.scoringMotor.set(0.5);
 
-    } else if (timer.get() == (3 + SimpleCurve6.getTotalTimeSeconds())) {
+    } else if ((2.5 + SimpleCurve6.getTotalTimeSeconds()) <= timer.get() && timer.get() < (4 + SimpleCurve6.getTotalTimeSeconds())) {
         finishedAligning = true;
 
         drivetrain.scoringMotor.set(0);
@@ -112,13 +115,14 @@ public void runAutonomous() {
 
         drivetrain.resetOdometry(SecondCurve1.getInitialPose());
 
-        subtractTime = timer.get();
-        System.out.println(subtractTime);
+        // subtractTime = timer.get();
 
-    } else if (timer.get() < (SecondCurve1.getTotalTimeSeconds() + subtractTime)) {
+        // System.out.println(subtractTime);
+
+    } else if (timer.get() <= (SecondCurve1.getTotalTimeSeconds() + 4 + SimpleCurve6.getTotalTimeSeconds())) {
         drivetrain.scoringMotor.set(0);
 
-        var desiredPose = SecondCurve1.sample(timer.get() - subtractTime);
+        var desiredPose = SecondCurve1.sample(timer.get() - (SimpleCurve6.getTotalTimeSeconds() + 4));
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
