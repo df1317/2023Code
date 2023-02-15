@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -44,6 +45,7 @@ public class TestCanvas extends Canvas {
 
 	private URLConnection ftp;
 	private BufferedInputStream propReader;
+	private String[] temp = "[#Wed Dec 14 19:56:49 EST 2022\nx, 300\ny, 200\ntheta, 0]".split("=");
 	double t;
 
 	public TestCanvas(int w, int h) {
@@ -90,23 +92,24 @@ public class TestCanvas extends Canvas {
     
 	public void paint(Graphics window) {
 		screen.drawImage(field,0,0,null);
-		String[] temp = null;
+		String raw;
 		try {
 			ftp = new URL("ftp://roborio-1317-frc.local/home/lvuser/deploy/KinematicsVals.txt").openConnection();
 			propReader = new BufferedInputStream( ftp.getInputStream());
-			String raw = new String(propReader.readAllBytes());
-			temp  = raw.split("\n");
+			raw = new String(propReader.readAllBytes());
+			if(raw.length() > 0){
+				temp  = raw.split("=");
+			}
+			System.out.println(Arrays.toString(temp));
 			propReader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// System.out.println(vals.get("theta"));
-		x = Double.parseDouble(temp[1].split("=")[1]);
-		y = Double.parseDouble(temp[2].split("=")[1]);
+		x = Double.parseDouble(temp[1].split("\n")[0]);
+		y = Double.parseDouble(temp[2].split("\n")[0]);
 
-		BufferedImage rotated = rotateImageByDegrees((BufferedImage)bot, Double.parseDouble(temp[3].split("=")[1]));
+		BufferedImage rotated = rotateImageByDegrees((BufferedImage)bot, Double.parseDouble(temp[3]));
 		screen.drawImage(rotated, (int)x-rotated.getWidth()/2, (int)y-rotated.getHeight()/2, null);
 		
 		window.drawImage(buffer, 0, 0, null);
