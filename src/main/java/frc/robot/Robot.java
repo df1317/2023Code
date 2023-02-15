@@ -34,28 +34,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        gyro.gyro.reset();
-        auto.autonomousStartup(); 
-        drivetrain.m_leftEncoder.reset();
-        drivetrain.m_rightEncoder.reset();
+        auto.autonomousStartup();
         
     }
 
     @Override
     public void autonomousPeriodic() {
-        limelight.updateLimelightVariables();
-        // System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
-        System.out.println(limelight.limelightTV);
-        if (!auto.finishedFirstTrajectory) {
-            auto.runAutonomous();
-            System.out.println("Running auto trajectory!!");
-        } else if (!limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
-            drivetrain.driveAutoLimelight();
-            System.out.println("Limelight auto aligning!!.");
-        } else {
-            drivetrain.drive(0, 0);
-            System.out.println("FINISHED AUTO");
-        }
+       auto.runAutonomous();
         
     }
 

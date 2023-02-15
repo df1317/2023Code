@@ -28,21 +28,21 @@ import java.nio.file.*;
 public class Auto {
     Drivetrain drivetrain = new Drivetrain();
     Limelight limelight = new Limelight();
+    Gyro gyro = new Gyro();
 
     // trajectory setup
-    //String trajectorySerpentine = "output/Move.wpilib.json";
     PathPlannerTrajectory SimpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
-    //Trajectory Move = new Trajectory();
-    //String trajectoryJSON_MidtoBalance = "PLACEHOLDER";
-    //Trajectory trajectoryMidtoBalance = new Trajectory();
+    PathPlannerTrajectory SecondCurve1 = PathPlanner.loadPath("SecondCurve1", new PathConstraints(1.0, 1));
 
     private final RamseteController m_ramseteController = new RamseteController();
 
     public boolean finishedFirstTrajectory;
+    public boolean finishedAligning;
 
-  private Timer timer;
+    private Timer timer;
+    public double subtractTime;
 
-  private Field2d field;
+    private Field2d field;
 
   public void trajectoryInit(){
    /* try {
@@ -61,11 +61,17 @@ public class Auto {
       //field.getObject("traj").setTrajectory(Move);
 }
 
-public void autonomousStartup(){
+public void autonomousStartup() {
+    gyro.gyro.reset();
+    drivetrain.m_leftEncoder.reset();
+    drivetrain.m_rightEncoder.reset();
+
+    // timer for first trajectory
     timer = new Timer();
     timer.start();
 
     finishedFirstTrajectory = false;
+    finishedAligning = false;
 
     drivetrain.resetOdometry(SimpleCurve6.getInitialPose());
 }
@@ -73,21 +79,60 @@ public void autonomousStartup(){
 public void runAutonomous() {
     drivetrain.updateOdometry();
     limelight.updateLimelightVariables();
+    //System.out.println(limelight.limelightTV);
 
    // field.setRobotPose(drivetrain.getPose());
 
-    if (timer.get() < SimpleCurve6.getTotalTimeSeconds()){
+    if (timer.get() < SimpleCurve6.getTotalTimeSeconds()) {
         var desiredPose = SimpleCurve6.sample(timer.get());
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-        System.out.println(refChassisSpeeds);
+        // System.out.println(refChassisSpeeds);
+
+    } else if (!finishedAligning && !limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
+
+        // System.out.println("align " + limelight.limelightInAlignment());
+        // System.out.println("valid " + limelight.validLimelightTarget());
+
+        drivetrain.driveAutoLimelight();
+        // System.out.println("Limelight auto aligning!!.");
+        finishedFirstTrajectory = true;
+        //timerScoring.start();
+
+    } else if (timer.get() < (2.5 + SimpleCurve6.getTotalTimeSeconds())) {
+        finishedAligning = true;
+        drivetrain.scoringMotor.set(0.5);
+
+    } else if (timer.get() == (3 + SimpleCurve6.getTotalTimeSeconds())) {
+        finishedAligning = true;
+
+        drivetrain.scoringMotor.set(0);
+        //timer2.start();
+
+        drivetrain.resetOdometry(SecondCurve1.getInitialPose());
+
+        subtractTime = timer.get();
+        System.out.println(subtractTime);
+
+    } else if (timer.get() < (SecondCurve1.getTotalTimeSeconds() + subtractTime)) {
+        drivetrain.scoringMotor.set(0);
+
+        var desiredPose = SecondCurve1.sample(timer.get() - subtractTime);
+        var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+      
+        drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+        // System.out.println(refChassisSpeeds);
 
     } else {
-        finishedFirstTrajectory = true;
-        // drivetrain.autoDrive(0,0);
-        // System.out.println("finished Auto");
+        drivetrain.autoDrive(0, 0);
+        System.out.println("FINISHED AUTO");
     }
+
+    /*if (finishedFirstTrajectory) {
+        timerScoring.start();
+    }*/
+
 
    /*  if (timer.get() < trajectorySerpentine.getTotalTimeSeconds()) {
 
