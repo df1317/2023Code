@@ -1,7 +1,7 @@
 package frc.robot;
 
 // imports for AHRS Constants.gyro
-import com.kauailabs.navx.frc.AHRS;
+// import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 //import edu.wpi.first.wpilibj.ADIS16448_IMU.CalibrationTime;
 //import edu.wpi.first.wpilibj.ADIS16448_IMU.IMUAxis;

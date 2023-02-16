@@ -5,6 +5,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Encoder;
+import java.util.ArrayList;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathConstraints;
+import java.nio.file.Path;
+import java.nio.file.*;
 
 public class Robot extends TimedRobot {
 
@@ -18,8 +24,10 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         gyro.gyro.reset();
-        System.out.println(gyro.getGyroY());
+        // System.out.println(gyro.getGyroY());
 
+
+        // TODO: make a method that resets encoders and sets distance per pulse (in drivetrain)
         drivetrain.m_leftEncoder.reset();
         drivetrain.m_rightEncoder.reset();
         drivetrain.m_leftEncoder.setDistancePerPulse(2 * Math.PI * drivetrain.kWheelRadius / drivetrain.kEncoderResolution);
@@ -34,33 +42,18 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        gyro.gyro.reset();
         auto.autonomousStartup(); 
-        drivetrain.m_leftEncoder.reset();
-        drivetrain.m_rightEncoder.reset();
-        
     }
 
     @Override
     public void autonomousPeriodic() {
-        limelight.updateLimelightVariables();
-        // System.out.println(drivetrain.m_leftEncoder.getDistance() + " " + drivetrain.m_rightEncoder.getDistance());
-        System.out.println(limelight.limelightTV);
-        if (!auto.finishedFirstTrajectory) {
-            auto.runAutonomous();
-            System.out.println("Running auto trajectory!!");
-        } else if (!limelight.limelightInAlignment() && limelight.validLimelightTarget()) {
-            drivetrain.driveAutoLimelight();
-            System.out.println("Limelight auto aligning!!.");
-        } else {
-            drivetrain.drive(0, 0);
-            System.out.println("FINISHED AUTO");
-        }
+        auto.runAutonomous();
         
     }
 
     @Override
     public void teleopInit() {
+        // TODO: set all motors to 0 here, 3 second wait period between auto and teleop for checking balance
     }
 
     @Override
