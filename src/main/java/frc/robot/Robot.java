@@ -13,14 +13,14 @@ public class Robot extends TimedRobot {
     public Gyro gyro = new Gyro();
     public Limelight limelight = new Limelight();
     public Auto auto = new Auto();
-    public Kinematics kinematics;
+    public DataSender dataSender;
 
    
     @Override
     public void robotInit() {
         gyro.gyro.reset();
-        kinematics =new Kinematics(gyro);
-        System.out.println(gyro.getGyroY());
+        dataSender = new DataSender(drivetrain.getPose());
+        dataSender.init();
 
         drivetrain.m_leftEncoder.reset();
         drivetrain.m_rightEncoder.reset();
@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        kinematics.update();
+        dataSender.update(drivetrain.getPose());
     }
 
     @Override
@@ -64,17 +64,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        kinematics.init();
+        dataSender.init();
     }
 
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putNumber("X Pos", kinematics.getX());
-        SmartDashboard.putNumber("Y Pos", kinematics.getY());
-        SmartDashboard.putNumber("acc", gyro.getAccelX());
+        SmartDashboard.putNumber("X Pos", drivetrain.getPose().getX());
+        SmartDashboard.putNumber("Y Pos", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Gyro Z", gyro.getGyroZ());
         SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
-        //System.out.println(gyro.gyro.getAngle());
         SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
         SmartDashboard.putBoolean("Auto Balance", controllers.autoBalanceXMode);
         /*if (controllers.autoBalanceXMode) {
@@ -84,10 +82,8 @@ public class Robot extends TimedRobot {
         // Limelight testing
         limelight.updateLimelightVariables();
         SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
-        // testing only 
-        double leftDrive;
+        // testing only
         drivetrain.driveTeleop();
-        //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
  
     }
 
