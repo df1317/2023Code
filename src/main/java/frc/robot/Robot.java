@@ -5,6 +5,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Encoder;
+import java.util.ArrayList;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathConstraints;
+import java.nio.file.Path;
+import java.nio.file.*;
 
 public class Robot extends TimedRobot {
 
@@ -36,13 +42,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        auto.autonomousStartup();
-        
+        auto.autonomousStartup(); 
     }
 
     @Override
     public void autonomousPeriodic() {
-       auto.runAutonomous();
+        auto.runAutonomous();
         
     }
 

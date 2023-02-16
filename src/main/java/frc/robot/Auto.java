@@ -33,6 +33,7 @@ public class Auto {
     // trajectory setup
     PathPlannerTrajectory SimpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
     PathPlannerTrajectory SecondCurve1 = PathPlanner.loadPath("SecondCurve1", new PathConstraints(1.0, 1));
+    List<PathPlannerTrajectory> GroupedPath = PathPlanner.loadPathGroup("GroupedPath", new PathConstraints(1.0, 1));
 
     private final RamseteController m_ramseteController = new RamseteController();
 
@@ -73,7 +74,8 @@ public void autonomousStartup() {
     finishedFirstTrajectory = false;
     finishedAligning = false;
 
-    drivetrain.resetOdometry(SimpleCurve6.getInitialPose());
+    // drivetrain.resetOdometry(SimpleCurve6.getInitialPose());
+    drivetrain.resetOdometry(GroupedPath.get(0).getInitialPose());
 }
 
 public void runAutonomous() {
@@ -86,8 +88,9 @@ public void runAutonomous() {
 
    // field.setRobotPose(drivetrain.getPose());
 
-    if (timer.get() < SimpleCurve6.getTotalTimeSeconds()) {
-        var desiredPose = SimpleCurve6.sample(timer.get());
+    if (timer.get() < GroupedPath.get(0).getTotalTimeSeconds()) {
+        // var desiredPose = SimpleCurve6.sample(timer.get());
+        var desiredPose = GroupedPath.get(0).sample(timer.get());
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
@@ -103,26 +106,27 @@ public void runAutonomous() {
         finishedFirstTrajectory = true;
         //timerScoring.start();
 */
-    } else if (timer.get() < (2.5 + SimpleCurve6.getTotalTimeSeconds())) {
+    } else if (timer.get() < (2.5 + GroupedPath.get(0).getTotalTimeSeconds())) {
         finishedAligning = true;
         drivetrain.scoringMotor.set(0.5);
 
-    } else if ((2.5 + SimpleCurve6.getTotalTimeSeconds()) <= timer.get() && timer.get() < (4 + SimpleCurve6.getTotalTimeSeconds())) {
+    } else if ((2.5 + GroupedPath.get(0).getTotalTimeSeconds()) <= timer.get() && timer.get() < (4 + GroupedPath.get(0).getTotalTimeSeconds())) {
         finishedAligning = true;
 
         drivetrain.scoringMotor.set(0);
         //timer2.start();
 
-        drivetrain.resetOdometry(SecondCurve1.getInitialPose());
+        drivetrain.resetOdometry(GroupedPath.get(1).getInitialPose());
 
         // subtractTime = timer.get();
 
         // System.out.println(subtractTime);
 
-    } else if (timer.get() <= (SecondCurve1.getTotalTimeSeconds() + 4 + SimpleCurve6.getTotalTimeSeconds())) {
+    } else if (timer.get() <= (GroupedPath.get(1).getTotalTimeSeconds() + 4 + GroupedPath.get(0).getTotalTimeSeconds())) {
         drivetrain.scoringMotor.set(0);
 
-        var desiredPose = SecondCurve1.sample(timer.get() - (SimpleCurve6.getTotalTimeSeconds() + 4));
+        // var desiredPose = SecondCurve1.sample(timer.get() - (SimpleCurve6.getTotalTimeSeconds() + 4));
+        var desiredPose = GroupedPath.get(1).sample(timer.get() - (GroupedPath.get(0).getTotalTimeSeconds() + 4));
         var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
       
         drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
@@ -133,36 +137,13 @@ public void runAutonomous() {
         System.out.println("FINISHED AUTO");
     }
 
-    /*if (finishedFirstTrajectory) {
-        timerScoring.start();
-    }*/
+    /*List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Some path", new PathConstraints(4, 3));
 
-
-   /*  if (timer.get() < trajectorySerpentine.getTotalTimeSeconds()) {
-
-      var desiredPose = trajectorySerpentine.sample(timer.get());
-      var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-    
-      drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-      System.out.println("Running A to Mid");
-
-    } else if (Math.abs(limelight.limelightSteeringAlign(limelight.calculateLimelightAngle())) > limelight.limelightMinCommand) {
-        double autoLeftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-        double autoRightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-
-        drivetrain.autoDrive(autoLeftDrive, autoRightDrive);
-        System.out.println("Limelight aligning");
-
-    } else if (Math.abs(limelight.limelightSteeringAlign(limelight.calculateLimelightAngle())) <= limelight.limelightMinCommand && timer.get() < trajectoryMidtoBalance.getTotalTimeSeconds()) {
-        var desiredPose = trajectoryMidtoBalance.sample(timer.get());
-        var refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-        drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-        System.out.println("Running Mid to Balance");
-
-    } else {
-        drivetrain.autoDrive(0, 0);
-        System.out.println("Finished Auto");
-    }*/
+return Commands.sequence(
+    new PathFollowingCommand(pathGroup.get(0)),
+    // Do some stuff between paths
+    new PathFollowingCommand(pathGroup.get(1)),
+    /// etc
+); */
 }
-
 }
