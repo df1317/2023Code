@@ -100,6 +100,7 @@ public class TestCanvas extends Canvas {
 			if(raw.length() > 0){
 				temp  = raw.split("=");
 			}
+			System.out.println(Arrays.toString(temp));
 			propReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
