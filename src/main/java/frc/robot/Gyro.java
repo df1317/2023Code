@@ -16,7 +16,6 @@ public class Gyro {
     double yAxisRate;
 
     public Gyro(){
-        System.out.println("why even");
     }
 
             // Control drive system automatically, 

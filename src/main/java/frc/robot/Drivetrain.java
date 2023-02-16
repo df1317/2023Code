@@ -112,7 +112,7 @@ public class Drivetrain {
      * @param rightSpeed    Speed of right side motor group
     **/
     public void drive(double leftSpeed, double rightSpeed) {
-        robotDrive.tankDrive(leftSpeed, rightSpeed);
+       drive(leftSpeed, rightSpeed, 1);
     }
     
      /**Sets left and right motor groups to input speeds, with a speed multiplier.
@@ -140,6 +140,13 @@ public class Drivetrain {
             drive(speedMod,-speedMod);
         }
     }
+
+      /**Sets drivetain to rotate at input direction and full speed. 
+     * @param counterclockwise True to rotate CCW, false to rotate CW
+     * **/
+    public void startRotate(boolean counterclockwise){
+        startRotate(1, counterclockwise);
+    };
     
     public void driveDistance(){
 

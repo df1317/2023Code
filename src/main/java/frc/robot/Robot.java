@@ -19,11 +19,14 @@ public class Robot extends TimedRobot {
     public Gyro gyro = new Gyro();
     public Limelight limelight = new Limelight();
     public Auto auto = new Auto();
+    public DataSender dataSender;
 
    
     @Override
     public void robotInit() {
         gyro.gyro.reset();
+        dataSender = new DataSender(drivetrain.getPose());
+        dataSender.init();
         // System.out.println(gyro.getGyroY());
 
 
@@ -38,6 +41,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        drivetrain.updateOdometry();
+        dataSender.update(drivetrain.getPose());
     }
 
     @Override
@@ -53,13 +58,16 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        dataSender.init();
         // TODO: set all motors to 0 here, 3 second wait period between auto and teleop for checking balance
     }
 
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putNumber("X Pos", drivetrain.getPose().getX());
+        SmartDashboard.putNumber("Y Pos", drivetrain.getPose().getY());
+        SmartDashboard.putNumber("Gyro Z", gyro.getGyroZ());
         SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
-        //System.out.println(gyro.gyro.getAngle());
         SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
         SmartDashboard.putBoolean("Auto Balance", controllers.autoBalanceXMode);
         /*if (controllers.autoBalanceXMode) {
@@ -69,11 +77,8 @@ public class Robot extends TimedRobot {
         // Limelight testing
         limelight.updateLimelightVariables();
         SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
-
+        // testing only
         drivetrain.driveTeleop();
-
-        //System.out.println("gyro " + gyro.gyroAdjust(gyro.getGyroY()));
-        //System.out.println(leftDrive + " " + rightDrive);
  
     }
 
