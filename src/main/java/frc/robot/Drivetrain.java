@@ -29,7 +29,7 @@ public class Drivetrain {
     private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(2);
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(3);
 
-    // TEMPORARY SCORING MOTOR: REMOVE ME
+    // TEMPORARY SCORING MOTOR: REMOVE ME 
     public final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(10);
 
     public static final double kMaxSpeed = 4; // meters per second
