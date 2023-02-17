@@ -30,5 +30,7 @@
   "java.test.defaultConfig": "WPIlibUnitTests",
   "java.errors.incompleteClasspath.severity": "warning",
   "C_Cpp.errorSquiggles": "enabled",
-  "C_Cpp.default.enableConfigurationSquiggles": true
+  "C_Cpp.default.enableConfigurationSquiggles": true,
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 300
 }
