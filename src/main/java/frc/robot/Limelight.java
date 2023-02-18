@@ -59,7 +59,7 @@ public class Limelight {
         return limelightTX;
     }
 
-    public double limelightSteeringAlign(double limelightTX) {
+    public double limelightSteeringAlign() {
         double limelightHeadingError = -limelightTX;
         double limelightAlignmentAdjust = 0.0;
 
@@ -69,15 +69,11 @@ public class Limelight {
             limelightAlignmentAdjust = (limelightKP * limelightHeadingError) + limelightMinCommand;
         }
 
-        return Math.abs(limelightAlignmentAdjust) > limelightMinCommand ? limelightAlignmentAdjust : 0;
+        return limelightAlignmentAdjust;
     }
 
     public boolean limelightInAlignment() {
-        if (limelightSteeringAlign(limelightTX) == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (Math.abs(limelightSteeringAlign()) < limelightMinCommand);
     }
 
     public void configLimelight() {

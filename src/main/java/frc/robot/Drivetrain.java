@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -48,6 +50,8 @@ public class Drivetrain {
     private Limelight limelight;
     private Controllers controllers;
 
+    private final double driveDeadzone = 0.1;
+
     public Drivetrain(Controllers controllers, Limelight limelight) {
 
         this.controllers = controllers;
@@ -65,7 +69,7 @@ public class Drivetrain {
 
         m_odometry = new DifferentialDriveOdometry(
                 // maybe negate m_gyro.getAngle()? atleast for NavX apparently
-                Rotation2d.fromDegrees(gyro.getGyroZ()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+                Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
@@ -86,11 +90,11 @@ public class Drivetrain {
 
     public void updateOdometry() {
         m_odometry.update(
-                Rotation2d.fromDegrees(gyro.getGyroZ()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+                Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
     public void resetOdometry(Pose2d pose) {
-        m_odometry.resetPosition(Rotation2d.fromDegrees(gyro.getGyroZ()), m_leftEncoder.getDistance(),
+        m_odometry.resetPosition(Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(),
                 m_rightEncoder.getDistance(), pose);
     }
 
@@ -116,6 +120,14 @@ public class Drivetrain {
      * @param speedMod   Speed multiplier / Max speed
      **/
     public void drive(double leftSpeed, double rightSpeed, double speedMod) {
+        if (Math.abs(leftSpeed) < driveDeadzone) {
+            leftSpeed = 0.0;
+        }
+
+        if (Math.abs(rightSpeed) < driveDeadzone) {
+            rightSpeed = 0.0;
+        }
+
         robotDrive.tankDrive(leftSpeed * speedMod, rightSpeed * speedMod);
     }
 
@@ -152,8 +164,8 @@ public class Drivetrain {
     }
 
     public void driveAutoLimelight() {
-        double leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-        double rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+        double leftDrive = -limelight.limelightSteeringAlign();
+        double rightDrive = limelight.limelightSteeringAlign();
 
         drive(leftDrive, rightDrive);
     }
@@ -163,12 +175,14 @@ public class Drivetrain {
         double rightDrive;
 
         if (controllers.getLimelightAutoAlign()) {
-            leftDrive = -limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
-            rightDrive = limelight.limelightSteeringAlign(limelight.calculateLimelightAngle());
+            leftDrive = -limelight.limelightSteeringAlign();
+            rightDrive = limelight.limelightSteeringAlign();
             System.out.println(limelight.calculateLimelightAngle());
         } else if (controllers.getAutoBalance()) {
-            leftDrive = -gyro.gyroAdjust(gyro.getGyroY());
-            rightDrive = -gyro.gyroAdjust(gyro.getGyroY());
+            // TODO: move to auto, temporary speedMods
+            leftDrive = gyro.gyroAdjust() * 0.5;
+            rightDrive = gyro.gyroAdjust() * 0.5;
+            System.out.println(leftDrive);
         } else {
             leftDrive = controllers.getLeftDrive();
             rightDrive = controllers.getRightDrive();

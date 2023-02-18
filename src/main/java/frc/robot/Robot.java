@@ -53,9 +53,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         SmartDashboard.putNumber("X Pos", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Y Pos", drivetrain.getPose().getY());
-        SmartDashboard.putNumber("Gyro Z", gyro.getGyroZ());
-        SmartDashboard.putNumber("Gyro X", gyro.getGyroX());
-        SmartDashboard.putNumber("Gyro Y", gyro.getGyroY());
+        SmartDashboard.putNumber("Gyro Z", gyro.getGyroYaw());
+        SmartDashboard.putNumber("Gyro X", gyro.getGyroPitch());
+        SmartDashboard.putNumber("Gyro Y", gyro.getGyroRoll());
 
         // Limelight testing
         limelight.updateLimelightVariables();

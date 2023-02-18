@@ -96,4 +96,9 @@ public class Auto {
             System.out.println("FINISHED AUTO");
         }
     }
+
+    // TODO: use me in the real auto code
+    public void balance() {
+        drivetrain.drive(gyro.gyroAdjust(), gyro.gyroAdjust(), 0.5);
+    }
 }

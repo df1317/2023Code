@@ -6,22 +6,24 @@ public class Gyro {
 
     private static final ADIS16448_IMU gyro = new ADIS16448_IMU();
 
+    public double gyroDriveAdjustment = 0;
+
     // Control drive system automatically,
     // driving in reverse direction of pitch/roll angle,
     // with a magnitude based upon the angle
 
     /** @return accumulated gyro pitch in degrees */
-    public double getGyroX() {
-        return gyro.getGyroAngleX();
-    }
-
-    /** @return accumulated gyro roll in degrees */
-    public double getGyroY() {
+    public double getGyroPitch() {
         return gyro.getGyroAngleY();
     }
 
+    /** @return accumulated gyro roll in degrees */
+    public double getGyroRoll() {
+        return gyro.getGyroAngleX();
+    }
+
     /** @return accumulated gyro yaw in degrees */
-    public double getGyroZ() {
+    public double getGyroYaw() {
         return gyro.getGyroAngleZ();
     }
 
@@ -40,20 +42,14 @@ public class Gyro {
         return gyro.getAccelZ();
     }
 
-    public double gyroAdjust(double gyroY) {
-        double gyroDriveAdjustment = 0.0;
-        if (gyroY > 5) {
-            gyroDriveAdjustment = 1;
-        } else if (gyroY < -5) {
-            gyroDriveAdjustment = -1;
-        } else {
-            gyroDriveAdjustment = 0;
-        }
+    public double gyroAdjust() {
+        gyroDriveAdjustment = getGyroPitch() / 10.0;
         return gyroDriveAdjustment;
     }
 
     public void reset() {
         gyro.reset();
+        gyroDriveAdjustment = 0.0;
     }
 
 }
