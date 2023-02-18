@@ -1,7 +1,5 @@
 package frc.robot;
 
-import org.opencv.core.Mat;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.math.controller.PIDController;
