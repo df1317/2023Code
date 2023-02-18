@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
         // testing only
         drivetrain.driveTeleop();
 
+        gyro.resetButton(controllers.gyroResetButton());
     }
 
     @Override

@@ -51,6 +51,8 @@ public class Drivetrain {
     private Controllers controllers;
 
     private final double driveDeadzone = 0.1;
+    private final double autoBalanceMaxPower = 0.55;
+    private final double autoBalanceMinPower = 0.45;
 
     public Drivetrain(Controllers controllers, Limelight limelight) {
 
@@ -180,8 +182,18 @@ public class Drivetrain {
             System.out.println(limelight.calculateLimelightAngle());
         } else if (controllers.getAutoBalance()) {
             // TODO: move to auto, temporary speedMods
-            leftDrive = gyro.gyroAdjust() * 0.5;
-            rightDrive = gyro.gyroAdjust() * 0.5;
+            double power = -0.5 * gyro.gyroAdjust();
+            // power = Math.min(autoBalanceMaxPower, power);
+            // power = Math.max(-autoBalanceMaxPower, power);
+            if (power > 0) {
+                power = Math.min(power, autoBalanceMaxPower);
+                power = Math.max(power, autoBalanceMinPower);
+            } else if (power < 0) {
+                power = Math.min(power, -autoBalanceMinPower);
+                power = Math.max(power, -autoBalanceMaxPower);
+            }
+            rightDrive = power;
+            leftDrive = power;
             System.out.println(leftDrive);
         } else {
             leftDrive = controllers.getLeftDrive();

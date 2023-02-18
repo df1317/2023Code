@@ -31,4 +31,8 @@ public class Controllers {
         return joyL.getRawButton(4);
     }
 
+    public boolean gyroResetButton() {
+        return joyL.getRawButton(5);
+    }
+
 }

@@ -44,7 +44,12 @@ public class Gyro {
 
     public double gyroAdjust() {
         gyroDriveAdjustment = getGyroPitch() / 10.0;
-        return gyroDriveAdjustment;
+
+        if (Math.abs(getGyroPitch()) > 3) {
+            return gyroDriveAdjustment;
+        } else {
+            return 0;
+        }
     }
 
     public void reset() {
@@ -52,4 +57,10 @@ public class Gyro {
         gyroDriveAdjustment = 0.0;
     }
 
+    public void resetButton(boolean resetButton) {
+        if (resetButton) {
+            reset();
+            System.out.println("!! GYRO RESET !!");
+        }
+    }
 }
