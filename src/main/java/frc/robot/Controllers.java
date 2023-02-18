@@ -35,4 +35,35 @@ public class Controllers {
         return joyL.getRawButton(5);
     }
 
+    public double getTurretRotation() {
+        return joyE.getZ();
+    }
+
+    public double getAxisRotation() {
+        return joyE.getY();
+    }
+
+    public boolean extendButton() {
+        return joyE.getRawButton(6);
+    }
+
+    public boolean retractButton() {
+        return joyE.getRawButton(4);
+    }
+
+    public boolean grabCubeButton() {
+        return joyE.getRawButton(5);
+    }
+
+    public boolean grabConeButton() {
+        return joyE.getRawButton(3);
+    }
+
+    public boolean realeaseClawButton() {
+        return joyE.getRawButton(2);
+    }
+
+    public boolean crazyLEDLights() {
+        return joyE.getRawButton(1);
+    }
 }
