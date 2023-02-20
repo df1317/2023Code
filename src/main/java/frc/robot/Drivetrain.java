@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class Drivetrain {
-    private final WPI_VictorSPX frontLeftMotor = new WPI_VictorSPX(9);
-    private final WPI_VictorSPX backLeftMotor = new WPI_VictorSPX(5);
-    private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(2);
-    private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(3);
+    private final WPI_VictorSPX frontLeftMotor = new WPI_VictorSPX(2);
+    private final WPI_VictorSPX backLeftMotor = new WPI_VictorSPX(1);
+    private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(3);
+    private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(4);
 
     // TEMPORARY SCORING MOTOR: REMOVE ME
-    private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(10);
+    // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
 
     private static final double kTrackWidth = 0.381 * 2; // meters
     private static final double kWheelRadius = 0.0762; // meters
@@ -204,9 +204,5 @@ public class Drivetrain {
     public void resetEncoders() {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
-    }
-
-    public void setScoringMotor(double speed) {
-        scoringMotor.set(speed);
     }
 }
