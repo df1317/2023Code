@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
         SmartDashboard.putNumber("X Pos", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Y Pos", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Gyro Z", gyro.getGyroYaw());
