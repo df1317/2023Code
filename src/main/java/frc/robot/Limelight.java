@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Limelight {
 
-    public double limelightTV;
-    public double limelightTA;
-    public double limelightTX;
-    public double limelightTY;
-    
+    private double limelightTV;
+    private double limelightTA;
+    private double limelightTX;
+    private double limelightTY;
+
     private double limelightKP = -0.05;
     public double limelightMinCommand = 0.1;
-    
+
     private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
     public double limelightInAlignment = 0;
@@ -34,13 +34,13 @@ public class Limelight {
         }
     }
 
-    public void updateLimelightVariables () {
+    public void updateLimelightVariables() {
         limelightTV = table.getEntry("tv").getDouble(0);
         limelightTA = table.getEntry("ta").getDouble(0);
         limelightTX = table.getEntry("tx").getDouble(0);
         limelightTY = table.getEntry("ty").getDouble(0);
     }
-    
+
     public double calculateLimelightDistance() {
         updateLimelightVariables();
         final double limelightMountingHeight = 0.0; // inches
@@ -59,7 +59,7 @@ public class Limelight {
         return limelightTX;
     }
 
-    public double limelightSteeringAlign(double limelightTX) {
+    public double limelightSteeringAlign() {
         double limelightHeadingError = -limelightTX;
         double limelightAlignmentAdjust = 0.0;
 
@@ -69,15 +69,11 @@ public class Limelight {
             limelightAlignmentAdjust = (limelightKP * limelightHeadingError) + limelightMinCommand;
         }
 
-        return Math.abs(limelightAlignmentAdjust) > limelightMinCommand ? limelightAlignmentAdjust : 0;
+        return limelightAlignmentAdjust;
     }
 
     public boolean limelightInAlignment() {
-        if (limelightSteeringAlign(limelightTX) == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (Math.abs(limelightSteeringAlign()) < limelightMinCommand);
     }
 
     public void configLimelight() {
