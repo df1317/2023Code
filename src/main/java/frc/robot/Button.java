@@ -91,4 +91,8 @@ public class Button{
     public boolean onRelease(){
         return onRelease;
     }
+
+    public void setState(boolean state){
+        this.state = state;
+    }
 }

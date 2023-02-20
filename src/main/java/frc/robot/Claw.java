@@ -12,35 +12,50 @@ public class Claw {
     Solenoid leftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
     Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 2);
 
+    private boolean grabbing = false;
+
     public void grabCone() {
-        if (controllers.grabConeButton()) {
             leftSolenoid.set(true);
             rightSolenoid.set(true);
-        }
+            grabbing = true;
+
     }
 
     public void grabCube() {
-        if (controllers.grabCubeButton()) {
             leftSolenoid.set(true);
             rightSolenoid.set(false);
-        }
+            grabbing = true;
+
     }
 
     public void releaseClaw() {
-        if (controllers.realeaseClawButton()) {
             leftSolenoid.set(false);
             rightSolenoid.set(false);
-        }
-    }
-
-    public void resetClaw() {
-        leftSolenoid.set(false);
-        rightSolenoid.set(false);
+            grabbing = false;
     }
 
     public void runClawCommands() {
-        grabCone();
-        grabCube();
-        releaseClaw();
+        //Use this code and private bool if using onPress
+        if(grabbing){
+            if(controllers.grabConeButton() || controllers.grabCubeButton()){
+                releaseClaw();
+            }
+        }else{
+            if(controllers.grabConeButton()){
+                grabCone();
+            }else if(controllers.grabCubeButton()){
+                grabCube();
+            }
+
+        }
+
+        //Use this code if using toggle states
+        /**if(controllers.grabConeButton() == controllers.grabCubeButton()){
+            resetClaw();   
+        }else if(controllers.grabConeButton()){
+            grabCone();
+        }else if(controllers.grabCubeButton()){
+            grabCube();
+        }**/
     }
 }

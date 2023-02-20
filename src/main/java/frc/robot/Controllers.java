@@ -25,15 +25,15 @@ public class Controllers {
     }
 
     public boolean getLimelightAutoAlign() {
-        return joyL.getButtonOutput(3);
+        return joyL.onButtonPress(3);
     }
 
     public boolean getAutoBalance() {
-        return joyL.getButtonOutput(4);
+        return joyL.onButtonPress(4);
     }
 
     public boolean gyroResetButton() {
-        return joyL.getButtonOutput(5);
+        return joyL.onButtonPress(5);
     }
 
     public double getTurretRotation() {
@@ -53,18 +53,14 @@ public class Controllers {
     }
 
     public boolean grabCubeButton() {
-        return joyE.getButtonOutput(5);
+        return joyE.onButtonPress(5);
     }
 
     public boolean grabConeButton() {
-        return joyE.getButtonOutput(3);
-    }
-
-    public boolean realeaseClawButton() {
-        return joyE.getButtonOutput(2);
+        return joyE.onButtonPress(3);
     }
 
     public boolean crazyLEDLights() {
-        return joyE.getButtonOutput(1);
+        return joyE.onButtonPress(1);
     }
 }
