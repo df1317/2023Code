@@ -101,10 +101,10 @@ public class Controller extends GenericHID{
     }
 
     public double getY(){
-        return getRawAxis(0);
+        return getRawAxis(1);
     }
     public double getX(){
-        return getRawAxis(1);
+        return getRawAxis(0);
     }
     public double getZ(){
         return getRawAxis(2);

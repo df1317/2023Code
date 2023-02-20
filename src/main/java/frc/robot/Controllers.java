@@ -13,11 +13,11 @@ public class Controllers {
     public boolean LLalignButton = joyL.getButtonOutput(3);
 
     public double getLeftDrive() {
-        return insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
+        return -insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
     }
 
     public double getRightDrive() {
-        return insideDeadzone(joyR.getY(), DRIVE_DEADZONE);
+        return -insideDeadzone(joyR.getY(), DRIVE_DEADZONE);
     }
 
     private double insideDeadzone(double joystickVal, double driveDeadzone) {
@@ -37,7 +37,7 @@ public class Controllers {
     }
 
     public double getTurretRotation() {
-        return joyE.getZ();
+        return -joyE.getZ();
     }
 
     public double getAxisRotation() {

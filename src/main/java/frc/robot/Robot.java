@@ -12,6 +12,7 @@ public class Robot extends TimedRobot {
     public Auto auto;
     public Arm arm;
     public DataSender dataSender;
+    public LED led;
 
     @Override
     public void robotInit() {
@@ -21,16 +22,19 @@ public class Robot extends TimedRobot {
         auto = new Auto(drivetrain, limelight);
         arm = new Arm();
         dataSender = new DataSender(drivetrain.getPose());
+        led = new LED();
 
         dataSender.init();
         gyro.reset();
         drivetrain.resetEncoders();
+        led.initLED();
     }
 
     @Override
     public void robotPeriodic() {
         drivetrain.updateOdometry();
         dataSender.update(drivetrain.getPose());
+        led.runLED();
     }
 
     @Override
