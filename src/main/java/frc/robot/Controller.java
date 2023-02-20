@@ -99,4 +99,14 @@ public class Controller extends GenericHID{
     public boolean onButtonRelease(int id){
         return buttons[map[id]].onRelease();
     }
+
+    public double getY(){
+        return getRawAxis(0);
+    }
+    public double getX(){
+        return getRawAxis(1);
+    }
+    public double getZ(){
+        return getRawAxis(2);
+    }
 }
