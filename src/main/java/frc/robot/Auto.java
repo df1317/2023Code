@@ -68,24 +68,21 @@ public class Auto {
              * // System.out.println("valid " + limelight.validLimelightTarget());
              * 
              * drivetrain.driveAutoLimelight();
-             * // System.out.println("Limelight auto aligning!!.");
-             * finishedFirstTrajectory = true;
-             * //timerScoring.start();
              */
         } else if (timer.get() < (2.5 + groupedPath.get(0).getTotalTimeSeconds())) {
             finishedAligning = true;
-            drivetrain.setScoringMotor(0.5);
+            // drivetrain.setScoringMotor(0.5);
 
         } else if ((2.5 + groupedPath.get(0).getTotalTimeSeconds()) <= timer.get()
                 && timer.get() < (4 + groupedPath.get(0).getTotalTimeSeconds())) {
             finishedAligning = true;
 
-            drivetrain.setScoringMotor(0);
+            // drivetrain.setScoringMotor(0);
 
             drivetrain.resetOdometry(groupedPath.get(1).getInitialPose());
         } else if (timer
                 .get() <= (groupedPath.get(1).getTotalTimeSeconds() + 4 + groupedPath.get(0).getTotalTimeSeconds())) {
-            drivetrain.setScoringMotor(0);
+            // drivetrain.setScoringMotor(0);
 
             State desiredPose = groupedPath.get(1).sample(timer.get() - (groupedPath.get(0).getTotalTimeSeconds() + 4));
             ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
