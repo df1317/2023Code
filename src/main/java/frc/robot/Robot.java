@@ -10,6 +10,7 @@ public class Robot extends TimedRobot {
     public Limelight limelight;
     public Drivetrain drivetrain;
     public Auto auto;
+    public Arm arm;
     public DataSender dataSender;
 
     @Override
@@ -18,6 +19,7 @@ public class Robot extends TimedRobot {
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
         auto = new Auto(drivetrain, limelight);
+        arm = new Arm();
         dataSender = new DataSender(drivetrain.getPose());
 
         dataSender.init();
@@ -65,6 +67,7 @@ public class Robot extends TimedRobot {
         drivetrain.driveTeleop();
 
         gyro.resetButton(controllers.gyroResetButton());
+        arm.rotateTurret();
     }
 
     @Override
