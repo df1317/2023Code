@@ -35,7 +35,6 @@ public class Claw {
     }
 
     public void runClawCommands() {
-        //Use this code and private bool if using onPress
         if(grabbing){
             if(controllers.grabConeButton() || controllers.grabCubeButton()){
                 releaseClaw();
@@ -46,16 +45,6 @@ public class Claw {
             }else if(controllers.grabCubeButton()){
                 grabCube();
             }
-
         }
-
-        //Use this code if using toggle states
-        /**if(controllers.grabConeButton() == controllers.grabCubeButton()){
-            resetClaw();   
-        }else if(controllers.grabConeButton()){
-            grabCone();
-        }else if(controllers.grabCubeButton()){
-            grabCube();
-        }**/
     }
 }
