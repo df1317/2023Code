@@ -13,6 +13,7 @@ public class Robot extends TimedRobot {
     public Arm arm;
     public DataSender dataSender;
     public LED led;
+    public Claw claw;
 
     @Override
     public void robotInit() {
@@ -20,14 +21,15 @@ public class Robot extends TimedRobot {
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
         auto = new Auto(drivetrain, limelight);
-        arm = new Arm();
+        arm = new Arm(controllers);
         dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
+        claw = new Claw();
 
-        dataSender.init();
-        gyro.reset();
-        drivetrain.resetEncoders();
-        led.initLED();
+       dataSender.init();
+       gyro.reset();
+       drivetrain.resetEncoders();
+       led.initLED();
     }
 
     @Override
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
         drivetrain.updateOdometry();
         dataSender.update(drivetrain.getPose());
         led.runLED();
+        controllers.update();
     }
 
     @Override
@@ -65,13 +68,19 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Gyro Y", gyro.getGyroRoll());
 
         // Limelight testing
-        limelight.updateLimelightVariables();
-        SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
+        // limelight.updateLimelightVariables();
+        // SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
         // testing only
         drivetrain.driveTeleop();
 
         gyro.resetButton(controllers.gyroResetButton());
         arm.rotateTurret();
+        arm.extension();
+        arm.rotateAxis();
+
+        claw.runClawCommands();
+
+
     }
 
     @Override

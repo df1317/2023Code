@@ -15,7 +15,7 @@ public class LED {
         // Reuse buffer
         // Default to a length of 60, start empty output
         // Length is expensive to set, so only set it once, then just update data
-        m_ledBuffer = new AddressableLEDBuffer(60);
+        m_ledBuffer = new AddressableLEDBuffer(300);
         m_led.setLength(m_ledBuffer.getLength());
 
         // Set the data
@@ -40,6 +40,7 @@ public class LED {
 
     public void runLED() {
         rainbow();
+        // m_ledBuffer.setRGB(128, 0, 128,0);
         // Set the LEDs
         m_led.setData(m_ledBuffer);
     }
