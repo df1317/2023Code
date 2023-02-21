@@ -71,16 +71,17 @@ public class Robot extends TimedRobot {
         // limelight.updateLimelightVariables();
         // SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
         // testing only
+
+        // TODO: run limelight alignment commands in teleop
+
         drivetrain.driveTeleop();
 
         gyro.resetButton(controllers.gyroResetButton());
-        arm.rotateTurret();
-        arm.extension();
-        arm.rotateAxis();
+        
+        arm.runArmCommands();
 
-        claw.runClawCommands();
-
-
+        // claw.runClawCommands();
+        claw.runClaw_Revised();
     }
 
     @Override

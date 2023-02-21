@@ -47,4 +47,10 @@ public class Arm {
             extensionMotor.set(0);
         }
     }
+
+    public void runArmCommands() {
+        rotateTurret();
+        rotateAxis();
+        extension();
+    }
 }

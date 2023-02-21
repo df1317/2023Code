@@ -69,7 +69,7 @@ public class Controllers {
         return joyE.onButtonPress(3);
     }
 
-    public boolean releaseButton(){
+    public boolean releaseButton() {
         return joyE.getRawButton(2);
     }
 

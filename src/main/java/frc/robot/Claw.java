@@ -10,8 +10,8 @@ public class Claw {
     Controllers controllers;
     Compressor compressor = new Compressor(9, PneumaticsModuleType.REVPH);
 
-    DoubleSolenoid leftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 1,0);
-    DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4,5);
+    DoubleSolenoid leftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 1, 0);
+    DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4, 5);
 
     private boolean grabbing = false;
 
@@ -45,6 +45,18 @@ public class Claw {
         }else if(controllers.releaseButton()){
             releaseClaw();
         }else{
+            rightSolenoid.set(Value.kOff);
+            leftSolenoid.set(Value.kOff);
+        }
+    }
+    public void runClaw_Revised() {
+        if (controllers.grabCubeButton()) {
+            grabCube();
+        } else if (controllers.grabConeButton()) {
+            grabCone();
+        } else if (controllers.releaseButton()) {
+            releaseClaw();
+        } else {
             rightSolenoid.set(Value.kOff);
             leftSolenoid.set(Value.kOff);
         }
