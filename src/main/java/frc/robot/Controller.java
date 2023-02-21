@@ -47,7 +47,7 @@ public class Controller extends GenericHID{
             }
         } catch (IOException e) {
             System.out.println("fail");
-            for(int i = 1; i < map.length; i++){
+            for(int i = 0; i < map.length; i++){
                 map[i] = i;
             }
         }

@@ -12,6 +12,12 @@ public class Controllers {
     // temporary button for temporary testing temporary temporary!.
     public boolean LLalignButton = joyL.getButtonOutput(3);
 
+    public void update(){
+        joyE.update();
+        joyL.update();
+        joyR.update();
+    }
+
     public double getLeftDrive() {
         return -insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
     }
@@ -41,14 +47,17 @@ public class Controllers {
     }
 
     public double getAxisRotation() {
+        System.out.println(joyE.getY());
         return joyE.getY();
     }
 
     public boolean extendButton() {
+        System.out.println("6" + "" + joyE.getRawButton(6));
         return joyE.getButtonOutput(6);
     }
 
     public boolean retractButton() {
+        System.out.println("4" + "" + joyE.getRawButton(4));
         return joyE.getButtonOutput(4);
     }
 

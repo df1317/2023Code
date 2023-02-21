@@ -6,13 +6,17 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class Arm {
     private final CANSparkMax turretMotor = new CANSparkMax(5, MotorType.kBrushless);
     private final CANSparkMax axisMotor = new CANSparkMax(7, MotorType.kBrushless);
-    private final CANSparkMax extensionMotor = new CANSparkMax(8, MotorType.kBrushless);
+    private final CANSparkMax extensionMotor = new CANSparkMax(6, MotorType.kBrushless);
 
-    Controllers controllers = new Controllers();
+    Controllers controllers;
+
+    public Arm(Controllers controllers){
+        this.controllers = controllers;
+    }
 
     private final double turretDeadzone = 0.25;
     private final double axisDeadzone = 0.25;
-    private final double extensionSpeed = 0.25;
+    private final double extensionSpeed = 0.50;
 
     public void rotateTurret() {
         double rotateDirection = (controllers.getTurretRotation() > 0) ? 1 : -1;
