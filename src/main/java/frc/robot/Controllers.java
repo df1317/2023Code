@@ -69,6 +69,10 @@ public class Controllers {
         return joyE.onButtonPress(3);
     }
 
+    public boolean releaseButton(){
+        return joyE.getRawButton(2);
+    }
+
     public boolean crazyLEDLights() {
         return joyE.onButtonPress(1);
     }

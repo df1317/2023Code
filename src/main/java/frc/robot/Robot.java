@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
         arm = new Arm(controllers);
         dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
-        claw = new Claw();
+        claw = new Claw(controllers);
 
        dataSender.init();
        gyro.reset();
@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
+        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 0.5);
         SmartDashboard.putNumber("X Pos", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Y Pos", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Gyro Z", gyro.getGyroYaw());

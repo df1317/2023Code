@@ -1,50 +1,52 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Claw {
-    Controllers controllers = new Controllers();
+    Controllers controllers;
+    Compressor compressor = new Compressor(9, PneumaticsModuleType.REVPH);
 
-    Compressor compressor = new Compressor(0, PneumaticsModuleType.REVPH);
-
-    Solenoid leftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
-    Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 2);
+    DoubleSolenoid leftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 1,0);
+    DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4,5);
 
     private boolean grabbing = false;
 
+    public Claw(Controllers controllers){
+        this.controllers = controllers;
+    }
+
     public void grabCone() {
-            leftSolenoid.set(true);
-            rightSolenoid.set(true);
+            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+            rightSolenoid.set(DoubleSolenoid.Value.kReverse);
             grabbing = true;
 
     }
 
     public void grabCube() {
-            leftSolenoid.set(true);
-            rightSolenoid.set(false);
+            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+            rightSolenoid.set(DoubleSolenoid.Value.kForward);
             grabbing = true;
 
     }
 
     public void releaseClaw() {
-            leftSolenoid.set(false);
-            rightSolenoid.set(false);
+            leftSolenoid.set(DoubleSolenoid.Value.kForward);
+            rightSolenoid.set(DoubleSolenoid.Value.kForward);
             grabbing = false;
     }
 
     public void runClawCommands() {
-        if(grabbing){
-            if(controllers.grabConeButton() || controllers.grabCubeButton()){
-                releaseClaw();
-            }
+        if(controllers.grabConeButton()){
+            grabCone();
+        }else if(controllers.releaseButton()){
+            releaseClaw();
         }else{
-            if(controllers.grabConeButton()){
-                grabCone();
-            }else if(controllers.grabCubeButton()){
-                grabCube();
-            }
+            rightSolenoid.set(Value.kOff);
+            leftSolenoid.set(Value.kOff);
         }
     }
 }
