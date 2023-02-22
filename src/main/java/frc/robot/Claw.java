@@ -10,6 +10,7 @@ public class Claw {
     Controllers controllers;
     Compressor compressor = new Compressor(9, PneumaticsModuleType.REVPH);
 
+    // TODO: add gearshift
     DoubleSolenoid leftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 1, 0);
     DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4, 5);
 

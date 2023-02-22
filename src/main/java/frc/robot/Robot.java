@@ -14,22 +14,25 @@ public class Robot extends TimedRobot {
     public DataSender dataSender;
     public LED led;
     public Claw claw;
+    public Dashboard dashboard;
 
     @Override
     public void robotInit() {
         controllers = new Controllers();
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
-        auto = new Auto(drivetrain, limelight);
+        auto = new Auto(drivetrain, limelight, dashboard);
         arm = new Arm(controllers);
         dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
         claw = new Claw(controllers);
+        dashboard = new Dashboard();
 
        dataSender.init();
        gyro.reset();
        drivetrain.resetEncoders();
        led.initLED();
+       dashboard.dashboardSetup();
     }
 
     @Override
@@ -42,12 +45,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        dashboard.dashboardAutoInit();
         auto.autonomousStartup();
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runAutonomous();
+        auto.runDefaultAutonomous();
 
     }
 
@@ -75,6 +79,8 @@ public class Robot extends TimedRobot {
         // TODO: run limelight alignment commands in teleop
 
         drivetrain.driveTeleop();
+
+        drivetrain.gearshift();
 
         gyro.resetButton(controllers.gyroResetButton());
         

@@ -30,9 +30,11 @@ public class Arm {
 
     public void rotateAxis() {
         double axisDirection = (controllers.getAxisRotation() > 0) ? 1 : -1;
+        double axisPower;
 
         if (Math.abs(controllers.getAxisRotation()) > axisDeadzone) {
-            axisMotor.set(axisDirection * 0.25);
+            axisPower = (axisDirection > 0) ? 0.5 : 0.25;
+            axisMotor.set(axisDirection * axisPower);
         } else {
             axisMotor.set(0);
         }
@@ -49,7 +51,8 @@ public class Arm {
     }
 
     public void runArmCommands() {
-        rotateTurret();
+        // temporarily disabling turret for student testing
+        // rotateTurret();
         rotateAxis();
         extension();
     }

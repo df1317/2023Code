@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 
 public class Dashboard {
     // default auto can be any auto, set in init
-    private static final String defaultAuto = "default auto";
-    private static final String firstAuto = "1st auto";
-    private static final String secondAuto = "2nd auto";
+    public static final String defaultAuto = "default auto";
+    public static final String firstAuto = "1st auto";
+    public static final String secondAuto = "2nd auto";
     private String selectedAuto;
     private final SendableChooser<String> sendableChooser = new SendableChooser<>();
     
@@ -18,9 +18,14 @@ public class Dashboard {
         SmartDashboard.putData("AUTO CHOICES", sendableChooser);
     }
 
+    public String getSelectedAuto() {
+        selectedAuto = sendableChooser.getSelected();
+        return selectedAuto;
+    }
+
     // call this method in autoInit to act upon selected autonomous
     public void dashboardAutoInit() {
-        selectedAuto = sendableChooser.getSelected();
+        getSelectedAuto();
         System.out.println("SELECTED: " + selectedAuto);
     }
 }
