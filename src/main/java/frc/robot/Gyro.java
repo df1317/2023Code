@@ -61,7 +61,7 @@ public class Gyro {
     public void resetButton(boolean resetButton) {
         if (resetButton) {
             reset();
-            System.out.println("!! GYRO RESET !!");
+            // System.out.println("!! GYRO RESET !!");
         }
     }
 }

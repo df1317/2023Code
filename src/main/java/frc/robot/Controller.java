@@ -22,7 +22,7 @@ public class Controller extends GenericHID{
      * **/
     public Controller(int port){
         super(port);
-        System.out.println(this.getButtonCount());
+        // System.out.println(this.getButtonCount());
         //Wraps each button on the joystick with a Button object 
             //Note that button count starts at 1
         buttons = new Button[this.getButtonCount()+1];

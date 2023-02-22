@@ -67,7 +67,7 @@ public class Drivetrain {
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
         double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
-        System.out.println("distance per pulse: " + distancePerPulse);
+        // System.out.println("distance per pulse: " + distancePerPulse);
         m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
         m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
 
@@ -197,7 +197,7 @@ public class Drivetrain {
         if (controllers.getLimelightAutoAlign()) {
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
-            System.out.println(limelight.calculateLimelightAngle());
+            // System.out.println(limelight.calculateLimelightAngle());
         } else if (controllers.getAutoBalance()) {
             leftDrive = gyroDrive();
             rightDrive = gyroDrive();

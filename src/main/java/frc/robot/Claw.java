@@ -41,16 +41,6 @@ public class Claw {
     }
 
     public void runClawCommands() {
-        if(controllers.grabConeButton()){
-            grabCone();
-        }else if(controllers.releaseButton()){
-            releaseClaw();
-        }else{
-            rightSolenoid.set(Value.kOff);
-            leftSolenoid.set(Value.kOff);
-        }
-    }
-    public void runClaw_Revised() {
         if (controllers.grabCubeButton()) {
             grabCube();
         } else if (controllers.grabConeButton()) {

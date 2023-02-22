@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
        drivetrain.resetEncoders();
        led.initLED();
        dashboard.dashboardSetup();
+       arm.resetEncoders();
     }
 
     @Override
@@ -86,8 +87,9 @@ public class Robot extends TimedRobot {
         
         arm.runArmCommands();
 
-        // claw.runClawCommands();
-        claw.runClaw_Revised();
+        claw.runClawCommands();
+
+        arm.temporaryEncoderTesting();
     }
 
     @Override
