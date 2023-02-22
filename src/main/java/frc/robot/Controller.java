@@ -22,7 +22,7 @@ public class Controller extends GenericHID{
      * **/
     public Controller(int port){
         super(port);
-        System.out.println(this.getButtonCount());
+        // System.out.println(this.getButtonCount());
         //Wraps each button on the joystick with a Button object 
             //Note that button count starts at 1
         buttons = new Button[this.getButtonCount()+1];
@@ -78,10 +78,10 @@ public class Controller extends GenericHID{
      * @param id The function button number to be read (starting at 1) (will be mapped to a joystick button)
      * @return The raw output of the button.
     */
-    public boolean getButtonOutput(int id){
+   /*  public boolean getButtonOutput(int id){
         return buttons[map[id]].getOutput();
     }
-
+*/
     /** 
      *This method returns true if the button is pressed exactly at the frame this method is called.
      * @param id The function button number to be read (starting at 1) (will be mapped to a joystick button)

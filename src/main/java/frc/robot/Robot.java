@@ -14,22 +14,26 @@ public class Robot extends TimedRobot {
     public DataSender dataSender;
     public LED led;
     public Claw claw;
+    public Dashboard dashboard;
 
     @Override
     public void robotInit() {
         controllers = new Controllers();
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
-        auto = new Auto(drivetrain, limelight);
+        auto = new Auto(drivetrain, limelight, dashboard);
         arm = new Arm(controllers);
         dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
-        claw = new Claw();
+        claw = new Claw(controllers);
+        dashboard = new Dashboard();
 
        dataSender.init();
        gyro.reset();
        drivetrain.resetEncoders();
        led.initLED();
+       dashboard.dashboardSetup();
+       arm.resetEncoders();
     }
 
     @Override
@@ -42,12 +46,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        dashboard.dashboardAutoInit();
         auto.autonomousStartup();
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runAutonomous();
+        auto.runDefaultAutonomous();
 
     }
 
@@ -60,7 +65,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 1);
+        drivetrain.drive(controllers.getLeftDrive(), controllers.getRightDrive(), 0.5);
         SmartDashboard.putNumber("X Pos", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Y Pos", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Gyro Z", gyro.getGyroYaw());
@@ -71,16 +76,20 @@ public class Robot extends TimedRobot {
         // limelight.updateLimelightVariables();
         // SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
         // testing only
+
+        // TODO: run limelight alignment commands in teleop
+
         drivetrain.driveTeleop();
 
+        drivetrain.gearshift();
+
         gyro.resetButton(controllers.gyroResetButton());
-        arm.rotateTurret();
-        arm.extension();
-        arm.rotateAxis();
+        
+        arm.runArmCommands();
 
         claw.runClawCommands();
 
-
+        arm.temporaryEncoderTesting();
     }
 
     @Override

@@ -15,10 +15,12 @@ public class Auto {
     private Drivetrain drivetrain;
     private Limelight limelight;
     private static Gyro gyro = new Gyro();
+    private Dashboard dashboard;
 
-    public Auto(Drivetrain drivetrain, Limelight limelight) {
+    public Auto(Drivetrain drivetrain, Limelight limelight, Dashboard dashboard) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
+        this.dashboard = dashboard;
     }
 
     // trajectory setup
@@ -28,28 +30,21 @@ public class Auto {
 
     private final RamseteController m_ramseteController = new RamseteController();
 
-    public boolean finishedFirstTrajectory;
-    public boolean finishedAligning;
-
     private Timer timer;
-    public double subtractTime;
 
     public void autonomousStartup() {
         gyro.reset();
         drivetrain.resetEncoders();
 
-        // timer for first trajectory
         timer = new Timer();
         timer.start();
-
-        finishedFirstTrajectory = false;
-        finishedAligning = false;
 
         // drivetrain.resetOdometry(simpleCurve6.getInitialPose());
         drivetrain.resetOdometry(groupedPath.get(0).getInitialPose());
     }
 
-    public void runAutonomous() {
+    // default autonomous method, create new methods for each separate auto routine
+    public void runFirstAutonomous() {
 
         drivetrain.updateOdometry();
         limelight.updateLimelightVariables();
@@ -60,42 +55,59 @@ public class Auto {
 
             drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
 
-            /*
-             * } else if (!finishedAligning && !limelight.limelightInAlignment() &&
-             * limelight.validLimelightTarget()) {
-             * 
-             * // System.out.println("align " + limelight.limelightInAlignment());
-             * // System.out.println("valid " + limelight.validLimelightTarget());
-             * 
-             * drivetrain.driveAutoLimelight();
-             */
-        } else if (timer.get() < (2.5 + groupedPath.get(0).getTotalTimeSeconds())) {
-            finishedAligning = true;
+            
+        } else if (timer.get() < (3 + groupedPath.get(0).getTotalTimeSeconds()) && !limelight.limelightInAlignment() &&
+            limelight.validLimelightTarget()) {
+             
+            // System.out.println("align " + limelight.limelightInAlignment());
+            // System.out.println("valid " + limelight.validLimelightTarget());
+             
+            drivetrain.driveAutoLimelight();
+            
+        } else if (timer.get() < (4 + groupedPath.get(0).getTotalTimeSeconds())) {
             // drivetrain.setScoringMotor(0.5);
 
-        } else if ((2.5 + groupedPath.get(0).getTotalTimeSeconds()) <= timer.get()
-                && timer.get() < (4 + groupedPath.get(0).getTotalTimeSeconds())) {
-            finishedAligning = true;
+        } else if ((3 + groupedPath.get(0).getTotalTimeSeconds()) <= timer.get()
+                && timer.get() < (6 + groupedPath.get(0).getTotalTimeSeconds())) {
 
             // drivetrain.setScoringMotor(0);
 
             drivetrain.resetOdometry(groupedPath.get(1).getInitialPose());
-        } else if (timer
-                .get() <= (groupedPath.get(1).getTotalTimeSeconds() + 4 + groupedPath.get(0).getTotalTimeSeconds())) {
+        } else if (timer.get() <= (groupedPath.get(1).getTotalTimeSeconds() + 6 + groupedPath.get(0).getTotalTimeSeconds())) {
             // drivetrain.setScoringMotor(0);
 
-            State desiredPose = groupedPath.get(1).sample(timer.get() - (groupedPath.get(0).getTotalTimeSeconds() + 4));
+            State desiredPose = groupedPath.get(1).sample(timer.get() - (groupedPath.get(0).getTotalTimeSeconds() + 6));
             ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
 
             drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
         } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED AUTO");
+            drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
+            // drivetrain.autoDrive(0, 0);
+            // System.out.println("FINISHED AUTO");
         }
     }
 
-    // TODO: use me in the real auto code
-    public void balance() {
-        drivetrain.drive(gyro.gyroAdjust(), gyro.gyroAdjust(), 0.5);
+    public void runDefaultAutonomous() {
+        if (timer.get() < 2) {
+            drivetrain.drive(0.5, 0.5);
+        } else {
+            drivetrain.drive(0, 0);
+        }
     }
+
+   public void runAutonomous() {
+    switch (dashboard.getSelectedAuto()) {
+        case Dashboard.firstAuto:
+          runFirstAutonomous();
+            break;
+
+        case Dashboard.secondAuto:
+            break;
+
+        case Dashboard.defaultAuto:
+        default:
+          runDefaultAutonomous();
+          break;
+      }
+   }
 }

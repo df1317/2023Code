@@ -13,6 +13,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Drivetrain {
     private final WPI_VictorSPX frontLeftMotor = new WPI_VictorSPX(2);
@@ -36,6 +40,8 @@ public class Drivetrain {
 
     private static final Encoder m_leftEncoder = new Encoder(0, 1);
     private static final Encoder m_rightEncoder = new Encoder(2, 3);
+
+    DoubleSolenoid gearshiftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 2, 3);
 
     private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(kTrackWidth);
 
@@ -61,7 +67,7 @@ public class Drivetrain {
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
         double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
-        System.out.println("distance per pulse: " + distancePerPulse);
+        // System.out.println("distance per pulse: " + distancePerPulse);
         m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
         m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
 
@@ -170,19 +176,9 @@ public class Drivetrain {
         drive(leftDrive, rightDrive);
     }
 
-    public void driveTeleop() {
-        double leftDrive;
-        double rightDrive;
-
-        if (controllers.getLimelightAutoAlign()) {
-            leftDrive = -limelight.limelightSteeringAlign();
-            rightDrive = limelight.limelightSteeringAlign();
-            System.out.println(limelight.calculateLimelightAngle());
-        } else if (controllers.getAutoBalance()) {
-            // TODO: move to auto, temporary speedMods
-            double power = -0.5 * gyro.gyroAdjust();
-            // power = Math.min(autoBalanceMaxPower, power);
-            // power = Math.max(-autoBalanceMaxPower, power);
+    public double gyroDrive() {
+        double power = -0.5 * gyro.gyroAdjust();
+        
             if (power > 0) {
                 power = Math.min(power, autoBalanceMaxPower);
                 power = Math.max(power, autoBalanceMinPower);
@@ -190,15 +186,37 @@ public class Drivetrain {
                 power = Math.min(power, -autoBalanceMinPower);
                 power = Math.max(power, -autoBalanceMaxPower);
             }
-            rightDrive = power;
-            leftDrive = power;
-            System.out.println(leftDrive);
+        return power;
+
+    }
+
+    public void driveTeleop() {
+        double leftDrive;
+        double rightDrive;
+
+        if (controllers.getLimelightAutoAlign()) {
+            leftDrive = -limelight.limelightSteeringAlign();
+            rightDrive = limelight.limelightSteeringAlign();
+            // System.out.println(limelight.calculateLimelightAngle());
+        } else if (controllers.getAutoBalance()) {
+            leftDrive = gyroDrive();
+            rightDrive = gyroDrive();
         } else {
             leftDrive = controllers.getLeftDrive();
             rightDrive = controllers.getRightDrive();
         }
 
         drive(leftDrive, rightDrive);
+    }
+
+    public void gearshift() {
+        if (controllers.gearshiftButtonLeft() || controllers.gearshiftButtonRight()) {
+            gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
+        } else if (controllers.downshiftButtonLeft() || controllers.downshiftButtonRight()) {
+            gearshiftSolenoid.set(DoubleSolenoid.Value.kReverse);
+        } else {
+            gearshiftSolenoid.set(DoubleSolenoid.Value.kOff);
+        }
     }
 
     public void resetEncoders() {
