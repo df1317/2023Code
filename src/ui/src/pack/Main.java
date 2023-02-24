@@ -16,7 +16,7 @@ public class Main extends JFrame {
 	private static final int sleepNano = (int) ((1000.0 / maxFPS - Math.floor(1000.0 / maxFPS)) * 1000000);
 
 	public Main() {
-		super("Kinematics Test");
+		super("Field Tracker");
 
 		setSize(WIDTH + 15, HEIGHT + 40);
 

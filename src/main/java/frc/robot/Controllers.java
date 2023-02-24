@@ -7,10 +7,10 @@ public class Controllers {
     private final Controller joyE = new Controller(2);
     private final Controller joyL = new Controller(0);
     private final Controller joyR = new Controller(1);
-    public final boolean autoBalanceXMode = joyE.getRawButton(1);
+    public final boolean autoBalanceXMode = joyE.getButtonOutput(1);
 
     // temporary button for temporary testing temporary temporary!.
-    public boolean LLalignButton = joyL.getRawButton(3);
+    public boolean LLalignButton = joyL.getButtonOutput(3);
 
     public void update(){
         joyE.update();
@@ -47,18 +47,15 @@ public class Controllers {
     }
 
     public double getAxisRotation() {
-        System.out.println(joyE.getY());
         return joyE.getY();
     }
 
     public boolean extendButton() {
-        System.out.println("6" + "" + joyE.getRawButton(6));
-        return joyE.getRawButton(6);
+        return joyE.getButtonOutput(6);
     }
 
     public boolean retractButton() {
-        System.out.println("4" + "" + joyE.getRawButton(4));
-        return joyE.getRawButton(4);
+        return joyE.getButtonOutput(4);
     }
 
     public boolean grabCubeButton() {
@@ -70,23 +67,23 @@ public class Controllers {
     }
 
     public boolean releaseButton() {
-        return joyE.getRawButton(2);
+        return joyE.onButtonPress(2);
     }
 
     public boolean gearshiftButtonLeft() {
-        return joyL.getRawButton(6);
+        return joyL.onButtonPress(6);
     }
 
     public boolean gearshiftButtonRight() {
-        return joyR.getRawButton(6);
+        return joyR.onButtonPress(6);
     }
 
     public boolean downshiftButtonLeft() {
-        return joyL.getRawButton(4);
+        return joyL.onButtonPress(4);
     }
 
     public boolean downshiftButtonRight() {
-        return joyR.getRawButton(4);
+        return joyR.onButtonPress(4);
     }
 
     public boolean crazyLEDLights() {
