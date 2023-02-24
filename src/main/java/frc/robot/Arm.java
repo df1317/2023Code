@@ -10,9 +10,9 @@ public class Arm {
     private final CANSparkMax axisMotor = new CANSparkMax(7, MotorType.kBrushless);
     private final CANSparkMax extensionMotor = new CANSparkMax(6, MotorType.kBrushless);
 
-    private final RelativeEncoder turretEncoder = turretMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-    private final RelativeEncoder axisEncoder = axisMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-    private final RelativeEncoder extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+    // private final RelativeEncoder turretEncoder = turretMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+    // private final RelativeEncoder axisEncoder = axisMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+    // private final RelativeEncoder extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
 
     Controllers controllers;
 
@@ -32,7 +32,7 @@ public class Arm {
     }
 
     public void temporaryEncoderTesting() {
-        System.out.println("Extension: " + extensionEncoder.getPosition());
+        // System.out.println("Extension: " + extensionEncoder.getPosition());
     }
 
     public void rotateTurret() {
