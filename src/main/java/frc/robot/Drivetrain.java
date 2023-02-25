@@ -1,6 +1,10 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -25,7 +29,10 @@ public class Drivetrain {
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(4);
 
     // TEMPORARY SCORING MOTOR: REMOVE ME
-    // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
+    private final CANSparkMax scoringMotor = new CANSparkMax(5, MotorType.kBrushless);
+    private final WPI_VictorSPX bottomCollection = new WPI_VictorSPX(6);
+    private final WPI_VictorSPX topCollection = new WPI_VictorSPX(7);
+    private final SparkMaxPIDController scoringPID = scoringMotor.getPIDController();
 
     private static final double kTrackWidth = 0.381 * 2; // meters
     private static final double kWheelRadius = 0.0762; // meters
@@ -76,6 +83,35 @@ public class Drivetrain {
         m_odometry = new DifferentialDriveOdometry(
                 // maybe negate m_gyro.getAngle()? atleast for NavX apparently
                 Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+
+        scoringPID.setP(0.006);
+        scoringPID.setI(0);
+        scoringPID.setD(0);
+        scoringPID.setIZone(0);
+        scoringPID.setFF(0.00011);
+        scoringPID.setOutputRange(-1, 1);
+    }
+
+    public void runCollector() {
+        if (controllers.bottomCollectionButton()) {
+            bottomCollection.set(0.5);
+        } else {
+            bottomCollection.set(0);
+        }
+
+        if (controllers.feederButton()) {
+            topCollection.set(0.5);
+        } else {
+            topCollection.set(0);
+        }
+    }
+
+    public void runShooter() {
+        if (controllers.shootingMotorButton()) {
+            scoringPID.setReference(3000, ControlType.kVelocity);
+        } else {
+            scoringMotor.set(0);
+        }
     }
 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
@@ -178,14 +214,14 @@ public class Drivetrain {
 
     public double gyroDrive() {
         double power = -0.5 * gyro.gyroAdjust();
-        
-            if (power > 0) {
-                power = Math.min(power, autoBalanceMaxPower);
-                power = Math.max(power, autoBalanceMinPower);
-            } else if (power < 0) {
-                power = Math.min(power, -autoBalanceMinPower);
-                power = Math.max(power, -autoBalanceMaxPower);
-            }
+
+        if (power > 0) {
+            power = Math.min(power, autoBalanceMaxPower);
+            power = Math.max(power, autoBalanceMinPower);
+        } else if (power < 0) {
+            power = Math.min(power, -autoBalanceMinPower);
+            power = Math.max(power, -autoBalanceMaxPower);
+        }
         return power;
 
     }

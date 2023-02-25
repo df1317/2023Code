@@ -28,12 +28,12 @@ public class Robot extends TimedRobot {
         claw = new Claw(controllers);
         dashboard = new Dashboard();
 
-       dataSender.init();
-       gyro.reset();
-       drivetrain.resetEncoders();
-       led.initLED();
-       dashboard.dashboardSetup();
-       arm.resetEncoders();
+        dataSender.init();
+        gyro.reset();
+        drivetrain.resetEncoders();
+        led.initLED();
+        dashboard.dashboardSetup();
+        arm.resetEncoders();
     }
 
     @Override
@@ -74,7 +74,8 @@ public class Robot extends TimedRobot {
 
         // Limelight testing
         // limelight.updateLimelightVariables();
-        // SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
+        // SmartDashboard.putNumber("LL distance",
+        // limelight.calculateLimelightDistance());
         // testing only
 
         // TODO: run limelight alignment commands in teleop
@@ -84,12 +85,17 @@ public class Robot extends TimedRobot {
         drivetrain.gearshift();
 
         gyro.resetButton(controllers.gyroResetButton());
-        
-        arm.runArmCommands();
 
-        claw.runClawCommands();
+        drivetrain.runCollector();
+        drivetrain.runShooter();
 
-        arm.temporaryEncoderTesting();
+        /*
+         * arm.runArmCommands();
+         * 
+         * claw.runClawCommands();
+         * 
+         * arm.temporaryEncoderTesting();
+         */
     }
 
     @Override

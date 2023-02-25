@@ -12,7 +12,7 @@ public class Controllers {
     // temporary button for temporary testing temporary temporary!.
     public boolean LLalignButton = joyL.getButtonOutput(3);
 
-    public void update(){
+    public void update() {
         joyE.update();
         joyL.update();
         joyR.update();
@@ -62,14 +62,15 @@ public class Controllers {
         return joyE.onButtonPress(5);
     }
 
-    public boolean grabConeButton() {
-        return joyE.onButtonPress(3);
-    }
-
-    public boolean releaseButton() {
-        return joyE.onButtonPress(2);
-    }
-
+    /*
+     * public boolean grabConeButton() {
+     * return joyE.onButtonPress(3);
+     * }
+     * 
+     * public boolean releaseButton() {
+     * return joyE.onButtonPress(2);
+     * }
+     */
     public boolean gearshiftButtonLeft() {
         return joyL.onButtonPress(6);
     }
@@ -86,7 +87,20 @@ public class Controllers {
         return joyR.onButtonPress(4);
     }
 
-    public boolean crazyLEDLights() {
-        return joyE.onButtonPress(1);
+    /*
+     * public boolean crazyLEDLights() {
+     * return joyE.onButtonPress(1);
+     * }
+     */
+    public boolean shootingMotorButton() {
+        return joyE.getButtonOutput(1);
+    }
+
+    public boolean bottomCollectionButton() {
+        return joyE.getButtonState(3);
+    }
+
+    public boolean feederButton() {
+        return joyE.getButtonOutput(2);
     }
 }

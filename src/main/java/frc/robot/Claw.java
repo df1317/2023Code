@@ -16,40 +16,42 @@ public class Claw {
 
     private boolean grabbing = false;
 
-    public Claw(Controllers controllers){
+    public Claw(Controllers controllers) {
         this.controllers = controllers;
     }
 
     public void grabCone() {
-            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-            rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-            grabbing = true;
+        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+        rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+        grabbing = true;
 
     }
 
     public void grabCube() {
-            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-            rightSolenoid.set(DoubleSolenoid.Value.kForward);
-            grabbing = true;
+        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+        rightSolenoid.set(DoubleSolenoid.Value.kForward);
+        grabbing = true;
 
     }
 
     public void releaseClaw() {
-            leftSolenoid.set(DoubleSolenoid.Value.kForward);
-            rightSolenoid.set(DoubleSolenoid.Value.kForward);
-            grabbing = false;
+        leftSolenoid.set(DoubleSolenoid.Value.kForward);
+        rightSolenoid.set(DoubleSolenoid.Value.kForward);
+        grabbing = false;
     }
 
-    public void runClawCommands() {
-        if (controllers.grabCubeButton()) {
-            grabCube();
-        } else if (controllers.grabConeButton()) {
-            grabCone();
-        } else if (controllers.releaseButton()) {
-            releaseClaw();
-        } else {
-            rightSolenoid.set(Value.kOff);
-            leftSolenoid.set(Value.kOff);
-        }
-    }
+    /*
+     * public void runClawCommands() {
+     * if (controllers.grabCubeButton()) {
+     * grabCube();
+     * } else if (controllers.grabConeButton()) {
+     * grabCone();
+     * } else if (controllers.releaseButton()) {
+     * releaseClaw();
+     * } else {
+     * rightSolenoid.set(Value.kOff);
+     * leftSolenoid.set(Value.kOff);
+     * }
+     * }
+     */
 }
