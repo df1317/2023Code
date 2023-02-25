@@ -178,7 +178,7 @@ public class Drivetrain {
     }
 
     public double gyroDrive() {
-        double power = -0.5 * gyro.gyroAdjust();
+        double power = 0.5 * gyro.gyroAdjust();
         
             if (power > 0) {
                 power = Math.min(power, autoBalanceMaxPower);
