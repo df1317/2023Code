@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         dataSender.init();
+        drivetrain.resetEncoders();
         // TODO: set all motors to 0 here, 3 second wait period between auto and teleop
         // for checking balance
     }
@@ -90,6 +91,13 @@ public class Robot extends TimedRobot {
         claw.runClawCommands();
 
         arm.temporaryEncoderTesting();
+
+       /*  System.out.println(drivetrain.getLeftEncoder());
+       if (drivetrain.getLeftEncoder() < 1) {
+            drivetrain.drive(-0.5, -0.5);
+        } else {
+            drivetrain.drive(0, 0);
+        }*/
     }
 
     @Override

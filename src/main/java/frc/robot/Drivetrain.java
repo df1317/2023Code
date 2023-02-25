@@ -29,7 +29,8 @@ public class Drivetrain {
 
     private static final double kTrackWidth = 0.381 * 2; // meters
     private static final double kWheelRadius = 0.0762; // meters
-    private static final double kEncoderResolution = 250;
+    private static final double kEncoderResolution = 2048;
+    private static final double kGearRatio = 3/2;
 
     private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
@@ -55,7 +56,7 @@ public class Drivetrain {
     private Controllers controllers;
 
     private final double driveDeadzone = 0.1;
-    private final double autoBalanceMaxPower = 0.55;
+    private final double autoBalanceMaxPower = 0.7;
     private final double autoBalanceMinPower = 0.45;
 
     public Drivetrain(Controllers controllers, Limelight limelight) {
@@ -66,10 +67,10 @@ public class Drivetrain {
         // make sure to reset gyro when we start auto and when robot init please!!!
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
-        double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
+        // double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
         // System.out.println("distance per pulse: " + distancePerPulse);
-        m_leftEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
-        m_rightEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
+        m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+        m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
 
         resetEncoders();
 
@@ -198,9 +199,10 @@ public class Drivetrain {
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
             // System.out.println(limelight.calculateLimelightAngle());
-        } else if (controllers.getAutoBalance()) {
+        } else if (controllers.getAutoBalanceLeft() || controllers.getAutoBalanceRight()) {
             leftDrive = gyroDrive();
             rightDrive = gyroDrive();
+            System.out.println("AUTO BALANCING!!!!!!");
         } else {
             leftDrive = controllers.getLeftDrive();
             rightDrive = controllers.getRightDrive();
@@ -222,5 +224,13 @@ public class Drivetrain {
     public void resetEncoders() {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
+    }
+
+    public double getLeftEncoder() {
+        return m_leftEncoder.getDistance();
+    }
+
+    public double getRightEncoder() {
+        return m_rightEncoder.getDistance();
     }
 }

@@ -50,19 +50,23 @@ public class Arm {
     public void rotateTurret() {
         double rotateDirection = (controllers.getTurretRotation() > 0) ? 1 : -1;
 
-        if (Math.abs(controllers.getTurretRotation()) > turretDeadzone) {
-            turretMotor.set(rotateDirection * 0.1);
+        if (controllers.turretTrigger()) {
+            if (Math.abs(controllers.getTurretRotation()) > turretDeadzone) {
+                turretMotor.set(rotateDirection * 0.1);
+            } else {
+                turretMotor.set(0);
+            }
         } else {
             turretMotor.set(0);
         }
-    }
+    } 
 
     public void rotateAxis() {
-        double axisDirection = (controllers.getAxisRotation() > 0) ? 1 : -1;
+        double axisDirection = (-controllers.getAxisRotation() > 0) ? 1 : -1;
         double axisPower;
 
         if (Math.abs(controllers.getAxisRotation()) > axisDeadzone) {
-            axisPower = (axisDirection > 0) ? 0.5 : 0.1;
+            axisPower = (axisDirection > 0) ? 0.2 : 0.5;
             axisMotor.set(axisDirection * axisPower);
         } else {
             axisMotor.set(0);

@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Controllers {
     private final double DRIVE_DEADZONE = 0.05;
-    private final Controller joyE = new Controller(2);
-    private final Controller joyL = new Controller(0);
-    private final Controller joyR = new Controller(1);
+    private final Controller joyE = new Controller(0);
+    private final Controller joyL = new Controller(1);
+    private final Controller joyR = new Controller(2);
     public final boolean autoBalanceXMode = joyE.getButtonOutput(1);
 
     // temporary button for temporary testing temporary temporary!.
@@ -34,8 +34,12 @@ public class Controllers {
         return joyL.onButtonPress(9);
     }
 
-    public boolean getAutoBalance() {
-        return joyL.onButtonPress(4);
+    public boolean getAutoBalanceLeft() {
+        return joyL.getButtonOutput(2);
+    }
+
+    public boolean getAutoBalanceRight() {
+        return joyR.getButtonOutput(2);
     }
 
     public boolean gyroResetButton() {
@@ -86,7 +90,7 @@ public class Controllers {
         return joyR.onButtonPress(4);
     }
 
-    public boolean crazyLEDLights() {
-        return joyE.onButtonPress(1);
+    public boolean turretTrigger() {
+        return joyE.getRawButton(1);
     }
 }

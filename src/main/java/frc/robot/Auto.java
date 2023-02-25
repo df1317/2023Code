@@ -59,8 +59,8 @@ public class Auto {
         } else if (timer.get() < (3 + groupedPath.get(0).getTotalTimeSeconds()) && !limelight.limelightInAlignment() &&
             limelight.validLimelightTarget()) {
              
-            // System.out.println("align " + limelight.limelightInAlignment());
-            // System.out.println("valid " + limelight.validLimelightTarget());
+            System.out.println("align " + limelight.limelightInAlignment());
+            System.out.println("valid " + limelight.validLimelightTarget());
              
             drivetrain.driveAutoLimelight();
             
@@ -81,9 +81,9 @@ public class Auto {
 
             drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
         } else {
-            drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
-            // drivetrain.autoDrive(0, 0);
-            // System.out.println("FINISHED AUTO");
+            // drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED AUTO");
         }
     }
 
