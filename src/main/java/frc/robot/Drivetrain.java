@@ -39,6 +39,7 @@ public class Drivetrain {
     private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
     private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
 
+    // left was 01 right was 23
     private static final Encoder m_leftEncoder = new Encoder(0, 1);
     private static final Encoder m_rightEncoder = new Encoder(2, 3);
 
@@ -64,18 +65,16 @@ public class Drivetrain {
         this.controllers = controllers;
         this.limelight = limelight;
 
-        // make sure to reset gyro when we start auto and when robot init please!!!
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
-        // double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
-        // System.out.println("distance per pulse: " + distancePerPulse);
+        
         m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
         m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+
 
         resetEncoders();
 
         m_odometry = new DifferentialDriveOdometry(
-                // maybe negate m_gyro.getAngle()? atleast for NavX apparently
                 Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
@@ -158,7 +157,7 @@ public class Drivetrain {
     }
 
     /**
-     * Sets drivetain to rotate at input direction and full speed.
+     * Sets drivetrain to rotate at input direction and full speed.
      * 
      * @param counterclockwise True to rotate CCW, false to rotate CW
      **/
@@ -232,5 +231,14 @@ public class Drivetrain {
 
     public double getRightEncoder() {
         return m_rightEncoder.getDistance();
+    }
+
+    // temporary testing methods
+    public double getLeftRate() {
+        return m_leftEncoder.getRate();
+    }
+
+    public double getRightRate() {
+        return m_rightEncoder.getRate();
     }
 }

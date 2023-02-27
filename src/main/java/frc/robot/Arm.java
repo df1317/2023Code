@@ -44,9 +44,9 @@ public class Arm {
     }
 
     public void temporaryEncoderTesting() {
-        System.out.println("Extension: " + axisEncoder.getPosition());
+        // System.out.println("Extension: " + axisEncoder.getPosition());
     }
-
+    
     public void rotateTurret() {
         double rotateDirection = (controllers.getTurretRotation() > 0) ? 1 : -1;
 

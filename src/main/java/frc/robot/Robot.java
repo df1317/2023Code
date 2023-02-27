@@ -92,9 +92,14 @@ public class Robot extends TimedRobot {
 
         arm.temporaryEncoderTesting();
 
-       /*  System.out.println(drivetrain.getLeftEncoder());
-       if (drivetrain.getLeftEncoder() < 1) {
-            drivetrain.drive(-0.5, -0.5);
+        System.out.println("L " + drivetrain.getLeftRate());
+        System.out.println("R " + drivetrain.getRightRate());
+    
+    //    System.out.println("L " + drivetrain.getLeftEncoder());
+    //    System.out.println("R " + drivetrain.getRightEncoder());
+
+       /*if (drivetrain.getRightEncoder() < 3) {
+            drivetrain.autoDrive(0.5, 0);
         } else {
             drivetrain.drive(0, 0);
         }*/
