@@ -195,8 +195,9 @@ public class Drivetrain {
         double rightDrive;
 
         if (controllers.getLimelightAutoAlign()) {
-            leftDrive = limelight.limelightSteeringAlign();
-            rightDrive = -limelight.limelightSteeringAlign();
+            // NOT TESTED after inverting drivetrain (changed sign though)
+            leftDrive = -limelight.limelightSteeringAlign();
+            rightDrive = limelight.limelightSteeringAlign();
             // System.out.println(limelight.calculateLimelightAngle());
         } else if (controllers.getAutoBalanceLeft() || controllers.getAutoBalanceRight()) {
             leftDrive = gyroDrive();
@@ -235,14 +236,5 @@ public class Drivetrain {
 
     public double getRightEncoder() {
         return m_rightEncoder.getDistance();
-    }
-
-    // temporary testing methods
-    public double getLeftRate() {
-        return m_leftEncoder.getRate();
-    }
-
-    public double getRightRate() {
-        return m_rightEncoder.getRate();
     }
 }

@@ -26,7 +26,7 @@ public class Auto {
     // trajectory setup
     PathPlannerTrajectory simpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
     PathPlannerTrajectory secondCurve1 = PathPlanner.loadPath("SecondCurve1", new PathConstraints(1.0, 1));
-    PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(0.5, 0.25));
+    PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(1.0, 0.5));
 
     List<PathPlannerTrajectory> groupedPath = PathPlanner.loadPathGroup("GroupedPath", new PathConstraints(1.0, 1));
 
