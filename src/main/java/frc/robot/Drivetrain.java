@@ -65,8 +65,8 @@ public class Drivetrain {
         this.controllers = controllers;
         this.limelight = limelight;
 
-        leftMotorGroup.setInverted(false);
-        rightMotorGroup.setInverted(true);
+        leftMotorGroup.setInverted(true);
+        rightMotorGroup.setInverted(false);
         
         m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
         m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
