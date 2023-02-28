@@ -26,6 +26,8 @@ public class Auto {
     // trajectory setup
     PathPlannerTrajectory simpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
     PathPlannerTrajectory secondCurve1 = PathPlanner.loadPath("SecondCurve1", new PathConstraints(1.0, 1));
+    PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(0.5, 0.25));
+
     List<PathPlannerTrajectory> groupedPath = PathPlanner.loadPathGroup("GroupedPath", new PathConstraints(1.0, 1));
 
     private final RamseteController m_ramseteController = new RamseteController();
@@ -39,8 +41,9 @@ public class Auto {
         timer = new Timer();
         timer.start();
 
+        // TODO: getInitialPose() of selected autonomous
         // drivetrain.resetOdometry(simpleCurve6.getInitialPose());
-        drivetrain.resetOdometry(groupedPath.get(0).getInitialPose());
+        drivetrain.resetOdometry(straight.getInitialPose());
     }
 
     // default autonomous method, create new methods for each separate auto routine
@@ -87,8 +90,22 @@ public class Auto {
         }
     }
 
+    public void runStraightAutonomous() {
+        if (timer.get() < straight.getTotalTimeSeconds()) {
+            State desiredPose = straight.sample(timer.get());
+            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+
+            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(straight.getTotalTimeSeconds()-timer.get());
+
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+        }
+    }
+
     public void runDefaultAutonomous() {
-        if (timer.get() < 2) {
+        if (drivetrain.getRightEncoder() < 3) {
             drivetrain.drive(0.5, 0.5);
         } else {
             drivetrain.drive(0, 0);
@@ -102,6 +119,7 @@ public class Auto {
             break;
 
         case Dashboard.secondAuto:
+            runStraightAutonomous();
             break;
 
         case Dashboard.defaultAuto:

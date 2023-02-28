@@ -23,7 +23,7 @@ public class Drivetrain {
     private final WPI_VictorSPX backLeftMotor = new WPI_VictorSPX(1);
     private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(3);
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(4);
-
+    
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
 
@@ -65,8 +65,8 @@ public class Drivetrain {
         this.controllers = controllers;
         this.limelight = limelight;
 
-        leftMotorGroup.setInverted(true);
-        rightMotorGroup.setInverted(false);
+        leftMotorGroup.setInverted(false);
+        rightMotorGroup.setInverted(true);
         
         m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
         m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
@@ -177,7 +177,7 @@ public class Drivetrain {
     }
 
     public double gyroDrive() {
-        double power = 0.5 * gyro.gyroAdjust();
+        double power = -0.5 * gyro.gyroAdjust();
         
             if (power > 0) {
                 power = Math.min(power, autoBalanceMaxPower);
@@ -195,8 +195,8 @@ public class Drivetrain {
         double rightDrive;
 
         if (controllers.getLimelightAutoAlign()) {
-            leftDrive = -limelight.limelightSteeringAlign();
-            rightDrive = limelight.limelightSteeringAlign();
+            leftDrive = limelight.limelightSteeringAlign();
+            rightDrive = -limelight.limelightSteeringAlign();
             // System.out.println(limelight.calculateLimelightAngle());
         } else if (controllers.getAutoBalanceLeft() || controllers.getAutoBalanceRight()) {
             leftDrive = gyroDrive();
@@ -220,6 +220,10 @@ public class Drivetrain {
         }
     }
 
+    public void gearshiftInit() {
+        gearshiftSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
     public void resetEncoders() {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
@@ -230,7 +234,7 @@ public class Drivetrain {
     }
 
     public double getRightEncoder() {
-        return m_rightEncoder.getDistance();
+        return -m_rightEncoder.getDistance();
     }
 
     // temporary testing methods

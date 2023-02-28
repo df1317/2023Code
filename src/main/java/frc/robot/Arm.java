@@ -24,12 +24,14 @@ public class Arm {
     private final double ki = 0.05;
     private final double kd = 0.1;
 
+    private final double axisLoweringPower = 0.2;
+    private final double axisRaisingPower = 0.5;
+
     public Arm(Controllers controllers){
         this.controllers = controllers;
         axisController = new PIDController(kp, ki, kd);
     }
 
-    private final double turretDeadzone = 0.25;
     private final double axisDeadzone = 0.25;
     private final double extensionSpeed = 0.50;
 
@@ -48,14 +50,8 @@ public class Arm {
     }
     
     public void rotateTurret() {
-        double rotateDirection = (controllers.getTurretRotation() > 0) ? 1 : -1;
-
         if (controllers.turretTrigger()) {
-            if (Math.abs(controllers.getTurretRotation()) > turretDeadzone) {
-                turretMotor.set(rotateDirection * 0.1);
-            } else {
-                turretMotor.set(0);
-            }
+            turretMotor.set(controllers.getTurretRotation());
         } else {
             turretMotor.set(0);
         }
@@ -66,7 +62,7 @@ public class Arm {
         double axisPower;
 
         if (Math.abs(controllers.getAxisRotation()) > axisDeadzone) {
-            axisPower = (axisDirection > 0) ? 0.2 : 0.5;
+            axisPower = (axisDirection > 0) ? axisLoweringPower : axisRaisingPower;
             axisMotor.set(axisDirection * axisPower);
         } else {
             axisMotor.set(0);

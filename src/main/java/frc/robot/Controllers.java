@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Controllers {
     private final double DRIVE_DEADZONE = 0.05;
+    private final double TURRET_DEADZONE = 0.1;
+    private final double AXIS_DEADZONE = 0.1;
+
     private final Controller joyE = new Controller(0);
     private final Controller joyL = new Controller(1);
     private final Controller joyR = new Controller(2);
@@ -18,16 +21,18 @@ public class Controllers {
         joyR.update();
     }
 
+    private double insideDeadzone(double joystickVal, double driveDeadzone) {
+        return Math.abs(joystickVal) > driveDeadzone ? joystickVal : 0;
+    }
+
     public double getLeftDrive() {
-        return -insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
+        double direction = (joyL.getY() > 0) ? 1 : -1;
+        return insideDeadzone(direction * Math.pow(joyL.getY(), 2), DRIVE_DEADZONE);
     }
 
     public double getRightDrive() {
-        return -insideDeadzone(joyR.getY(), DRIVE_DEADZONE);
-    }
-
-    private double insideDeadzone(double joystickVal, double driveDeadzone) {
-        return Math.abs(joystickVal) > driveDeadzone ? joystickVal : 0;
+        double direction = (joyR.getY() > 0) ? 1 : -1;
+        return insideDeadzone(direction * Math.pow(joyR.getY(), 2), DRIVE_DEADZONE);
     }
 
     public boolean getLimelightAutoAlign() {
@@ -47,7 +52,8 @@ public class Controllers {
     }
 
     public double getTurretRotation() {
-        return -joyE.getZ();
+        double direction = (joyE.getZ() > 0) ? 1 : -1;
+        return insideDeadzone(joyE.getZ(), TURRET_DEADZONE);
     }
 
     public double getAxisRotation() {
