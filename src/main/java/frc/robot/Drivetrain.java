@@ -234,7 +234,7 @@ public class Drivetrain {
     }
 
     public double getRightEncoder() {
-        return -m_rightEncoder.getDistance();
+        return m_rightEncoder.getDistance();
     }
 
     // temporary testing methods

@@ -98,9 +98,10 @@ public class Robot extends TimedRobot {
     //    System.out.println("L " + drivetrain.getLeftEncoder());
     //    System.out.println("R " + drivetrain.getRightEncoder());
 
-    System.out.println(drivetrain.getLeftEncoder());
+    System.out.println("L " + drivetrain.getLeftEncoder());
+    System.out.println("R " + drivetrain.getRightEncoder());
    if (drivetrain.getLeftEncoder() < 1) {
-            drivetrain.autoDrive(-0.5, 0);
+            drivetrain.drive(0.5, 0.5);
         } else {
             drivetrain.drive(0, 0);
         }
