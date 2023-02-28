@@ -212,6 +212,7 @@ public class Drivetrain {
     }
 
     public void gearshift() {
+        // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for auto)
         if (controllers.gearshiftButtonLeft() || controllers.gearshiftButtonRight()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
         } else if (controllers.downshiftButtonLeft() || controllers.downshiftButtonRight()) {
@@ -222,7 +223,8 @@ public class Drivetrain {
     }
 
     public void gearshiftInit() {
-        gearshiftSolenoid.set(DoubleSolenoid.Value.kReverse);
+        // init sets initial gear to kForward for autonomous/teleop driving
+        gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
     public void resetEncoders() {

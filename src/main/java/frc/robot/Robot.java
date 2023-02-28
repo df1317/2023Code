@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
        led.initLED();
        dashboard.dashboardSetup();
        arm.resetEncoders();
+       drivetrain.gearshiftInit();
     }
 
     @Override
@@ -46,6 +47,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        drivetrain.gearshiftInit();
         dashboard.dashboardAutoInit();
         auto.autonomousStartup();
     }
