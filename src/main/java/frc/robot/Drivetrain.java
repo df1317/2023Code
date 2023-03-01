@@ -204,8 +204,8 @@ public class Drivetrain {
             rightDrive = gyroDrive();
             System.out.println("AUTO BALANCING!!!!!!");
         } else {
-            leftDrive = controllers.getLeftDrive();
-            rightDrive = controllers.getRightDrive();
+            leftDrive = -controllers.getLeftDrive();
+            rightDrive = -controllers.getRightDrive();
         }
 
         drive(leftDrive, rightDrive);

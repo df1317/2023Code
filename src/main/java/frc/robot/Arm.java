@@ -26,14 +26,15 @@ public class Arm {
 
     private final double axisLoweringPower = 0.2;
     private final double axisRaisingPower = 0.5;
+    private final double turretPower = 0.25;
+    private final double axisDeadzone = 0.25;
+    private final double extendPower = 0.5;
+    private final double retractPower = -0.25;
 
     public Arm(Controllers controllers){
         this.controllers = controllers;
         axisController = new PIDController(kp, ki, kd);
     }
-
-    private final double axisDeadzone = 0.25;
-    private final double extensionSpeed = 0.50;
 
     public void resetEncoders() {
         // restore factory defaults? reset encoders?
@@ -50,8 +51,9 @@ public class Arm {
     }
     
     public void rotateTurret() {
+        double turretDirection = (controllers.getTurretRotation() > 0) ? 1 : -1;
         if (controllers.turretTrigger()) {
-            turretMotor.set(controllers.getTurretRotation());
+                turretMotor.set(turretDirection * turretPower);
         } else {
             turretMotor.set(0);
         }
@@ -71,9 +73,9 @@ public class Arm {
 
     public void extension() {
         if (controllers.extendButton()) {
-            extensionMotor.set(extensionSpeed);
+            extensionMotor.set(extendPower);
         } else if (controllers.retractButton()) {
-            extensionMotor.set(-extensionSpeed);
+            extensionMotor.set(retractPower);
         } else {
             extensionMotor.set(0);
         }
