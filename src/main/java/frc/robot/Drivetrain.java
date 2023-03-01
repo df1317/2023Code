@@ -23,7 +23,7 @@ public class Drivetrain {
     private final WPI_VictorSPX backLeftMotor = new WPI_VictorSPX(1);
     private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(3);
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(4);
-
+    
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
 
@@ -39,6 +39,7 @@ public class Drivetrain {
     private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
     private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
 
+    // left was 01 right was 23
     private static final Encoder m_leftEncoder = new Encoder(0, 1);
     private static final Encoder m_rightEncoder = new Encoder(2, 3);
 
@@ -64,18 +65,16 @@ public class Drivetrain {
         this.controllers = controllers;
         this.limelight = limelight;
 
-        // make sure to reset gyro when we start auto and when robot init please!!!
         leftMotorGroup.setInverted(true);
         rightMotorGroup.setInverted(false);
-        // double distancePerPulse = 2.0 * Math.PI * kWheelRadius / kEncoderResolution;
-        // System.out.println("distance per pulse: " + distancePerPulse);
+        
         m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
         m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+
 
         resetEncoders();
 
         m_odometry = new DifferentialDriveOdometry(
-                // maybe negate m_gyro.getAngle()? atleast for NavX apparently
                 Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
@@ -158,7 +157,7 @@ public class Drivetrain {
     }
 
     /**
-     * Sets drivetain to rotate at input direction and full speed.
+     * Sets drivetrain to rotate at input direction and full speed.
      * 
      * @param counterclockwise True to rotate CCW, false to rotate CW
      **/
@@ -178,7 +177,7 @@ public class Drivetrain {
     }
 
     public double gyroDrive() {
-        double power = 0.5 * gyro.gyroAdjust();
+        double power = -0.5 * gyro.gyroAdjust();
         
             if (power > 0) {
                 power = Math.min(power, autoBalanceMaxPower);
@@ -196,6 +195,7 @@ public class Drivetrain {
         double rightDrive;
 
         if (controllers.getLimelightAutoAlign()) {
+            // NOT TESTED after inverting drivetrain (changed sign though)
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
             // System.out.println(limelight.calculateLimelightAngle());
@@ -204,14 +204,15 @@ public class Drivetrain {
             rightDrive = gyroDrive();
             System.out.println("AUTO BALANCING!!!!!!");
         } else {
-            leftDrive = controllers.getLeftDrive();
-            rightDrive = controllers.getRightDrive();
+            leftDrive = -controllers.getLeftDrive();
+            rightDrive = -controllers.getRightDrive();
         }
 
         drive(leftDrive, rightDrive);
     }
 
     public void gearshift() {
+        // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for auto)
         if (controllers.gearshiftButtonLeft() || controllers.gearshiftButtonRight()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
         } else if (controllers.downshiftButtonLeft() || controllers.downshiftButtonRight()) {
@@ -219,6 +220,11 @@ public class Drivetrain {
         } else {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kOff);
         }
+    }
+
+    public void gearshiftInit() {
+        // init sets initial gear to kForward for autonomous/teleop driving
+        gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
     public void resetEncoders() {

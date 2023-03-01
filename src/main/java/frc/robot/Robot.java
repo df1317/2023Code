@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
        led.initLED();
        dashboard.dashboardSetup();
        arm.resetEncoders();
+       dashboard.cameraInit();
     }
 
     @Override
@@ -52,14 +53,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        auto.runDefaultAutonomous();
-
+        auto.runStraightAutonomous();
     }
 
     @Override
     public void teleopInit() {
         dataSender.init();
         drivetrain.resetEncoders();
+        drivetrain.gearshiftInit();
         // TODO: set all motors to 0 here, 3 second wait period between auto and teleop
         // for checking balance
     }
@@ -92,12 +93,14 @@ public class Robot extends TimedRobot {
 
         arm.temporaryEncoderTesting();
 
-       /*  System.out.println(drivetrain.getLeftEncoder());
-       if (drivetrain.getLeftEncoder() < 1) {
-            drivetrain.drive(-0.5, -0.5);
-        } else {
-            drivetrain.drive(0, 0);
-        }*/
+        // System.out.println("L " + drivetrain.getLeftRate());
+        // System.out.println("R " + drivetrain.getRightRate());
+    
+    //    System.out.println("L " + drivetrain.getLeftEncoder());
+    //    System.out.println("R " + drivetrain.getRightEncoder());
+
+    System.out.println("L " + drivetrain.getLeftEncoder());
+    System.out.println("R " + drivetrain.getRightEncoder());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.cameraserver.CameraServer;
 
 public class Dashboard {
     // default auto can be any auto, set in init
@@ -27,5 +28,9 @@ public class Dashboard {
     public void dashboardAutoInit() {
         getSelectedAuto();
         System.out.println("SELECTED: " + selectedAuto);
+    }
+
+    public void cameraInit() {
+        CameraServer.startAutomaticCapture();
     }
 }
