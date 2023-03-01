@@ -125,7 +125,7 @@ private AddressableLED m_led;
 public void redPulse(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, redPulseBrightness);
+      m_ledBuffer.setRGB(i, redPulseBrightness, 0, 0);
    }
 
    //increase brightness
@@ -140,7 +140,7 @@ public void redPulse(){
   public void redStreak(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, 255);
+      m_ledBuffer.setRGB(i, 255, 0, 0);
    }
 
    //turns one led off
@@ -162,7 +162,7 @@ public void redPulse(){
   public void greenPulse(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, greenPulseBrightness);
+      m_ledBuffer.setRGB(i, 0, greenPulseBrightness, 0);
    }
 
    //increase brightness
@@ -177,7 +177,7 @@ public void redPulse(){
   public void greenStreak(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, 255);
+      m_ledBuffer.setRGB(i, 0, 255, 0);
    }
 
    //turns one led off
@@ -199,7 +199,7 @@ public void redPulse(){
   public void purplePulse(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, purplePulseBrightness);
+      m_ledBuffer.setRGB(i, purplePulseBrightness, 0, purplePulseBrightness);
    }
 
    //increase brightness
@@ -214,7 +214,7 @@ public void redPulse(){
   public void purpleStreak(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, 255);
+      m_ledBuffer.setRGB(i, 148, 0, 211);
    }
 
    //turns one led off
