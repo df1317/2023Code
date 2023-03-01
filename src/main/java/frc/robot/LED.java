@@ -214,7 +214,7 @@ public void redPulse(){
   public void purpleStreak(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 148, 0, 211);
+      m_ledBuffer.setRGB(i, 150, 0, 225);
    }
 
    //turns one led off

@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
        led.initLED();
        dashboard.dashboardSetup();
        arm.resetEncoders();
+       dashboard.cameraInit();
     }
 
     @Override
