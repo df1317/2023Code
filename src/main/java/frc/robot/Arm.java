@@ -26,10 +26,10 @@ public class Arm {
 
     private final double axisLoweringPower = 0.2;
     private final double axisRaisingPower = 0.5;
-    private final double turretPower = 0.25;
+    private final double turretPower = 0.15;
     private final double axisDeadzone = 0.25;
-    private final double extendPower = 0.5;
-    private final double retractPower = -0.25;
+    private final double extendPower = 1;
+    private final double retractPower = -1;
 
     public Arm(Controllers controllers){
         this.controllers = controllers;
@@ -51,7 +51,7 @@ public class Arm {
     }
     
     public void rotateTurret() {
-        double turretDirection = (controllers.getTurretRotation() > 0) ? 1 : -1;
+        double turretDirection = (-controllers.getTurretRotation() > 0) ? 1 : -1;
         if (controllers.turretTrigger()) {
                 turretMotor.set(turretDirection * turretPower);
         } else {
