@@ -3,8 +3,6 @@ package frc.robot;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
@@ -18,7 +16,7 @@ public class Arm {
     private final RelativeEncoder extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
 
     private Controllers controllers;
-    private PIDController axisController;
+    private SparkMaxPIDController axisController;
 
     private final double kp = 0.3;
     private final double ki = 0.05;
@@ -33,7 +31,10 @@ public class Arm {
 
     public Arm(Controllers controllers){
         this.controllers = controllers;
-        axisController = new PIDController(kp, ki, kd);
+        axisController = axisMotor.getPIDController();
+        axisController.setP(kp);
+        axisController.setI(ki);
+        axisController.setD(kd);
     }
 
     public void resetEncoders() {
@@ -80,9 +81,12 @@ public class Arm {
             extensionMotor.set(0);
         }
     }
-
+    /**
+     * Rotates to
+     * @param targetPosition desired axis position IN # of ROTATIONS
+     */
     public void rotateTo(double targetPosition){
-        axisMotor.set(axisController.calculate(axisEncoder.getPosition(), targetPosition));
+        axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
     }
 
     public void runArmCommands() {
