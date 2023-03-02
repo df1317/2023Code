@@ -27,17 +27,17 @@ public class Drivetrain {
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
 
-    private static final double kTrackWidth = 0.381 * 2; // meters
+    private static final double kTrackWidth = 0.6858; // meters
     private static final double kWheelRadius = 0.0762; // meters
     private static final double kEncoderResolution = 2048;
-    private static final double kGearRatio = 3/2;
+    private static final double kGearRatio = 1.43023;
 
     private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
     private final DifferentialDrive robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
-    private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
-    private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
+    private final PIDController m_leftPIDController = new PIDController(0.020403, 0, 0);
+    private final PIDController m_rightPIDController = new PIDController(0.020403, 0, 0);
 
     // left was 01 right was 23
     private static final Encoder m_leftEncoder = new Encoder(0, 1);
@@ -50,7 +50,7 @@ public class Drivetrain {
     private final DifferentialDriveOdometry m_odometry;
 
     // Gains are for example purposes only - must be determined for your own robot!
-    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3.1527, 1.5513);
+    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1.0438, 3.168, 1.134);
 
     private Gyro gyro = new Gyro();
     private Limelight limelight;
