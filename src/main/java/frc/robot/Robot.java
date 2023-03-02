@@ -53,7 +53,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        auto.runStraightAutonomous();
+        //auto.runStraightAutonomous();
+        arm.rotateTo(0.3*42);
     }
 
     @Override

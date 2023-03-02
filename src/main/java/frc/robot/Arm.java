@@ -18,9 +18,9 @@ public class Arm {
     private Controllers controllers;
     private SparkMaxPIDController axisController;
 
-    private final double kp = 0.3;
-    private final double ki = 0.05;
-    private final double kd = 0.1;
+    private final double kp = 0.67972;
+    private final double ki = 0;
+    private final double kd = 0;
 
     private final double axisLoweringPower = 0.2;
     private final double axisRaisingPower = 0.5;
@@ -31,6 +31,8 @@ public class Arm {
 
     public Arm(Controllers controllers){
         this.controllers = controllers;
+    
+        axisEncoder.setPosition(0);
         axisController = axisMotor.getPIDController();
         axisController.setP(kp);
         axisController.setI(ki);
@@ -87,6 +89,7 @@ public class Arm {
      */
     public void rotateTo(double targetPosition){
         axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
+        System.out.println(axisMotor.getEncoder().getPosition());
     }
 
     public void runArmCommands() {
