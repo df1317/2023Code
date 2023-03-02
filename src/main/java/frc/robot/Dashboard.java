@@ -32,5 +32,6 @@ public class Dashboard {
 
     public void cameraInit() {
         CameraServer.startAutomaticCapture();
+        CameraServer.startAutomaticCapture();
     }
 }
