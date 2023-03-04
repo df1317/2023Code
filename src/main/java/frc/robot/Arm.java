@@ -17,6 +17,7 @@ public class Arm {
             42);
 
     private Controllers controllers;
+    private Claw claw;
     private SparkMaxPIDController axisController;
 
     private final double kp = 0.3;
@@ -38,8 +39,12 @@ public class Arm {
     private final double fullExtend = 100;
     private final double fullRetract = 0;
 
-    public Arm(Controllers controllers) {
+    private int i = 0;
+    public boolean continueToTrajectory = false;
+
+    public Arm(Controllers controllers, Claw claw) {
         this.controllers = controllers;
+        this.claw = claw;
         axisController = axisMotor.getPIDController();
         axisController.setP(kp);
         axisController.setI(ki);
@@ -54,6 +59,8 @@ public class Arm {
         turretEncoder.setPosition(0);
         axisEncoder.setPosition(0);
         extensionEncoder.setPosition(0);
+        continueToTrajectory = false;
+        i = 0;
     }
 
     public void temporaryEncoderTesting() {
@@ -99,6 +106,10 @@ public class Arm {
         return extensionEncoder.getPosition() <= fullRetract;
     }
 
+    public boolean atAxisPosition(double targetPosition) {
+        return Math.abs(axisEncoder.getPosition() - targetPosition) <= axisDeadzone;
+    }
+
     /**
      * Rotates to
      * 
@@ -115,12 +126,45 @@ public class Arm {
     }
 
     public void highScoreCube() {
-        // deadzone for if we are 5 degrees off
-        if (Math.abs(turretEncoder.getPosition() - axisHighScorePosition) > 5) {
+        switch (i) {
+            case 0:
+            continueToTrajectory = false;
             rotateTo(axisHighScorePosition);
-        } else if (Math.abs(extensionEncoder.getPosition() - fullExtend) > 5) {
-            axisMotor.set(0);
+            if (atAxisPosition(axisHighScorePosition)) {
+                i++;
+            }
+                break;
+    
+            case 1:
+                extensionMotor.set(extendPower);
+                if (atFullExtension()) {
+                    extensionMotor.set(0);
+                    i++;
+                }
+                break;
+    
+            case 2:
+                claw.releaseClaw();
+                if (!claw.grabbing()) {
+                    continueToTrajectory = true;
+                    i++;
+                }
+              break;
 
-        }
+            case 3:
+                extensionMotor.set(retractPower);
+                if (atFullRetraction()) {
+                    extensionMotor.set(0);
+                    i++;
+                }
+                break;
+
+            case 4:
+                rotateTo(axisLowScorePosition);
+                if (atAxisPosition(axisLowScorePosition)) {
+                    i++;
+                }
+                break;
+          }
     }
 }

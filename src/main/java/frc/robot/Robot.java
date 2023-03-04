@@ -21,11 +21,11 @@ public class Robot extends TimedRobot {
         controllers = new Controllers();
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
+        claw = new Claw(controllers);
         auto = new Auto(drivetrain, limelight, dashboard);
-        arm = new Arm(controllers);
+        arm = new Arm(controllers, claw);
         dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
-        claw = new Claw(controllers);
         dashboard = new Dashboard();
 
        dataSender.init();
@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         dashboard.dashboardAutoInit();
         auto.autonomousStartup();
+        claw.grabCube();
     }
 
     @Override
