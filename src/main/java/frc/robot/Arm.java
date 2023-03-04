@@ -18,6 +18,8 @@ public class Arm {
     private Controllers controllers;
     private SparkMaxPIDController axisController;
 
+    private double axisTarget = 0;
+
     private final double kp = 0.67972;
     private final double ki = 0;
     private final double kd = 0;
@@ -28,6 +30,7 @@ public class Arm {
     private final double axisDeadzone = 0.25;
     private final double extendPower = 1;
     private final double retractPower = -1;
+    private double turretTarget;
 
     public Arm(Controllers controllers){
         this.controllers = controllers;
@@ -64,13 +67,14 @@ public class Arm {
 
     public void rotateAxis() {
         double axisDirection = (-controllers.getAxisRotation() > 0) ? 1 : -1;
-        double axisPower;
+        double axisPower = (axisDirection > 0) ? axisLoweringPower : axisRaisingPower;
+
+        axisController.setP(0);
 
         if (Math.abs(controllers.getAxisRotation()) > axisDeadzone) {
-            axisPower = (axisDirection > 0) ? axisLoweringPower : axisRaisingPower;
-            axisMotor.set(axisDirection * axisPower);
+            axisController.setReference(axisDirection*axisPower, CANSparkMax.ControlType.kDutyCycle);
         } else {
-            axisMotor.set(0);
+            axisController.setReference(0, CANSparkMax.ControlType.kDutyCycle);
         }
     }
 
@@ -87,9 +91,28 @@ public class Arm {
      * Rotates to
      * @param targetPosition desired axis position IN # of ROTATIONS
      */
-    public void rotateTo(double targetPosition){
+    public void axisTo(double targetPosition){
+
+        axisController.setP(kp);
+        axisController.setI(ki);
+        axisController.setD(kd);
+
+        axisTarget = targetPosition;
         axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
         System.out.println(axisMotor.getEncoder().getPosition());
+    }
+
+    public void turretTo(double targetPosition, double tolerance){
+        turretTarget = targetPosition;
+        turretMotor.set((Math.abs(targetPosition - turretEncoder.getPosition()) < tolerance) ? 0 : Math.signum(targetPosition - turretEncoder.getPosition())*turretPower);
+    }
+
+    public boolean turretWithin(double tolerance){
+        return Math.abs(turretTarget - turretEncoder.getPosition()) < tolerance;
+    }
+
+    public boolean axisWithin(double tolerance){
+        return Math.abs(axisTarget - axisEncoder.getPosition()) < tolerance; 
     }
 
     public void runArmCommands() {
