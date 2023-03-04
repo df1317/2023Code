@@ -13,7 +13,8 @@ public class Arm {
 
     private final RelativeEncoder turretEncoder = turretMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     private final RelativeEncoder axisEncoder = axisMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
-    private final RelativeEncoder extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+    private final RelativeEncoder extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor,
+            42);
 
     private Controllers controllers;
     private SparkMaxPIDController axisController;
@@ -37,7 +38,7 @@ public class Arm {
     private final double fullExtend = 100;
     private final double fullRetract = 0;
 
-    public Arm(Controllers controllers){
+    public Arm(Controllers controllers) {
         this.controllers = controllers;
         axisController = axisMotor.getPIDController();
         axisController.setP(kp);
@@ -47,9 +48,9 @@ public class Arm {
 
     public void resetEncoders() {
         // restore factory defaults? reset encoders?
-        //turretMotor.restoreFactoryDefaults();
-        //axisMotor.restoreFactoryDefaults();
-        //extensionMotor.restoreFactoryDefaults();
+        // turretMotor.restoreFactoryDefaults();
+        // axisMotor.restoreFactoryDefaults();
+        // extensionMotor.restoreFactoryDefaults();
         turretEncoder.setPosition(0);
         axisEncoder.setPosition(0);
         extensionEncoder.setPosition(0);
@@ -58,15 +59,15 @@ public class Arm {
     public void temporaryEncoderTesting() {
         // System.out.println("Extension: " + axisEncoder.getPosition());
     }
-    
+
     public void rotateTurret() {
         double turretDirection = (-controllers.getTurretRotation() > 0) ? 1 : -1;
         if (controllers.turretTrigger()) {
-                turretMotor.set(turretDirection * turretPower);
+            turretMotor.set(turretDirection * turretPower);
         } else {
             turretMotor.set(0);
         }
-    } 
+    }
 
     public void rotateAxis() {
         double axisDirection = (-controllers.getAxisRotation() > 0) ? 1 : -1;
@@ -81,19 +82,29 @@ public class Arm {
     }
 
     public void extension() {
-        if (controllers.extendButton()) {
+        if (controllers.extendButton() && !atFullExtension()) {
             extensionMotor.set(extendPower);
-        } else if (controllers.retractButton()) {
+        } else if (controllers.retractButton() && !atFullRetraction()) {
             extensionMotor.set(retractPower);
         } else {
             extensionMotor.set(0);
         }
     }
+
+    public boolean atFullExtension() {
+        return extensionEncoder.getPosition() >= fullExtend;
+    }
+
+    public boolean atFullRetraction() {
+        return extensionEncoder.getPosition() <= fullRetract;
+    }
+
     /**
      * Rotates to
+     * 
      * @param targetPosition desired axis position IN # of ROTATIONS
      */
-    public void rotateTo(double targetPosition){
+    public void rotateTo(double targetPosition) {
         axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
     }
 
@@ -109,7 +120,7 @@ public class Arm {
             rotateTo(axisHighScorePosition);
         } else if (Math.abs(extensionEncoder.getPosition() - fullExtend) > 5) {
             axisMotor.set(0);
-            
+
         }
     }
 }
