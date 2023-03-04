@@ -16,11 +16,13 @@ public class Auto {
     private Limelight limelight;
     private static Gyro gyro = new Gyro();
     private Dashboard dashboard;
+    private Arm arm;
 
     public Auto(Drivetrain drivetrain, Limelight limelight, Dashboard dashboard) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.dashboard = dashboard;
+        this.arm = arm;
     }
 
     // trajectory setup
