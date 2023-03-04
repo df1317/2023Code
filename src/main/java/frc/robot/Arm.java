@@ -29,6 +29,14 @@ public class Arm {
     private final double extendPower = 1;
     private final double retractPower = -1;
 
+    // temporary values, determine these w/testing
+    private final double axisHighScorePosition = 90;
+    private final double axisMidScorePosition = 60;
+    private final double axisLowScorePosition = 30;
+
+    private final double fullExtend = 100;
+    private final double fullRetract = 0;
+
     public Arm(Controllers controllers){
         this.controllers = controllers;
         axisController = axisMotor.getPIDController();
@@ -93,5 +101,15 @@ public class Arm {
         rotateTurret();
         rotateAxis();
         extension();
+    }
+
+    public void highScoreCube() {
+        // deadzone for if we are 5 degrees off
+        if (Math.abs(turretEncoder.getPosition() - axisHighScorePosition) > 5) {
+            rotateTo(axisHighScorePosition);
+        } else if (Math.abs(extensionEncoder.getPosition() - fullExtend) > 5) {
+            axisMotor.set(0);
+            
+        }
     }
 }
