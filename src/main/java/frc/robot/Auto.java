@@ -27,11 +27,11 @@ public class Auto {
     }
 
     // trajectory setup
-    PathPlannerTrajectory Blue_ACubeLeaveCommunity = PathPlanner.loadPath("ACubeLeaveCommunity", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_ACubeBalance = PathPlanner.loadPath("ACubeBalance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_BCubeBalance = PathPlanner.loadPath("BCubeBalance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_CCubeBalance = PathPlanner.loadPath("CCubeBalance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_CCubeLeaveCommunity = PathPlanner.loadPath("CCubeLeaveCommunity", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_ACubeLeaveCommunity = PathPlanner.loadPath("A_Cube_LeaveCommunity", new PathConstraints(3, 2));
+    PathPlannerTrajectory Blue_ACubeBalance = PathPlanner.loadPath("A_Cube_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_BCubeBalance = PathPlanner.loadPath("B_Cube_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_CCubeBalance = PathPlanner.loadPath("C_Cube_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_CCubeLeaveCommunity = PathPlanner.loadPath("C_Cube_LeaveCommunity", new PathConstraints(1.0, 0.5));
     
     PathPlannerTrajectory Red_ACubeLeaveCommunity = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_ACubeLeaveCommunity, DriverStation.Alliance.valueOf("Red"));
     PathPlannerTrajectory Red_ACubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_ACubeBalance, DriverStation.Alliance.valueOf("Red"));

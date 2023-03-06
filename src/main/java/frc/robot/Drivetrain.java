@@ -30,7 +30,7 @@ public class Drivetrain {
     private static final double kTrackWidth = 0.6858; // meters
     private static final double kWheelRadius = 0.0762; // meters
     private static final double kEncoderResolution = 2048;
-    private static final double kGearRatio = 1.43023;
+    private static final double kGearRatio = 1/1.327;
 
     private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
@@ -75,7 +75,7 @@ public class Drivetrain {
         resetEncoders();
 
         m_odometry = new DifferentialDriveOdometry(
-                Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+                Rotation2d.fromDegrees(-gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
@@ -96,11 +96,11 @@ public class Drivetrain {
 
     public void updateOdometry() {
         m_odometry.update(
-                Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+                Rotation2d.fromDegrees(-gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
     public void resetOdometry(Pose2d pose) {
-        m_odometry.resetPosition(Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(),
+        m_odometry.resetPosition(Rotation2d.fromDegrees(-gyro.getGyroYaw()), m_leftEncoder.getDistance(),
                 m_rightEncoder.getDistance(), pose);
     }
 

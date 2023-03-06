@@ -28,13 +28,14 @@ public class Robot extends TimedRobot {
         led = new LED();
         dashboard = new Dashboard();
 
-       dataSender.init();
-       gyro.reset();
-       drivetrain.resetEncoders();
-       led.initLED();
-       dashboard.dashboardSetup();
-       arm.resetEncoders();
-       dashboard.cameraInit();
+        dataSender.init();
+        gyro.reset();
+        drivetrain.resetEncoders();
+        led.initLED();
+        dashboard.dashboardSetup();
+        arm.resetEncoders();
+        dashboard.cameraInit();
+        drivetrain.gearshiftInit();
     }
 
     @Override
@@ -47,14 +48,22 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        dashboard.dashboardAutoInit();
-        auto.autonomousStartup();
+        // dashboard.dashboardAutoInit();
+        drivetrain.gearshiftInit();
+        // auto.autonomousStartup();
         claw.grabCube();
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runStraightAutonomous();
+        // auto.runStraightAutonomous();
+        // auto.runStraightAutonomous();
+        if (drivetrain.getLeftEncoder() < 3) {
+            drivetrain.drive(0.5, 0.5);
+            System.out.println(drivetrain.getLeftEncoder());
+        } else {
+            drivetrain.drive(0, 0);
+        }
     }
 
     @Override
