@@ -25,7 +25,7 @@ public class Arm {
     private final double kd = 0.1;
 
     private final double axisLoweringPower = 0.2;
-    private final double axisRaisingPower = 0.5;
+    private final double axisRaisingPower = 0.35;
     private final double turretPower = 0.15;
     private final double axisDeadzone = 0.25;
     private final double extendPower = 1;
@@ -64,7 +64,8 @@ public class Arm {
     }
 
     public void temporaryEncoderTesting() {
-        // System.out.println("Extension: " + axisEncoder.getPosition());
+        System.out.println("Extension: " + extensionEncoder.getPosition());
+        System.out.println("Axis: " + axisEncoder.getPosition());
     }
 
     public void rotateTurret() {

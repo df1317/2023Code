@@ -102,15 +102,6 @@ public class Robot extends TimedRobot {
         claw.runClawCommands();
 
         arm.temporaryEncoderTesting();
-
-        // System.out.println("L " + drivetrain.getLeftRate());
-        // System.out.println("R " + drivetrain.getRightRate());
-    
-    //    System.out.println("L " + drivetrain.getLeftEncoder());
-    //    System.out.println("R " + drivetrain.getRightEncoder());
-
-    System.out.println("L " + drivetrain.getLeftEncoder());
-    System.out.println("R " + drivetrain.getRightEncoder());
     }
 
     @Override
