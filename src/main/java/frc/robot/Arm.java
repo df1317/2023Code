@@ -31,13 +31,18 @@ public class Arm {
     private final double extendPower = 1;
     private final double retractPower = -1;
 
-    // temporary values, determine these w/testing
-    private final double axisHighScorePosition = 90;
-    private final double axisMidScorePosition = 60;
-    private final double axisLowScorePosition = 30;
+    private final double axisHighScorePosition = -83;
+    private final double axisMidScorePosition = -72;
+    private final double axisLowScorePosition = -32;
+    private final double axisCollectionPosition = -11;
 
-    private final double fullExtend = 100;
-    private final double fullRetract = 0;
+    private final double extensionFull = 447;
+    private final double extensionMid = 100;
+    private final double extensionLow = 0;
+    private final double extensionNone = 0;
+
+    private final double axisPositionDeadzone = 2;
+    private final double extensionPositionDeadzone = 10;
 
     private int i = 0;
     public boolean continueToTrajectory = false;
@@ -69,7 +74,7 @@ public class Arm {
     }
 
     public void rotateTurret() {
-        double turretDirection = (-controllers.getTurretRotation() > 0) ? 1 : -1;
+        double turretDirection = (controllers.povTurret() > 0) ? 1 : -1;
         if (controllers.turretTrigger()) {
             turretMotor.set(turretDirection * turretPower);
         } else {
@@ -77,6 +82,7 @@ public class Arm {
         }
     }
 
+    // TODO: move deadzone logic to controllers
     public void rotateAxis() {
         double axisDirection = (-controllers.getAxisRotation() > 0) ? 1 : -1;
         double axisPower;
@@ -89,26 +95,31 @@ public class Arm {
         }
     }
 
+    // manual extension bounded, keep this method for drivers
     public void extension() {
-        if (controllers.extendButton() && !atFullExtension()) {
+        if (controllers.extendButton() && !atExtensionPosition(extensionFull)) {
             extensionMotor.set(extendPower);
-        } else if (controllers.retractButton() && !atFullRetraction()) {
+        } else if (controllers.retractButton() && !atExtensionPosition(extensionNone)) {
             extensionMotor.set(retractPower);
         } else {
             extensionMotor.set(0);
         }
     }
 
-    public boolean atFullExtension() {
-        return extensionEncoder.getPosition() >= fullExtend;
+    /* public boolean atFullExtension() {
+        return extensionEncoder.getPosition() >= extensionFull;
     }
 
     public boolean atFullRetraction() {
-        return extensionEncoder.getPosition() <= fullRetract;
-    }
+        return extensionEncoder.getPosition() <= extensionNone;
+    } */
 
     public boolean atAxisPosition(double targetPosition) {
-        return Math.abs(axisEncoder.getPosition() - targetPosition) <= axisDeadzone;
+        return Math.abs(axisEncoder.getPosition() - targetPosition) <= axisPositionDeadzone;
+    }
+
+    public boolean atExtensionPosition(double targetExtension) {
+        return Math.abs(extensionEncoder.getPosition() - targetExtension) <= extensionPositionDeadzone;
     }
 
     /**
@@ -118,6 +129,15 @@ public class Arm {
      */
     public void rotateTo(double targetPosition) {
         axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
+    }
+
+    public void extendTo(double targetExtension) {
+        double extensionDirection = (extensionEncoder.getPosition() - targetExtension > 0) ? 1 : -1;
+        if (!atExtensionPosition(targetExtension)) {
+            extensionMotor.set(extensionDirection * extendPower);
+        } else {
+            extensionMotor.set(0);
+        }
     }
 
     public void runArmCommands() {
@@ -137,8 +157,8 @@ public class Arm {
                 break;
     
             case 1:
-                extensionMotor.set(extendPower);
-                if (atFullExtension()) {
+                extendTo(extensionFull);
+                if (atExtensionPosition(extensionFull)) {
                     extensionMotor.set(0);
                     i++;
                 }
@@ -153,8 +173,8 @@ public class Arm {
               break;
 
             case 3:
-                extensionMotor.set(retractPower);
-                if (atFullRetraction()) {
+                extendTo(extensionNone);
+                if (atExtensionPosition(extensionNone)) {
                     extensionMotor.set(0);
                     i++;
                 }

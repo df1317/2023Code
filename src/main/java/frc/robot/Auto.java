@@ -19,7 +19,7 @@ public class Auto {
     private Dashboard dashboard;
     private Arm arm;
 
-    public Auto(Drivetrain drivetrain, Limelight limelight, Dashboard dashboard) {
+    public Auto(Drivetrain drivetrain, Limelight limelight, Dashboard dashboard, Arm arm) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.dashboard = dashboard;

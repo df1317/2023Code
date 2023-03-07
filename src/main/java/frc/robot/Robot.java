@@ -22,11 +22,11 @@ public class Robot extends TimedRobot {
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
         claw = new Claw(controllers);
-        auto = new Auto(drivetrain, limelight, dashboard);
         arm = new Arm(controllers, claw);
         dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
         dashboard = new Dashboard();
+        auto = new Auto(drivetrain, limelight, dashboard, arm);
 
         dataSender.init();
         gyro.reset();
@@ -36,6 +36,17 @@ public class Robot extends TimedRobot {
         arm.resetEncoders();
         dashboard.cameraInit();
         drivetrain.gearshiftInit();
+
+        // temporary if statements, remove us
+        if (controllers.testHighScoreAuto()) {
+            arm.highScoreCube();
+        }
+        if (controllers.midScoreAlign()) {
+
+        }
+        if (controllers.lowScoreAlign()) {
+            
+        }
     }
 
     @Override
