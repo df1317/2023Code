@@ -44,6 +44,9 @@ public class Arm {
     private final double axisPositionDeadzone = 2;
     private final double extensionPositionDeadzone = 10;
 
+    private double axisScorePosition;
+    private double extensionPosition;
+
     private int i = 0;
     public boolean continueToTrajectory = false;
 
@@ -187,5 +190,19 @@ public class Arm {
                 }
                 break;
           }
+    }
+
+    public void scoreAlign() {
+        if (controllers.midScoreAlignButton() || controllers.lowScoreAlignButton()) {
+            if (controllers.midScoreAlignButton()) {
+                axisScorePosition = axisMidScorePosition;
+                extensionPosition = extensionMid;
+            } else if (controllers.lowScoreAlignButton()) {
+                axisScorePosition = axisLowScorePosition;
+                extensionPosition = extensionLow;
+            } 
+            rotateTo(axisScorePosition);
+            extendTo(extensionPosition);
+        }
     }
 }

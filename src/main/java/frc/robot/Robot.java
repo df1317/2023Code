@@ -41,12 +41,7 @@ public class Robot extends TimedRobot {
         if (controllers.testHighScoreAuto()) {
             arm.highScoreCube();
         }
-        if (controllers.midScoreAlign()) {
-
-        }
-        if (controllers.lowScoreAlign()) {
-            
-        }
+        arm.scoreAlign();
     }
 
     @Override

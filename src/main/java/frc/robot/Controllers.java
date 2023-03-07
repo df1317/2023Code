@@ -113,11 +113,11 @@ public class Controllers {
         return joyE.getRawButton(8);
     }
 
-    public boolean midScoreAlign() {
+    public boolean midScoreAlignButton() {
         return joyE.getRawButton(10);
     }
 
-    public boolean lowScoreAlign() {
+    public boolean lowScoreAlignButton() {
         return joyE.getRawButton(12);
     }
 }
