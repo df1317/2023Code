@@ -77,7 +77,11 @@ public class Arm {
     }
 
     public void rotateTurret() {
+        if (controllers.povTurret() != 0) {
         double turretDirection = (controllers.povTurret() > 0) ? 1 : -1;
+        } else {
+            turretMotor.set(0);
+        }
         if (controllers.turretTrigger()) {
             turretMotor.set(turretDirection * turretPower);
         } else {
@@ -137,7 +141,7 @@ public class Arm {
     public void extendTo(double targetExtension) {
         double extensionDirection = (extensionEncoder.getPosition() - targetExtension > 0) ? 1 : -1;
         if (!atExtensionPosition(targetExtension)) {
-            extensionMotor.set(extensionDirection * extendPower);
+            extensionMotor.set(extensionDirection * -extendPower);
         } else {
             extensionMotor.set(0);
         }

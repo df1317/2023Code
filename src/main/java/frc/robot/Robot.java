@@ -36,12 +36,6 @@ public class Robot extends TimedRobot {
         arm.resetEncoders();
         dashboard.cameraInit();
         drivetrain.gearshiftInit();
-
-        // temporary if statements, remove us
-        if (controllers.testHighScoreAuto()) {
-            arm.highScoreCube();
-        }
-        arm.scoreAlign();
     }
 
     @Override
@@ -108,6 +102,11 @@ public class Robot extends TimedRobot {
         claw.runClawCommands();
 
         arm.temporaryEncoderTesting();
+        // temporary if statements, remove us
+        if (controllers.testHighScoreAuto()) {
+            arm.highScoreCube();
+        }
+        arm.scoreAlign();
     }
 
     @Override
