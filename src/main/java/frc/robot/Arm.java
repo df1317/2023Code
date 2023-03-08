@@ -47,6 +47,7 @@ public class Arm {
     private double axisScorePosition;
     private double extensionPosition;
 
+    private double turretDirection;
     private int i = 0;
     public boolean continueToTrajectory = false;
 
@@ -77,11 +78,8 @@ public class Arm {
     }
 
     public void rotateTurret() {
-        if (controllers.povTurret() != 0) {
-        double turretDirection = (controllers.povTurret() > 0) ? 1 : -1;
-        } else {
-            turretMotor.set(0);
-        }
+        double turretDirection = controllers.povTurret();
+        
         if (controllers.turretTrigger()) {
             turretMotor.set(turretDirection * turretPower);
         } else {
