@@ -65,17 +65,18 @@ public class Drivetrain {
         this.controllers = controllers;
         this.limelight = limelight;
 
-        leftMotorGroup.setInverted(true);
-        rightMotorGroup.setInverted(false);
+        // left was true, right was false
+        leftMotorGroup.setInverted(false);
+        rightMotorGroup.setInverted(true);
         
-        m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
-        m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+        m_leftEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+        m_rightEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
 
 
         resetEncoders();
 
         m_odometry = new DifferentialDriveOdometry(
-                Rotation2d.fromDegrees(-gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+                Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
     public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
@@ -96,11 +97,11 @@ public class Drivetrain {
 
     public void updateOdometry() {
         m_odometry.update(
-                Rotation2d.fromDegrees(-gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+                Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
     }
 
     public void resetOdometry(Pose2d pose) {
-        m_odometry.resetPosition(Rotation2d.fromDegrees(-gyro.getGyroYaw()), m_leftEncoder.getDistance(),
+        m_odometry.resetPosition(Rotation2d.fromDegrees(gyro.getGyroYaw()), m_leftEncoder.getDistance(),
                 m_rightEncoder.getDistance(), pose);
     }
 

@@ -55,7 +55,7 @@ public class Auto {
 
         // TODO: getInitialPose() of selected autonomous
         // drivetrain.resetOdometry(simpleCurve6.getInitialPose());
-        drivetrain.resetOdometry(straight.getInitialPose());
+        drivetrain.resetOdometry(Red_ACubeBalance.getInitialPose());
     }
 
     // default autonomous method, create new methods for each separate auto routine
@@ -139,12 +139,12 @@ public class Auto {
     }
 
     public void runBlueBlueACubeBalance() {
-        if (timer.get() < Blue_ACubeBalance.getTotalTimeSeconds()) {
-            State desiredPose = Blue_ACubeBalance.sample(timer.get());
+        if (timer.get() < Red_ACubeBalance.getTotalTimeSeconds()) {
+            State desiredPose = Red_ACubeBalance.sample(timer.get());
             ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
 
             drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(Blue_ACubeBalance.getTotalTimeSeconds()-timer.get());
+            System.out.println(Red_ACubeBalance.getTotalTimeSeconds()-timer.get());
 
         } else {
             drivetrain.autoDrive(0, 0);

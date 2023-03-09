@@ -51,12 +51,14 @@ public class Robot extends TimedRobot {
         // dashboard.dashboardAutoInit();
         drivetrain.gearshiftInit();
         auto.autonomousStartup();
+        gyro.reset();
+        drivetrain.resetEncoders();
         // claw.grabCube();
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runStraightAutonomous();
+        auto.runBlueBlueACubeBalance();
         /*if (drivetrain.getLeftEncoder() < 3) {
             drivetrain.drive(0.5, 0.5);
             System.out.println(drivetrain.getLeftEncoder());
