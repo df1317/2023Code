@@ -102,14 +102,28 @@ public class Arm {
 
     // manual extension bounded, keep this method for drivers
     public void extension() {
-        if (controllers.extendButton() && !atExtensionPosition(extensionFull)) {
-            extensionMotor.set(extendPower);
-        } else if (controllers.retractButton() && !atExtensionPosition(extensionNone)) {
-            extensionMotor.set(retractPower);
+        // remove for competition
+        if (controllers.turretTrigger()) {
+            if (controllers.extendButton()) {
+                extensionMotor.set(extendPower);
+            } else if (controllers.retractButton()) {
+                extensionMotor.set(retractPower);
+                if (atExtensionPosition(extensionNone)) {
+                    extensionEncoder.setPosition(0);
+                }
+            } else {
+                extensionMotor.set(0);
+            }
         } else {
-            extensionMotor.set(0);
+            if (controllers.extendButton() && !atExtensionPosition(extensionFull)) {
+                extensionMotor.set(extendPower);
+            } else if (controllers.retractButton() && !atExtensionPosition(extensionNone)) {
+                extensionMotor.set(retractPower);
+            } else {
+                extensionMotor.set(0);
         }
     }
+}
 
     /* public boolean atFullExtension() {
         return extensionEncoder.getPosition() >= extensionFull;

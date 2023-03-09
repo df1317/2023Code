@@ -50,20 +50,19 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         // dashboard.dashboardAutoInit();
         drivetrain.gearshiftInit();
-        // auto.autonomousStartup();
-        claw.grabCube();
+        auto.autonomousStartup();
+        // claw.grabCube();
     }
 
     @Override
     public void autonomousPeriodic() {
-        // auto.runStraightAutonomous();
-        // auto.runStraightAutonomous();
-        if (drivetrain.getLeftEncoder() < 3) {
+        auto.runStraightAutonomous();
+        /*if (drivetrain.getLeftEncoder() < 3) {
             drivetrain.drive(0.5, 0.5);
             System.out.println(drivetrain.getLeftEncoder());
         } else {
             drivetrain.drive(0, 0);
-        }
+        }*/
     }
 
     @Override

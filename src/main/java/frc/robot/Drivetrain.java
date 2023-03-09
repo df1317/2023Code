@@ -30,14 +30,14 @@ public class Drivetrain {
     private static final double kTrackWidth = 0.6858; // meters
     private static final double kWheelRadius = 0.0762; // meters
     private static final double kEncoderResolution = 2048;
-    private static final double kGearRatio = 1/1.327;
+    private static final double kGearRatio = 1;
 
     private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
     private final DifferentialDrive robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
-    private final PIDController m_leftPIDController = new PIDController(0.020403, 0, 0);
-    private final PIDController m_rightPIDController = new PIDController(0.020403, 0, 0);
+    private final PIDController m_leftPIDController = new PIDController(0.0000002855, 0, 0);
+    private final PIDController m_rightPIDController = new PIDController(0.00000032183, 0, 0);
 
     // left was 01 right was 23
     private static final Encoder m_leftEncoder = new Encoder(0, 1);
@@ -50,7 +50,7 @@ public class Drivetrain {
     private final DifferentialDriveOdometry m_odometry;
 
     // Gains are for example purposes only - must be determined for your own robot!
-    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1.0438, 3.168, 1.134);
+    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1.0442, 3.4783, 0.98103);
 
     private Gyro gyro = new Gyro();
     private Limelight limelight;
