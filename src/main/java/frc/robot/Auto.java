@@ -46,12 +46,15 @@ public class Auto {
 
     private Timer timer;
 
+    public boolean finishedTrajectory;
+
     public void autonomousStartup() {
         gyro.reset();
         drivetrain.resetEncoders();
 
         timer = new Timer();
         timer.start();
+        finishedTrajectory = false;
 
         // TODO: getInitialPose() of selected autonomous
         // drivetrain.resetOdometry(simpleCurve6.getInitialPose());
@@ -149,6 +152,7 @@ public class Auto {
         } else {
             drivetrain.autoDrive(0, 0);
             System.out.println("FINISHED");
+            finishedTrajectory = true;
         }
     }
 

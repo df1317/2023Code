@@ -44,7 +44,7 @@ public class Gyro {
     }
 
     public double gyroAdjust() {
-        gyroDriveAdjustment = getGyroPitch() / 10.0;
+        gyroDriveAdjustment = getGyroPitch()/10;
 
         if (Math.abs(getGyroPitch()) > gyroDeadzoneDegrees) {
             return gyroDriveAdjustment;

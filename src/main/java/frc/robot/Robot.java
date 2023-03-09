@@ -16,6 +16,8 @@ public class Robot extends TimedRobot {
     public Claw claw;
     public Dashboard dashboard;
 
+    private int i;
+
     @Override
     public void robotInit() {
         controllers = new Controllers();
@@ -36,6 +38,8 @@ public class Robot extends TimedRobot {
         arm.resetEncoders();
         dashboard.cameraInit();
         drivetrain.gearshiftInit();
+
+        i = 0;
     }
 
     @Override
@@ -44,6 +48,10 @@ public class Robot extends TimedRobot {
         dataSender.update(drivetrain.getPose());
         led.runLED();
         controllers.update();
+
+        if (controllers.gyroResetButton()) {
+            gyro.reset();
+        }
     }
 
     @Override
@@ -51,14 +59,25 @@ public class Robot extends TimedRobot {
         // dashboard.dashboardAutoInit();
         drivetrain.gearshiftInit();
         auto.autonomousStartup();
-        gyro.reset();
         drivetrain.resetEncoders();
         // claw.grabCube();
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runBlueBlueACubeBalance();
+        switch (i) {
+            case 0:
+            auto.runBlueBlueACubeBalance();
+            if (auto.finishedTrajectory) {
+                i++;
+            }
+            break;
+            case 1:
+            drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
+            break;
+        }
+                
+        // auto.runBlueBlueACubeBalance();
         /*if (drivetrain.getLeftEncoder() < 3) {
             drivetrain.drive(0.5, 0.5);
             System.out.println(drivetrain.getLeftEncoder());
@@ -107,7 +126,7 @@ public class Robot extends TimedRobot {
         if (controllers.testHighScoreAuto()) {
             arm.highScoreCube();
         }
-        arm.scoreAlign();
+        System.out.println(arm.axisEncoderGet());
     }
 
     @Override

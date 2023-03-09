@@ -26,12 +26,12 @@ public class Controllers {
 
     public double getLeftDrive() {
         double direction = (joyL.getY() > 0) ? 1 : -1;
-        return insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
+        return insideDeadzone(-joyL.getY(), DRIVE_DEADZONE);
     }
 
     public double getRightDrive() {
         double direction = (joyR.getY() > 0) ? 1 : -1;
-        return insideDeadzone(joyR.getY(), DRIVE_DEADZONE);
+        return insideDeadzone(-joyR.getY(), DRIVE_DEADZONE);
     }
 
     public boolean getLimelightAutoAlign() {

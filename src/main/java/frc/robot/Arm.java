@@ -31,7 +31,7 @@ public class Arm {
     private final double extendPower = 1;
     private final double retractPower = -1;
 
-    private final double axisHighScorePosition = -83;
+    private final double axisHighScorePosition = -79;
     private final double axisMidScorePosition = -72;
     private final double axisLowScorePosition = -32;
     private final double axisCollectionPosition = -11;
@@ -70,6 +70,10 @@ public class Arm {
         extensionEncoder.setPosition(0);
         continueToTrajectory = false;
         i = 0;
+    }
+
+    public double axisEncoderGet() {
+        return axisEncoder.getPosition();
     }
 
     public void temporaryEncoderTesting() {
@@ -124,14 +128,6 @@ public class Arm {
         }
     }
 }
-
-    /* public boolean atFullExtension() {
-        return extensionEncoder.getPosition() >= extensionFull;
-    }
-
-    public boolean atFullRetraction() {
-        return extensionEncoder.getPosition() <= extensionNone;
-    } */
 
     public boolean atAxisPosition(double targetPosition) {
         return Math.abs(axisEncoder.getPosition() - targetPosition) <= axisPositionDeadzone;
@@ -200,8 +196,8 @@ public class Arm {
                 break;
 
             case 4:
-                rotateTo(axisLowScorePosition);
-                if (atAxisPosition(axisLowScorePosition)) {
+                rotateTo(0);
+                if (atAxisPosition(0)) {
                     i++;
                 }
                 break;
