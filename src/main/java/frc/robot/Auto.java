@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Auto {
     private Drivetrain drivetrain;
@@ -18,7 +19,7 @@ public class Auto {
     private Dashboard dashboard;
     private Arm arm;
 
-    public Auto(Drivetrain drivetrain, Limelight limelight, Dashboard dashboard) {
+    public Auto(Drivetrain drivetrain, Limelight limelight, Dashboard dashboard, Arm arm) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.dashboard = dashboard;
@@ -26,15 +27,26 @@ public class Auto {
     }
 
     // trajectory setup
-    PathPlannerTrajectory simpleCurve6 = PathPlanner.loadPath("SimpleCurve6", new PathConstraints(1.5, 1));
-    PathPlannerTrajectory secondCurve1 = PathPlanner.loadPath("SecondCurve1", new PathConstraints(1.0, 1));
-    PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_ACubeLeaveCommunity = PathPlanner.loadPath("A_Cube_LeaveCommunity", new PathConstraints(3, 2));
+    PathPlannerTrajectory Blue_ACubeBalance = PathPlanner.loadPath("A_Cube_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_BCubeBalance = PathPlanner.loadPath("B_Cube_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_CCubeBalance = PathPlanner.loadPath("C_Cube_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory Blue_CCubeLeaveCommunity = PathPlanner.loadPath("C_Cube_LeaveCommunity", new PathConstraints(1.0, 0.5));
+    
+    PathPlannerTrajectory Red_ACubeLeaveCommunity = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_ACubeLeaveCommunity, DriverStation.Alliance.valueOf("Red"));
+    PathPlannerTrajectory Red_ACubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_ACubeBalance, DriverStation.Alliance.valueOf("Red"));
+    PathPlannerTrajectory Red_BCubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_BCubeBalance, DriverStation.Alliance.valueOf("Red"));
+    PathPlannerTrajectory Red_CCubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_CCubeBalance, DriverStation.Alliance.valueOf("Red"));
+    PathPlannerTrajectory Red_CCubeLeaveCommunity = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_CCubeLeaveCommunity, DriverStation.Alliance.valueOf("Red"));
 
     List<PathPlannerTrajectory> groupedPath = PathPlanner.loadPathGroup("GroupedPath", new PathConstraints(1.0, 1));
+    PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(1.0, 0.5));
 
     private final RamseteController m_ramseteController = new RamseteController();
 
     private Timer timer;
+
+    public boolean finishedTrajectory;
 
     public void autonomousStartup() {
         gyro.reset();
@@ -42,10 +54,11 @@ public class Auto {
 
         timer = new Timer();
         timer.start();
+        finishedTrajectory = false;
 
         // TODO: getInitialPose() of selected autonomous
         // drivetrain.resetOdometry(simpleCurve6.getInitialPose());
-        drivetrain.resetOdometry(straight.getInitialPose());
+        drivetrain.resetOdometry(Red_ACubeBalance.getInitialPose());
     }
 
     // default autonomous method, create new methods for each separate auto routine
@@ -114,10 +127,84 @@ public class Auto {
         }
     }
 
+    public void runBlueACubeLeaveCommunity() {
+        if (timer.get() < Blue_ACubeLeaveCommunity.getTotalTimeSeconds()) {
+            State desiredPose = Blue_ACubeLeaveCommunity.sample(timer.get());
+            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+
+            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(Blue_ACubeLeaveCommunity.getTotalTimeSeconds()-timer.get());
+
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+        }
+    }
+
+    public void runBlueBlueACubeBalance() {
+        if (timer.get() < Red_ACubeBalance.getTotalTimeSeconds()) {
+            State desiredPose = Red_ACubeBalance.sample(timer.get());
+            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+
+            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(Red_ACubeBalance.getTotalTimeSeconds()-timer.get());
+
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+            finishedTrajectory = true;
+        }
+    }
+
+    public void runBlueBCubeBalance() {
+        if (timer.get() < Blue_BCubeBalance.getTotalTimeSeconds()) {
+            State desiredPose = Blue_BCubeBalance.sample(timer.get());
+            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+
+            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(Blue_BCubeBalance.getTotalTimeSeconds()-timer.get());
+
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+        }
+    }
+
+    public void runBlueCCubeLeaveCommunity() {
+        if (timer.get() < Blue_CCubeLeaveCommunity.getTotalTimeSeconds()) {
+            State desiredPose = Blue_CCubeLeaveCommunity.sample(timer.get());
+            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+
+            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(Blue_CCubeLeaveCommunity.getTotalTimeSeconds()-timer.get());
+
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+        }
+    }
+
+    public void runBlueCCubeBalance() {
+        if (timer.get() < Blue_CCubeBalance.getTotalTimeSeconds()) {
+            State desiredPose = Blue_CCubeBalance.sample(timer.get());
+            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
+
+            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(Blue_CCubeBalance.getTotalTimeSeconds()-timer.get());
+
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+        }
+    }
+
    public void runAutonomous() {
     switch (dashboard.getSelectedAuto()) {
-        case Dashboard.firstAuto:
-          runFirstAutonomous();
+        case Dashboard.A_Cube_Score_LeaveComm:
+          arm.highScoreCube();
+          if (arm.continueToTrajectory) {
+            runDefaultAutonomous();
+          }
             break;
 
         case Dashboard.secondAuto:

@@ -10,7 +10,6 @@ public class Controllers {
     private final Controller joyE = new Controller(0);
     private final Controller joyL = new Controller(1);
     private final Controller joyR = new Controller(2);
-    public final boolean autoBalanceXMode = joyE.getButtonOutput(1);
 
     // temporary button for temporary testing temporary temporary!.
     public boolean LLalignButton = joyL.getButtonOutput(3);
@@ -27,16 +26,16 @@ public class Controllers {
 
     public double getLeftDrive() {
         double direction = (joyL.getY() > 0) ? 1 : -1;
-        return insideDeadzone(joyL.getY(), DRIVE_DEADZONE);
+        return insideDeadzone(-joyL.getY(), DRIVE_DEADZONE);
     }
 
     public double getRightDrive() {
         double direction = (joyR.getY() > 0) ? 1 : -1;
-        return insideDeadzone(joyR.getY(), DRIVE_DEADZONE);
+        return insideDeadzone(-joyR.getY(), DRIVE_DEADZONE);
     }
 
     public boolean getLimelightAutoAlign() {
-        return joyL.onButtonPress(9);
+        return joyL.getButtonOutput(9);
     }
 
     public boolean getAutoBalanceLeft() {
@@ -98,5 +97,27 @@ public class Controllers {
 
     public boolean turretTrigger() {
         return joyE.getRawButton(1);
+    }
+
+    public double povTurret() {
+        if (joyE.getPOV() > 0 && joyE.getPOV() < 180) {
+            return 1;
+        } else if (joyE.getPOV() > 180 && joyE.getPOV() < 360) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    public boolean testHighScoreAuto() {
+        return joyE.getRawButton(8);
+    }
+
+    public boolean midScoreAlignButton() {
+        return joyE.getRawButton(10);
+    }
+
+    public boolean lowScoreAlignButton() {
+        return joyE.getRawButton(12);
     }
 }

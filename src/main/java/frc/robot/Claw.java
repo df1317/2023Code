@@ -40,6 +40,10 @@ public class Claw {
             grabbing = false;
     }
 
+    public boolean grabbing() {
+        return grabbing;
+    }
+
     public void runClawCommands() {
         if (controllers.grabCubeButton()) {
             grabCube();

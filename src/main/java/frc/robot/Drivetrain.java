@@ -26,18 +26,20 @@ public class Drivetrain {
     
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
+    public static boolean balanced = false;
+    public static boolean aligning = false;
 
     private static final double kTrackWidth = 0.6858; // meters
     private static final double kWheelRadius = 0.0762; // meters
     private static final double kEncoderResolution = 2048;
-    private static final double kGearRatio = 1.43023;
+    private static final double kGearRatio = 1;
 
     private final MotorControllerGroup leftMotorGroup = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
     private final MotorControllerGroup rightMotorGroup = new MotorControllerGroup(frontRightMotor, backRightMotor);
     private final DifferentialDrive robotDrive = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
 
-    private final PIDController m_leftPIDController = new PIDController(0.020403, 0, 0);
-    private final PIDController m_rightPIDController = new PIDController(0.020403, 0, 0);
+    private final PIDController m_leftPIDController = new PIDController(0.0000002855, 0, 0);
+    private final PIDController m_rightPIDController = new PIDController(0.00000032183, 0, 0);
 
     // left was 01 right was 23
     private static final Encoder m_leftEncoder = new Encoder(0, 1);
@@ -50,14 +52,14 @@ public class Drivetrain {
     private final DifferentialDriveOdometry m_odometry;
 
     // Gains are for example purposes only - must be determined for your own robot!
-    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1.0438, 3.168, 1.134);
+    private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1.0442, 3.4783, 0.98103);
 
     private Gyro gyro = new Gyro();
     private Limelight limelight;
     private Controllers controllers;
 
     private final double driveDeadzone = 0.1;
-    private final double autoBalanceMaxPower = 0.7;
+    private final double autoBalanceMaxPower = 0.55;
     private final double autoBalanceMinPower = 0.45;
 
     public Drivetrain(Controllers controllers, Limelight limelight) {
@@ -65,11 +67,12 @@ public class Drivetrain {
         this.controllers = controllers;
         this.limelight = limelight;
 
-        leftMotorGroup.setInverted(true);
-        rightMotorGroup.setInverted(false);
+        // left was true, right was false
+        leftMotorGroup.setInverted(false);
+        rightMotorGroup.setInverted(true);
         
-        m_leftEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
-        m_rightEncoder.setDistancePerPulse((2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+        m_leftEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
+        m_rightEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
 
 
         resetEncoders();
@@ -178,14 +181,19 @@ public class Drivetrain {
 
     public double gyroDrive() {
         double power = -0.5 * gyro.gyroAdjust();
-        
+
+            balanced = false;
+
             if (power > 0) {
                 power = Math.min(power, autoBalanceMaxPower);
                 power = Math.max(power, autoBalanceMinPower);
             } else if (power < 0) {
                 power = Math.min(power, -autoBalanceMinPower);
                 power = Math.max(power, -autoBalanceMaxPower);
+            }else{
+                balanced = true;
             }
+            System.out.println(power);
         return power;
 
     }
@@ -198,12 +206,10 @@ public class Drivetrain {
             // NOT TESTED after inverting drivetrain (changed sign though)
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
+            aligning = true;
             // System.out.println(limelight.calculateLimelightAngle());
-        } else if (controllers.getAutoBalanceLeft() || controllers.getAutoBalanceRight()) {
-            leftDrive = gyroDrive();
-            rightDrive = gyroDrive();
-            System.out.println("AUTO BALANCING!!!!!!");
-        } else {
+        }else {
+            aligning = false;
             leftDrive = -controllers.getLeftDrive();
             rightDrive = -controllers.getRightDrive();
         }

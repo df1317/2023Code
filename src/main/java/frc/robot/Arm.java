@@ -17,6 +17,7 @@ public class Arm {
             42);
 
     private Controllers controllers;
+    private Claw claw;
     private SparkMaxPIDController axisController;
 
     private final double kp = 0.3;
@@ -24,22 +25,35 @@ public class Arm {
     private final double kd = 0.1;
 
     private final double axisLoweringPower = 0.2;
-    private final double axisRaisingPower = 0.5;
+    private final double axisRaisingPower = 0.35;
     private final double turretPower = 0.15;
     private final double axisDeadzone = 0.25;
     private final double extendPower = 1;
     private final double retractPower = -1;
 
-    // temporary values, determine these w/testing
-    private final double axisHighScorePosition = 90;
-    private final double axisMidScorePosition = 60;
-    private final double axisLowScorePosition = 30;
+    private final double axisHighScorePosition = -79;
+    private final double axisMidScorePosition = -72;
+    private final double axisLowScorePosition = -32;
+    private final double axisCollectionPosition = -11;
 
-    private final double fullExtend = 100;
-    private final double fullRetract = 0;
+    private final double extensionFull = 447;
+    private final double extensionMid = 100;
+    private final double extensionLow = 0;
+    private final double extensionNone = 0;
 
-    public Arm(Controllers controllers) {
+    private final double axisPositionDeadzone = 2;
+    private final double extensionPositionDeadzone = 10;
+
+    private double axisScorePosition;
+    private double extensionPosition;
+
+    private double turretDirection;
+    private int i = 0;
+    public boolean continueToTrajectory = false;
+
+    public Arm(Controllers controllers, Claw claw) {
         this.controllers = controllers;
+        this.claw = claw;
         axisController = axisMotor.getPIDController();
         axisController.setP(kp);
         axisController.setI(ki);
@@ -54,14 +68,22 @@ public class Arm {
         turretEncoder.setPosition(0);
         axisEncoder.setPosition(0);
         extensionEncoder.setPosition(0);
+        continueToTrajectory = false;
+        i = 0;
+    }
+
+    public double axisEncoderGet() {
+        return axisEncoder.getPosition();
     }
 
     public void temporaryEncoderTesting() {
-        // System.out.println("Extension: " + axisEncoder.getPosition());
+        System.out.println("Extension: " + extensionEncoder.getPosition());
+        System.out.println("Axis: " + axisEncoder.getPosition());
     }
 
     public void rotateTurret() {
-        double turretDirection = (-controllers.getTurretRotation() > 0) ? 1 : -1;
+        double turretDirection = controllers.povTurret();
+        
         if (controllers.turretTrigger()) {
             turretMotor.set(turretDirection * turretPower);
         } else {
@@ -69,6 +91,7 @@ public class Arm {
         }
     }
 
+    // TODO: move deadzone logic to controllers
     public void rotateAxis() {
         double axisDirection = (-controllers.getAxisRotation() > 0) ? 1 : -1;
         double axisPower;
@@ -81,22 +104,37 @@ public class Arm {
         }
     }
 
+    // manual extension bounded, keep this method for drivers
     public void extension() {
-        if (controllers.extendButton() && !atFullExtension()) {
-            extensionMotor.set(extendPower);
-        } else if (controllers.retractButton() && !atFullRetraction()) {
-            extensionMotor.set(retractPower);
+        // remove for competition
+        if (controllers.turretTrigger()) {
+            if (controllers.extendButton()) {
+                extensionMotor.set(extendPower);
+            } else if (controllers.retractButton()) {
+                extensionMotor.set(retractPower);
+                if (atExtensionPosition(extensionNone)) {
+                    extensionEncoder.setPosition(0);
+                }
+            } else {
+                extensionMotor.set(0);
+            }
         } else {
-            extensionMotor.set(0);
+            if (controllers.extendButton() && !atExtensionPosition(extensionFull)) {
+                extensionMotor.set(extendPower);
+            } else if (controllers.retractButton() && !atExtensionPosition(extensionNone)) {
+                extensionMotor.set(retractPower);
+            } else {
+                extensionMotor.set(0);
         }
     }
+}
 
-    public boolean atFullExtension() {
-        return extensionEncoder.getPosition() >= fullExtend;
+    public boolean atAxisPosition(double targetPosition) {
+        return Math.abs(axisEncoder.getPosition() - targetPosition) <= axisPositionDeadzone;
     }
 
-    public boolean atFullRetraction() {
-        return extensionEncoder.getPosition() <= fullRetract;
+    public boolean atExtensionPosition(double targetExtension) {
+        return Math.abs(extensionEncoder.getPosition() - targetExtension) <= extensionPositionDeadzone;
     }
 
     /**
@@ -108,6 +146,15 @@ public class Arm {
         axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
     }
 
+    public void extendTo(double targetExtension) {
+        double extensionDirection = (extensionEncoder.getPosition() - targetExtension > 0) ? 1 : -1;
+        if (!atExtensionPosition(targetExtension)) {
+            extensionMotor.set(extensionDirection * -extendPower);
+        } else {
+            extensionMotor.set(0);
+        }
+    }
+
     public void runArmCommands() {
         rotateTurret();
         rotateAxis();
@@ -115,12 +162,59 @@ public class Arm {
     }
 
     public void highScoreCube() {
-        // deadzone for if we are 5 degrees off
-        if (Math.abs(turretEncoder.getPosition() - axisHighScorePosition) > 5) {
+        switch (i) {
+            case 0:
+            continueToTrajectory = false;
             rotateTo(axisHighScorePosition);
-        } else if (Math.abs(extensionEncoder.getPosition() - fullExtend) > 5) {
-            axisMotor.set(0);
+            if (atAxisPosition(axisHighScorePosition)) {
+                i++;
+            }
+                break;
+    
+            case 1:
+                extendTo(extensionFull);
+                if (atExtensionPosition(extensionFull)) {
+                    extensionMotor.set(0);
+                    i++;
+                }
+                break;
+    
+            case 2:
+                claw.releaseClaw();
+                if (!claw.grabbing()) {
+                    continueToTrajectory = true;
+                    i++;
+                }
+              break;
 
+            case 3:
+                extendTo(extensionNone);
+                if (atExtensionPosition(extensionNone)) {
+                    extensionMotor.set(0);
+                    i++;
+                }
+                break;
+
+            case 4:
+                rotateTo(0);
+                if (atAxisPosition(0)) {
+                    i++;
+                }
+                break;
+          }
+    }
+
+    public void scoreAlign() {
+        if (controllers.midScoreAlignButton() || controllers.lowScoreAlignButton()) {
+            if (controllers.midScoreAlignButton()) {
+                axisScorePosition = axisMidScorePosition;
+                extensionPosition = extensionMid;
+            } else if (controllers.lowScoreAlignButton()) {
+                axisScorePosition = axisLowScorePosition;
+                extensionPosition = extensionLow;
+            } 
+            rotateTo(axisScorePosition);
+            extendTo(extensionPosition);
         }
     }
 }

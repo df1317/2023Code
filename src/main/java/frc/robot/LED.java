@@ -2,21 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class LED {
 private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
   // Store what the last hue of the first pixel is
   private int m_rainbowFirstPixelHue;
-
-  private int bluePulseBrightness = 0;
-  private int blueStreakLED = 0;
-  private int redPulseBrightness = 0;
-  private int redStreakLED = 0;
-  private int greenPulseBrightness = 0;
-  private int greenStreakLED = 0;
-  private int purplePulseBrightness = 0;
-  private int purpleStreakLED = 0;
+  private int t = 0;
 
   private int numLoops = 0;
 
@@ -48,195 +41,59 @@ private AddressableLED m_led;
     m_rainbowFirstPixelHue %= 180;
   }
 
-  public void red() {
+  public void purpleSolid() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 255, 0, 0);
+      m_ledBuffer.setRGB(i, 128, 0, 128);
    }
    
    m_led.setData(m_ledBuffer);
   }
 
-  public void green() {
+  public void purpleFade() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for green
-      m_ledBuffer.setRGB(i, 0, 255, 0);
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 64 + (int)(64*Math.cos(t*Math.PI/36)), 0, 64 + (int)(64*Math.cos(t*Math.PI/36)));
    }
    
    m_led.setData(m_ledBuffer);
   }
 
-  public void blue() {
+  public void purpleChaser(int number, int size){
+      if(size > m_ledBuffer.getLength()/(number*2)){
+        size = m_ledBuffer.getLength()/(number*2);
+      }
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, 255);
+      // Sets the specified LED to the RGB values for red
+      if((i + t) % (m_ledBuffer.getLength()/(number)) < size){
+        m_ledBuffer.setRGB(i, 128, 0, 128);
+      }else{
+        m_ledBuffer.setRGB(i, 0, 0, 0);
+      }
    }
    
    m_led.setData(m_ledBuffer);
   }
 
-  public void purple() {
+  public void greenSwitcher(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for purple
-      m_ledBuffer.setRGB(i, 148, 0, 211);
-   }
-   
-   m_led.setData(m_ledBuffer);
-  }
-
-  public void bluePulse(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, bluePulseBrightness);
-   }
-
-   //increase brightness
-   bluePulseBrightness += 5;
-
-   //Check bounds
-   bluePulseBrightness %= 255;
-
-   m_led.setData(m_ledBuffer);
-
-  }
-
-  public void blueStreak(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 0, 255);
-   }
-
-   //turns one led off
-   m_ledBuffer.setRGB(blueStreakLED, 0, 0, 0);
-
-   //increase brightness
-   if (numLoops%3 == 0){
-      blueStreakLED += 1;
-      //Check bounds
-      blueStreakLED %= m_ledBuffer.getLength();
+      m_ledBuffer.setRGB(i,0,128*((i+t/10)%2),0);
     }
-
-   m_led.setData(m_ledBuffer);
-
-   numLoops += 1;
-   //Timer.delay(0.2);
   }
-
-public void redPulse(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, redPulseBrightness, 0, 0);
-   }
-
-   //increase brightness
-   redPulseBrightness += 5;
-
-   //Check bounds
-   redPulseBrightness %= 255;
-
-   m_led.setData(m_ledBuffer);
-  }
-
-  public void redStreak(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 255, 0, 0);
-   }
-
-   //turns one led off
-   m_ledBuffer.setRGB(redStreakLED, 0, 0, 0);
-
-   //increase brightness
-   if (numLoops%3 == 0){
-      redStreakLED += 1;
-      //Check bounds
-      redStreakLED %= m_ledBuffer.getLength();
-    }
-
-   m_led.setData(m_ledBuffer);
-
-   numLoops += 1;
-   //Timer.delay(0.2);
-  }
-
-  public void greenPulse(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, greenPulseBrightness, 0);
-   }
-
-   //increase brightness
-   greenPulseBrightness += 5;
-
-   //Check bounds
-   greenPulseBrightness %= 255;
-
-   m_led.setData(m_ledBuffer);
-  }
-
-  public void greenStreak(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 0, 255, 0);
-   }
-
-   //turns one led off
-   m_ledBuffer.setRGB(greenStreakLED, 0, 0, 0);
-
-   //increase brightness
-   if (numLoops%3 == 0){
-      greenStreakLED += 1;
-      //Check bounds
-      greenStreakLED %= m_ledBuffer.getLength();
-    }
-
-   m_led.setData(m_ledBuffer);
-
-   numLoops += 1;
-   //Timer.delay(0.2);
-  }
-
-  public void purplePulse(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, purplePulseBrightness, 0, purplePulseBrightness);
-   }
-
-   //increase brightness
-   purplePulseBrightness += 5;
-
-   //Check bounds
-   purplePulseBrightness %= 255;
-
-   m_led.setData(m_ledBuffer);
-  }
-
-  public void purpleStreak(){
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for blue
-      m_ledBuffer.setRGB(i, 150, 0, 225);
-   }
-
-   //turns one led off
-   m_ledBuffer.setRGB(purpleStreakLED, 0, 0, 0);
-
-   //increase brightness
-   if (numLoops%3 == 0){
-      purpleStreakLED += 1;
-      //Check bounds
-      purpleStreakLED %= m_ledBuffer.getLength();
-
-   m_led.setData(m_ledBuffer);
-
-   numLoops += 1;
-   //Timer.delay(0.2);
-  }
-}
 
   public void runLED() {
-    rainbow();
-    // m_ledBuffer.setRGB(128, 0, 128,0);
-    // Set the LEDs
+    if(Drivetrain.aligning){
+      greenSwitcher();
+    }else if(Drivetrain.balanced){
+      rainbow();
+    }else if(DriverStation.isAutonomousEnabled()){
+      purpleFade();
+    }else if(DriverStation.isTeleopEnabled()){
+      purpleChaser(2, 50);
+    }else{
+      purpleSolid();
+    }
     m_led.setData(m_ledBuffer);
+    t++;
   }
 }

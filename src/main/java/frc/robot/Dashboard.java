@@ -8,6 +8,10 @@ public class Dashboard {
     public static final String defaultAuto = "default auto";
     public static final String firstAuto = "1st auto";
     public static final String secondAuto = "2nd auto";
+    public static final String cube_Score = "cube score";
+    public static final String A_Cube_Score_LeaveComm = "A_Cube_Score_LeaveComm";
+    public static final String A_Cube_Score_Balance = "A_Cube_Score_Balance";
+    public static final String A_Balance = "A_Balance";
     private String selectedAuto;
     private final SendableChooser<String> sendableChooser = new SendableChooser<>();
     

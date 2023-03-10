@@ -11,54 +11,85 @@ public class Robot extends TimedRobot {
     public Drivetrain drivetrain;
     public Auto auto;
     public Arm arm;
-    public DataSender dataSender;
+    //public DataSender dataSender;
     public LED led;
     public Claw claw;
     public Dashboard dashboard;
+
+    private int i;
 
     @Override
     public void robotInit() {
         controllers = new Controllers();
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
-        auto = new Auto(drivetrain, limelight, dashboard);
-        arm = new Arm(controllers);
-        dataSender = new DataSender(drivetrain.getPose());
-        led = new LED();
         claw = new Claw(controllers);
+        arm = new Arm(controllers, claw);
+        //dataSender = new DataSender(drivetrain.getPose());
+        led = new LED();
         dashboard = new Dashboard();
+        auto = new Auto(drivetrain, limelight, dashboard, arm);
 
-       dataSender.init();
-       gyro.reset();
-       drivetrain.resetEncoders();
-       led.initLED();
-       dashboard.dashboardSetup();
-       arm.resetEncoders();
-       dashboard.cameraInit();
+        //dataSender.init();
+        gyro.reset();
+        drivetrain.resetEncoders();
+        led.initLED();
+        dashboard.dashboardSetup();
+        arm.resetEncoders();
+        dashboard.cameraInit();
+        drivetrain.gearshiftInit();
+
+        i = 0;
     }
 
     @Override
     public void robotPeriodic() {
         drivetrain.updateOdometry();
-        dataSender.update(drivetrain.getPose());
+        //dataSender.update(drivetrain.getPose());
         led.runLED();
         controllers.update();
+
+        if (controllers.gyroResetButton()) {
+            gyro.reset();
+        }
     }
 
     @Override
     public void autonomousInit() {
-        dashboard.dashboardAutoInit();
+        // dashboard.dashboardAutoInit();
+        drivetrain.gearshiftInit();
         auto.autonomousStartup();
+        drivetrain.resetEncoders();
+        // claw.grabCube();
     }
 
     @Override
     public void autonomousPeriodic() {
-        auto.runStraightAutonomous();
+        switch (i) {
+            case 0:
+            auto.runBlueBlueACubeBalance();
+            if (auto.finishedTrajectory) {
+                i++;
+            }
+            break;
+            case 1:
+            drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
+            break;
+        }
+                
+        // auto.runBlueBlueACubeBalance();
+        /*if (drivetrain.getLeftEncoder() < 3) {
+            drivetrain.drive(0.5, 0.5);
+            System.out.println(drivetrain.getLeftEncoder());
+        } else {
+            drivetrain.drive(0, 0);
+        }*/
     }
 
     @Override
     public void teleopInit() {
-        dataSender.init();
+        Drivetrain.balanced = false;
+        //dataSender.init();
         drivetrain.resetEncoders();
         drivetrain.gearshiftInit();
         // TODO: set all motors to 0 here, 3 second wait period between auto and teleop
@@ -92,15 +123,11 @@ public class Robot extends TimedRobot {
         claw.runClawCommands();
 
         arm.temporaryEncoderTesting();
-
-        // System.out.println("L " + drivetrain.getLeftRate());
-        // System.out.println("R " + drivetrain.getRightRate());
-    
-    //    System.out.println("L " + drivetrain.getLeftEncoder());
-    //    System.out.println("R " + drivetrain.getRightEncoder());
-
-    System.out.println("L " + drivetrain.getLeftEncoder());
-    System.out.println("R " + drivetrain.getRightEncoder());
+        // temporary if statements, remove us
+        if (controllers.testHighScoreAuto()) {
+            arm.highScoreCube();
+        }
+        System.out.println(arm.axisEncoderGet());
     }
 
     @Override
