@@ -35,7 +35,7 @@ public class Controllers {
     }
 
     public boolean getLimelightAutoAlign() {
-        return joyL.onButtonPress(9);
+        return joyL.getButtonOutput(9);
     }
 
     public boolean getAutoBalanceLeft() {

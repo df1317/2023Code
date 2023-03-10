@@ -11,7 +11,7 @@ public class Robot extends TimedRobot {
     public Drivetrain drivetrain;
     public Auto auto;
     public Arm arm;
-    public DataSender dataSender;
+    //public DataSender dataSender;
     public LED led;
     public Claw claw;
     public Dashboard dashboard;
@@ -25,12 +25,12 @@ public class Robot extends TimedRobot {
         drivetrain = new Drivetrain(controllers, limelight);
         claw = new Claw(controllers);
         arm = new Arm(controllers, claw);
-        dataSender = new DataSender(drivetrain.getPose());
+        //dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
         dashboard = new Dashboard();
         auto = new Auto(drivetrain, limelight, dashboard, arm);
 
-        dataSender.init();
+        //dataSender.init();
         gyro.reset();
         drivetrain.resetEncoders();
         led.initLED();
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         drivetrain.updateOdometry();
-        dataSender.update(drivetrain.getPose());
+        //dataSender.update(drivetrain.getPose());
         led.runLED();
         controllers.update();
 
@@ -88,7 +88,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        dataSender.init();
+        Drivetrain.balanced = false;
+        //dataSender.init();
         drivetrain.resetEncoders();
         drivetrain.gearshiftInit();
         // TODO: set all motors to 0 here, 3 second wait period between auto and teleop

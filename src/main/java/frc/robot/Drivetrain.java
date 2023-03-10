@@ -26,6 +26,8 @@ public class Drivetrain {
     
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
+    public static boolean balanced = false;
+    public static boolean aligning = false;
 
     private static final double kTrackWidth = 0.6858; // meters
     private static final double kWheelRadius = 0.0762; // meters
@@ -179,13 +181,17 @@ public class Drivetrain {
 
     public double gyroDrive() {
         double power = -0.5 * gyro.gyroAdjust();
-        
+
+            balanced = false;
+
             if (power > 0) {
                 power = Math.min(power, autoBalanceMaxPower);
                 power = Math.max(power, autoBalanceMinPower);
             } else if (power < 0) {
                 power = Math.min(power, -autoBalanceMinPower);
                 power = Math.max(power, -autoBalanceMaxPower);
+            }else{
+                balanced = true;
             }
             System.out.println(power);
         return power;
@@ -200,12 +206,10 @@ public class Drivetrain {
             // NOT TESTED after inverting drivetrain (changed sign though)
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
+            aligning = true;
             // System.out.println(limelight.calculateLimelightAngle());
-        } else if (controllers.getAutoBalanceLeft() || controllers.getAutoBalanceRight()) {
-            leftDrive = gyroDrive();
-            rightDrive = gyroDrive();
-            System.out.println("AUTO BALANCING!!!!!!");
-        } else {
+        }else {
+            aligning = false;
             leftDrive = -controllers.getLeftDrive();
             rightDrive = -controllers.getRightDrive();
         }
