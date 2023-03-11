@@ -27,20 +27,15 @@ public class Auto {
     }
 
     // trajectory setup
-    PathPlannerTrajectory Blue_ACubeLeaveCommunity = PathPlanner.loadPath("A_Cube_LeaveCommunity", new PathConstraints(3, 2));
-    PathPlannerTrajectory Blue_ACubeBalance = PathPlanner.loadPath("A_Cube_Balance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_BCubeBalance = PathPlanner.loadPath("B_Cube_Balance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_CCubeBalance = PathPlanner.loadPath("C_Cube_Balance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory Blue_CCubeLeaveCommunity = PathPlanner.loadPath("C_Cube_LeaveCommunity", new PathConstraints(1.0, 0.5));
-    
-    PathPlannerTrajectory Red_ACubeLeaveCommunity = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_ACubeLeaveCommunity, DriverStation.Alliance.valueOf("Red"));
-    PathPlannerTrajectory Red_ACubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_ACubeBalance, DriverStation.Alliance.valueOf("Red"));
-    PathPlannerTrajectory Red_BCubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_BCubeBalance, DriverStation.Alliance.valueOf("Red"));
-    PathPlannerTrajectory Red_CCubeBalance = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_CCubeBalance, DriverStation.Alliance.valueOf("Red"));
-    PathPlannerTrajectory Red_CCubeLeaveCommunity = PathPlannerTrajectory.transformTrajectoryForAlliance(Blue_CCubeLeaveCommunity, DriverStation.Alliance.valueOf("Red"));
-
-    List<PathPlannerTrajectory> groupedPath = PathPlanner.loadPathGroup("GroupedPath", new PathConstraints(1.0, 1));
+    PathPlannerTrajectory A_LeaveCommunity = PathPlanner.loadPath("A_LeaveCommunity", new PathConstraints(3, 2));
+    PathPlannerTrajectory A_Balance = PathPlanner.loadPath("A_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory B_Balance = PathPlanner.loadPath("B_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory C_Balance = PathPlanner.loadPath("C_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory C_LeaveCommunity = PathPlanner.loadPath("C_LeaveCommunity", new PathConstraints(1.0, 0.5));
+ 
     PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(1.0, 0.5));
+
+    private PathPlannerTrajectory selectedTrajectory;
 
     private final RamseteController m_ramseteController = new RamseteController();
 
@@ -48,173 +43,52 @@ public class Auto {
 
     public boolean finishedTrajectory;
 
-    public void autonomousStartup() {
+    public void autonomousStartup(String trajectory) {
         gyro.reset();
         drivetrain.resetEncoders();
 
         timer = new Timer();
         timer.start();
         finishedTrajectory = false;
+        selectedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(chooseAutonomous(trajectory), DriverStation.getAlliance());
 
-        // TODO: getInitialPose() of selected autonomous
-        // drivetrain.resetOdometry(simpleCurve6.getInitialPose());
-        drivetrain.resetOdometry(Red_ACubeBalance.getInitialPose());
+        drivetrain.resetOdometry(selectedTrajectory.getInitialPose());
     }
 
-    // default autonomous method, create new methods for each separate auto routine
-    public void runFirstAutonomous() {
-
-        drivetrain.updateOdometry();
-        limelight.updateLimelightVariables();
-
-        if (timer.get() < groupedPath.get(0).getTotalTimeSeconds()) {
-            State desiredPose = groupedPath.get(0).sample(timer.get());
+    public void runTrajectory() {
+        if (timer.get() < selectedTrajectory.getTotalTimeSeconds()) {
+            State desiredPose = selectedTrajectory.sample(timer.get());
             ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
 
             drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+            System.out.println(selectedTrajectory.getTotalTimeSeconds()-timer.get());
 
+        } else {
+            drivetrain.autoDrive(0, 0);
+            System.out.println("FINISHED");
+        }
+    }
+
+   private PathPlannerTrajectory chooseAutonomous(String input) {
+    switch (input){
+        case Dashboard.A_LeaveComm:
+            return A_LeaveCommunity;
             
-        } else if (timer.get() < (3 + groupedPath.get(0).getTotalTimeSeconds()) && !limelight.limelightInAlignment() &&
-            limelight.validLimelightTarget()) {
-             
-            System.out.println("align " + limelight.limelightInAlignment());
-            System.out.println("valid " + limelight.validLimelightTarget());
-             
-            drivetrain.driveAutoLimelight();
-            
-        } else if (timer.get() < (4 + groupedPath.get(0).getTotalTimeSeconds())) {
-            // drivetrain.setScoringMotor(0.5);
-
-        } else if ((3 + groupedPath.get(0).getTotalTimeSeconds()) <= timer.get()
-                && timer.get() < (6 + groupedPath.get(0).getTotalTimeSeconds())) {
-
-            // drivetrain.setScoringMotor(0);
-
-            drivetrain.resetOdometry(groupedPath.get(1).getInitialPose());
-        } else if (timer.get() <= (groupedPath.get(1).getTotalTimeSeconds() + 6 + groupedPath.get(0).getTotalTimeSeconds())) {
-            // drivetrain.setScoringMotor(0);
-
-            State desiredPose = groupedPath.get(1).sample(timer.get() - (groupedPath.get(0).getTotalTimeSeconds() + 6));
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-        } else {
-            // drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED AUTO");
-        }
-    }
-
-    public void runStraightAutonomous() {
-        if (timer.get() < straight.getTotalTimeSeconds()) {
-            State desiredPose = straight.sample(timer.get());
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(straight.getTotalTimeSeconds()-timer.get());
-
-        } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED");
-        }
-    }
-
-    public void runDefaultAutonomous() {
-        if (drivetrain.getRightEncoder() < 3) {
-            drivetrain.drive(0.5, 0.5);
-        } else {
-            drivetrain.drive(0, 0);
-        }
-    }
-
-    public void runBlueACubeLeaveCommunity() {
-        if (timer.get() < Blue_ACubeLeaveCommunity.getTotalTimeSeconds()) {
-            State desiredPose = Blue_ACubeLeaveCommunity.sample(timer.get());
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(Blue_ACubeLeaveCommunity.getTotalTimeSeconds()-timer.get());
-
-        } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED");
-        }
-    }
-
-    public void runBlueBlueACubeBalance() {
-        if (timer.get() < Red_ACubeBalance.getTotalTimeSeconds()) {
-            State desiredPose = Red_ACubeBalance.sample(timer.get());
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(Red_ACubeBalance.getTotalTimeSeconds()-timer.get());
-
-        } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED");
-            finishedTrajectory = true;
-        }
-    }
-
-    public void runBlueBCubeBalance() {
-        if (timer.get() < Blue_BCubeBalance.getTotalTimeSeconds()) {
-            State desiredPose = Blue_BCubeBalance.sample(timer.get());
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(Blue_BCubeBalance.getTotalTimeSeconds()-timer.get());
-
-        } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED");
-        }
-    }
-
-    public void runBlueCCubeLeaveCommunity() {
-        if (timer.get() < Blue_CCubeLeaveCommunity.getTotalTimeSeconds()) {
-            State desiredPose = Blue_CCubeLeaveCommunity.sample(timer.get());
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(Blue_CCubeLeaveCommunity.getTotalTimeSeconds()-timer.get());
-
-        } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED");
-        }
-    }
-
-    public void runBlueCCubeBalance() {
-        if (timer.get() < Blue_CCubeBalance.getTotalTimeSeconds()) {
-            State desiredPose = Blue_CCubeBalance.sample(timer.get());
-            ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
-
-            drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(Blue_CCubeBalance.getTotalTimeSeconds()-timer.get());
-
-        } else {
-            drivetrain.autoDrive(0, 0);
-            System.out.println("FINISHED");
-        }
-    }
-
-   public void runAutonomous() {
-    switch (dashboard.getSelectedAuto()) {
-        case Dashboard.A_Cube_Score_LeaveComm:
-          arm.highScoreCube();
-          if (arm.continueToTrajectory) {
-            runDefaultAutonomous();
-          }
-            break;
-
-        case Dashboard.secondAuto:
-            runStraightAutonomous();
-            break;
+        case Dashboard.A_Balance:
+            return A_Balance;
+        
+        case Dashboard.B_Balance:
+            return B_Balance;
+        
+        case Dashboard.C_LeaveComm:
+            return C_LeaveCommunity;
+    
+        case Dashboard.C_Balance:
+            return C_Balance;
 
         case Dashboard.defaultAuto:
         default:
-          runDefaultAutonomous();
-          break;
+          return straight;
       }
    }
 }

@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         // dashboard.dashboardAutoInit();
         drivetrain.gearshiftInit();
-        auto.autonomousStartup();
+        auto.autonomousStartup(dashboard.getSelectedAuto());
         drivetrain.resetEncoders();
         // claw.grabCube();
     }
@@ -67,23 +67,24 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         switch (i) {
             case 0:
-            auto.runBlueBlueACubeBalance();
+            arm.highScoreCube();
+            if (arm.continueToTrajectory) {
+                i++;
+            }
+            break;
+
+            case 1:
+            arm.highScoreCube();
+            auto.runTrajectory();
             if (auto.finishedTrajectory) {
                 i++;
             }
             break;
-            case 1:
+            
+            case 2:
             drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
             break;
         }
-                
-        // auto.runBlueBlueACubeBalance();
-        /*if (drivetrain.getLeftEncoder() < 3) {
-            drivetrain.drive(0.5, 0.5);
-            System.out.println(drivetrain.getLeftEncoder());
-        } else {
-            drivetrain.drive(0, 0);
-        }*/
     }
 
     @Override
