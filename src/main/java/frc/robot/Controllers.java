@@ -38,12 +38,8 @@ public class Controllers {
         return joyL.getButtonOutput(9);
     }
 
-    public boolean getAutoBalanceLeft() {
-        return joyL.getButtonOutput(2);
-    }
-
-    public boolean getAutoBalanceRight() {
-        return joyR.getButtonOutput(2);
+    public boolean rainbowLEDButton() {
+        return joyE.getButtonState(12);
     }
 
     public boolean gyroResetButton() {

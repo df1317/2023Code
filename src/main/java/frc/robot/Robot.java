@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Gyro Z", gyro.getGyroYaw());
         SmartDashboard.putNumber("Gyro X", gyro.getGyroPitch());
         SmartDashboard.putNumber("Gyro Y", gyro.getGyroRoll());
-
+        Drivetrain.balanced = controllers.rainbowLEDButton();
         // Limelight testing
         // limelight.updateLimelightVariables();
         // SmartDashboard.putNumber("LL distance", limelight.calculateLimelightDistance());
