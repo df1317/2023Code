@@ -29,7 +29,7 @@ public class Auto {
     // trajectory setup
     PathPlannerTrajectory A_LeaveCommunity = PathPlanner.loadPath("A_LeaveCommunity", new PathConstraints(3, 2));
     PathPlannerTrajectory A_Balance = PathPlanner.loadPath("A_Balance", new PathConstraints(1.0, 0.5));
-    PathPlannerTrajectory B_Balance = PathPlanner.loadPath("B_Balance", new PathConstraints(1.0, 0.5));
+    PathPlannerTrajectory B_Balance = PathPlanner.loadPath("B_Balance", new PathConstraints(4, 0.5));
     PathPlannerTrajectory C_Balance = PathPlanner.loadPath("C_Balance", new PathConstraints(1.0, 0.5));
     PathPlannerTrajectory C_LeaveCommunity = PathPlanner.loadPath("C_LeaveCommunity", new PathConstraints(1.0, 0.5));
  
@@ -44,13 +44,12 @@ public class Auto {
     public boolean finishedTrajectory;
 
     public void autonomousStartup(String trajectory) {
-        gyro.reset();
         drivetrain.resetEncoders();
 
         timer = new Timer();
         timer.start();
         finishedTrajectory = false;
-        selectedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(chooseAutonomous(trajectory), DriverStation.getAlliance());
+        selectedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(chooseAutonomous(trajectory), (DriverStation.getAlliance() == DriverStation.Alliance.valueOf("Red") ) ? DriverStation.Alliance.valueOf("Blue") : DriverStation.Alliance.valueOf("Red"));
 
         drivetrain.resetOdometry(selectedTrajectory.getInitialPose());
     }
@@ -66,6 +65,7 @@ public class Auto {
         } else {
             drivetrain.autoDrive(0, 0);
             System.out.println("FINISHED");
+            finishedTrajectory = true;
         }
     }
 
@@ -73,7 +73,7 @@ public class Auto {
     switch (input){
         case Dashboard.A_LeaveComm:
             return A_LeaveCommunity;
-            
+
         case Dashboard.A_Balance:
             return A_Balance;
         

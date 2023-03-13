@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
         limelight = new Limelight();
         drivetrain = new Drivetrain(controllers, limelight);
         claw = new Claw(controllers);
-        arm = new Arm(controllers, claw);
+        arm = new Arm(controllers, claw, drivetrain);
         //dataSender = new DataSender(drivetrain.getPose());
         led = new LED();
         dashboard = new Dashboard();
@@ -56,7 +56,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        // dashboard.dashboardAutoInit();
+        gyro.reset();
+        i=0;
+        arm.resetEncoders();
+        dashboard.dashboardAutoInit();
         drivetrain.gearshiftInit();
         auto.autonomousStartup(dashboard.getSelectedAuto());
         drivetrain.resetEncoders();
@@ -69,10 +72,11 @@ public class Robot extends TimedRobot {
             case 0:
             arm.highScoreCube();
             if (arm.continueToTrajectory) {
+                auto.autonomousStartup(dashboard.getSelectedAuto());
                 i++;
             }
             break;
-
+            
             case 1:
             arm.highScoreCube();
             auto.runTrajectory();
@@ -83,6 +87,7 @@ public class Robot extends TimedRobot {
             
             case 2:
             drivetrain.drive(drivetrain.gyroDrive(), drivetrain.gyroDrive());
+            System.out.println(drivetrain.gyroDrive());
             break;
         }
 
@@ -124,12 +129,11 @@ public class Robot extends TimedRobot {
 
         claw.runClawCommands();
 
-        arm.temporaryEncoderTesting();
+        //arm.temporaryEncoderTesting();
         // temporary if statements, remove us
-        if (controllers.testHighScoreAuto()) {
-            arm.highScoreCube();
-        }
-        System.out.println(arm.axisEncoderGet());
+    
+        //System.out.println(arm.axisEncoderGet());
+
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Claw {
     DoubleSolenoid leftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 1, 0);
     DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4, 5);
 
-    private boolean grabbing = false;
+    private boolean grabbing = true;
 
     public Claw(Controllers controllers){
         this.controllers = controllers;
