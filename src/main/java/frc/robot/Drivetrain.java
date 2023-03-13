@@ -163,17 +163,6 @@ public class Drivetrain {
      **/
     public void startRotate(boolean counterclockwise) {
         startRotate(1, counterclockwise);
-    };
-
-    public void driveDistance() {
-
-    }
-
-    public void driveAutoLimelight() {
-        double leftDrive = -limelight.limelightSteeringAlign();
-        double rightDrive = limelight.limelightSteeringAlign();
-
-        drive(leftDrive, rightDrive);
     }
 
     public double gyroDrive() {
