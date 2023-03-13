@@ -60,7 +60,7 @@ public class Drivetrain {
 
     private final double driveDeadzone = 0.1;
     private final double autoBalanceMaxPower = 0.55;
-    private final double autoBalanceMinPower = 0.45;
+    private final double autoBalanceMinPower = 0.35;
 
     public Drivetrain(Controllers controllers, Limelight limelight) {
 
@@ -193,7 +193,6 @@ public class Drivetrain {
             }else{
                 balanced = true;
             }
-            System.out.println(power);
         return power;
 
     }

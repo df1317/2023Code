@@ -51,8 +51,11 @@ public class Arm {
     private int i = 0;
     public boolean continueToTrajectory = false;
 
-    public Arm(Controllers controllers, Claw claw) {
+    private Drivetrain drivetrain;
+
+    public Arm(Controllers controllers, Claw claw, Drivetrain drivetrain) {
         this.controllers = controllers;
+        this.drivetrain = drivetrain;
         this.claw = claw;
         axisController = axisMotor.getPIDController();
         axisController.setP(kp);
@@ -143,7 +146,13 @@ public class Arm {
      * @param targetPosition desired axis position IN # of ROTATIONS
      */
     public void rotateTo(double targetPosition) {
-        axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
+        double axisDirection = (axisEncoder.getPosition() - targetPosition > 0) ? 1 : -1;
+        if (!atAxisPosition(targetPosition)) {
+            axisMotor.set(axisDirection * -0.7);
+        } else {
+            axisMotor.set(0);
+        }
+        //axisController.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
     }
 
     public void extendTo(double targetExtension) {
@@ -173,6 +182,11 @@ public class Arm {
     
             case 1:
                 extendTo(extensionFull);
+                if(Math.abs(drivetrain.getLeftEncoder()) < 4){
+                    drivetrain.drive(-0.45, -0.45);
+                }else{
+                    drivetrain.drive(0,0);
+                }
                 if (atExtensionPosition(extensionFull)) {
                     extensionMotor.set(0);
                     i++;
@@ -191,13 +205,14 @@ public class Arm {
                 extendTo(extensionNone);
                 if (atExtensionPosition(extensionNone)) {
                     extensionMotor.set(0);
+                    claw.grabCone();
                     i++;
                 }
                 break;
 
             case 4:
-                rotateTo(0);
-                if (atAxisPosition(0)) {
+                rotateTo(axisLowScorePosition);
+                if (atAxisPosition(axisLowScorePosition)) {
                     i++;
                 }
                 break;

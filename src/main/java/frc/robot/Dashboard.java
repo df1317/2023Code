@@ -5,21 +5,25 @@ import edu.wpi.first.cameraserver.CameraServer;
 
 public class Dashboard {
     // default auto can be any auto, set in init
-    public static final String defaultAuto = "default auto";
-    public static final String firstAuto = "1st auto";
-    public static final String secondAuto = "2nd auto";
-    public static final String cube_Score = "cube score";
-    public static final String A_Cube_Score_LeaveComm = "A_Cube_Score_LeaveComm";
-    public static final String A_Cube_Score_Balance = "A_Cube_Score_Balance";
+    public static final String defaultAuto = "straight";
+    public static final String A_LeaveComm = "A_LeaveComm";
     public static final String A_Balance = "A_Balance";
+    public static final String B_Balance = "B_Balance";
+    public static final String C_LeaveComm = "C_LeaveComm";
+    public static final String C_Balance = "C_Balance";
+    
+
     private String selectedAuto;
     private final SendableChooser<String> sendableChooser = new SendableChooser<>();
     
     // call this method in robotInit to put options on the dashboard
     public void dashboardSetup() {
-        sendableChooser.setDefaultOption("Default Auto", defaultAuto);
-        sendableChooser.addOption("First Auto", firstAuto);
-        sendableChooser.addOption("Second Auto", secondAuto);
+        sendableChooser.setDefaultOption("Straight", defaultAuto);
+        sendableChooser.addOption("A_LeaveComm", A_LeaveComm);
+        sendableChooser.addOption("A_Balance", A_Balance);
+        sendableChooser.addOption("B_Balance", B_Balance);
+        sendableChooser.addOption("C_LeaveComm", C_LeaveComm);
+        sendableChooser.addOption("C_Balance", C_Balance);
         SmartDashboard.putData("AUTO CHOICES", sendableChooser);
     }
 
