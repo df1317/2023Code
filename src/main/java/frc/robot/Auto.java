@@ -32,7 +32,7 @@ public class Auto {
     PathPlannerTrajectory B_Balance = PathPlanner.loadPath("B_Balance", new PathConstraints(4, 0.5));
     PathPlannerTrajectory C_Balance = PathPlanner.loadPath("C_Balance", new PathConstraints(1.0, 0.5));
     PathPlannerTrajectory C_LeaveCommunity = PathPlanner.loadPath("C_LeaveCommunity", new PathConstraints(1.0, 0.5));
- 
+
     PathPlannerTrajectory straight = PathPlanner.loadPath("Straight", new PathConstraints(1.0, 0.5));
 
     private PathPlannerTrajectory selectedTrajectory;
@@ -49,7 +49,10 @@ public class Auto {
         timer = new Timer();
         timer.start();
         finishedTrajectory = false;
-        selectedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(chooseAutonomous(trajectory), (DriverStation.getAlliance() == DriverStation.Alliance.valueOf("Red") ) ? DriverStation.Alliance.valueOf("Blue") : DriverStation.Alliance.valueOf("Red"));
+        selectedTrajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(chooseAutonomous(trajectory),
+                (DriverStation.getAlliance() == DriverStation.Alliance.valueOf("Red"))
+                        ? DriverStation.Alliance.valueOf("Blue")
+                        : DriverStation.Alliance.valueOf("Red"));
 
         drivetrain.resetOdometry(selectedTrajectory.getInitialPose());
     }
@@ -60,7 +63,7 @@ public class Auto {
             ChassisSpeeds refChassisSpeeds = m_ramseteController.calculate(drivetrain.getPose(), desiredPose);
 
             drivetrain.autoDrive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-            System.out.println(selectedTrajectory.getTotalTimeSeconds()-timer.get());
+            System.out.println(selectedTrajectory.getTotalTimeSeconds() - timer.get());
 
         } else {
             drivetrain.autoDrive(0, 0);
@@ -69,26 +72,26 @@ public class Auto {
         }
     }
 
-   private PathPlannerTrajectory chooseAutonomous(String input) {
-    switch (input){
-        case Dashboard.A_LeaveComm:
-            return A_LeaveCommunity;
+    private PathPlannerTrajectory chooseAutonomous(String input) {
+        switch (input) {
+            case Dashboard.A_LeaveComm:
+                return A_LeaveCommunity;
 
-        case Dashboard.A_Balance:
-            return A_Balance;
-        
-        case Dashboard.B_Balance:
-            return B_Balance;
-        
-        case Dashboard.C_LeaveComm:
-            return C_LeaveCommunity;
-    
-        case Dashboard.C_Balance:
-            return C_Balance;
+            case Dashboard.A_Balance:
+                return A_Balance;
 
-        case Dashboard.defaultAuto:
-        default:
-          return straight;
-      }
-   }
+            case Dashboard.B_Balance:
+                return B_Balance;
+
+            case Dashboard.C_LeaveComm:
+                return C_LeaveCommunity;
+
+            case Dashboard.C_Balance:
+                return C_Balance;
+
+            case Dashboard.defaultAuto:
+            default:
+                return straight;
+        }
+    }
 }

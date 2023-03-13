@@ -15,15 +15,13 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Drivetrain {
     private final WPI_VictorSPX frontLeftMotor = new WPI_VictorSPX(2);
     private final WPI_VictorSPX backLeftMotor = new WPI_VictorSPX(1);
     private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(3);
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(4);
-    
+
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
     public static boolean balanced = false;
@@ -70,10 +68,9 @@ public class Drivetrain {
         // left was true, right was false
         leftMotorGroup.setInverted(false);
         rightMotorGroup.setInverted(true);
-        
+
         m_leftEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
         m_rightEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
-
 
         resetEncoders();
 
@@ -182,17 +179,17 @@ public class Drivetrain {
     public double gyroDrive() {
         double power = -0.5 * gyro.gyroAdjust();
 
-            balanced = false;
+        balanced = false;
 
-            if (power > 0) {
-                power = Math.min(power, autoBalanceMaxPower);
-                power = Math.max(power, autoBalanceMinPower);
-            } else if (power < 0) {
-                power = Math.min(power, -autoBalanceMinPower);
-                power = Math.max(power, -autoBalanceMaxPower);
-            }else{
-                balanced = true;
-            }
+        if (power > 0) {
+            power = Math.min(power, autoBalanceMaxPower);
+            power = Math.max(power, autoBalanceMinPower);
+        } else if (power < 0) {
+            power = Math.min(power, -autoBalanceMinPower);
+            power = Math.max(power, -autoBalanceMaxPower);
+        } else {
+            balanced = true;
+        }
         return power;
 
     }
@@ -201,13 +198,13 @@ public class Drivetrain {
         double leftDrive;
         double rightDrive;
 
-        if (controllers.getLimelightAutoAlign()) {
+        if (controllers.getLimelightAutoAlignLeft() || controllers.getLimelightAutoAlignRight()) {
             // NOT TESTED after inverting drivetrain (changed sign though)
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
             aligning = true;
             // System.out.println(limelight.calculateLimelightAngle());
-        }else {
+        } else {
             aligning = false;
             leftDrive = -controllers.getLeftDrive();
             rightDrive = -controllers.getRightDrive();
@@ -217,7 +214,8 @@ public class Drivetrain {
     }
 
     public void gearshift() {
-        // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for auto)
+        // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for
+        // auto)
         if (controllers.gearshiftButtonLeft() || controllers.gearshiftButtonRight()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
         } else if (controllers.downshiftButtonLeft() || controllers.downshiftButtonRight()) {
