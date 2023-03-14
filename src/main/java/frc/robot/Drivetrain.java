@@ -57,6 +57,7 @@ public class Drivetrain {
     private Controllers controllers;
 
     private final double driveDeadzone = 0.1;
+    private final double slowForwardSpeed = -0.4;
     private final double autoBalanceMaxPower = 0.55;
     private final double autoBalanceMinPower = 0.35;
 
@@ -193,6 +194,14 @@ public class Drivetrain {
             rightDrive = limelight.limelightSteeringAlign();
             aligning = true;
             // System.out.println(limelight.calculateLimelightAngle());
+        } else if (controllers.slowForwardDriveLeft() || controllers.slowForwardDriveRight()) {
+            // sets to low gear
+            gearshiftInit();
+            leftDrive = slowForwardSpeed;
+            rightDrive = slowForwardSpeed;
+        } else if (controllers.gyroBalance()) {
+            leftDrive = gyroDrive();
+            rightDrive = gyroDrive();
         } else {
             aligning = false;
             leftDrive = -controllers.getLeftDrive();
@@ -205,9 +214,9 @@ public class Drivetrain {
     public void gearshift() {
         // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for
         // auto)
-        if (controllers.gearshiftButtonLeft() || controllers.gearshiftButtonRight()) {
+        if (controllers.gearshiftButtonLeft2() || controllers.gearshiftButtonRight2()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
-        } else if (controllers.downshiftButtonLeft() || controllers.downshiftButtonRight()) {
+        } else if (controllers.downshiftButtonLeft2() || controllers.downshiftButtonRight2()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kReverse);
         } else {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kOff);
