@@ -187,7 +187,7 @@ public class Drivetrain {
         double leftDrive;
         double rightDrive;
 
-        if (controllers.getLimelightAutoAlignLeft() || controllers.getLimelightAutoAlignRight()) {
+        if (controllers.getLimelightAutoAlign()) {
             // NOT TESTED after inverting drivetrain (changed sign though)
             leftDrive = -limelight.limelightSteeringAlign();
             rightDrive = limelight.limelightSteeringAlign();
