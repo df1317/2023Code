@@ -149,7 +149,11 @@ public class Controllers {
         return joyR.getRawButton(2);
     }
 
-    public boolean gyroBalance() {
+    public boolean gyroBalance1() {
         return joyL.getRawButton(4);
+    }
+
+    public boolean gyroBalance2() {
+        return joyL.getRawButton(12);
     }
 }

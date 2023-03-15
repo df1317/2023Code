@@ -199,9 +199,10 @@ public class Drivetrain {
             gearshiftInit();
             leftDrive = slowForwardSpeed;
             rightDrive = slowForwardSpeed;
-        } else if (controllers.gyroBalance()) {
+        } else if (controllers.gyroBalance1() || controllers.gyroBalance2()) {
             leftDrive = gyroDrive();
             rightDrive = gyroDrive();
+            // System.out.println(gyroDrive());
         } else {
             aligning = false;
             leftDrive = -controllers.getLeftDrive();
