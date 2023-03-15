@@ -16,28 +16,28 @@ public class Claw {
 
     private boolean grabbing = true;
 
-    public Claw(Controllers controllers){
+    public Claw(Controllers controllers) {
         this.controllers = controllers;
     }
 
     public void grabCone() {
-            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-            rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-            grabbing = true;
+        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+        rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+        grabbing = true;
 
     }
 
     public void grabCube() {
-            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-            rightSolenoid.set(DoubleSolenoid.Value.kForward);
-            grabbing = true;
+        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+        rightSolenoid.set(DoubleSolenoid.Value.kForward);
+        grabbing = true;
 
     }
 
     public void releaseClaw() {
-            leftSolenoid.set(DoubleSolenoid.Value.kForward);
-            rightSolenoid.set(DoubleSolenoid.Value.kForward);
-            grabbing = false;
+        leftSolenoid.set(DoubleSolenoid.Value.kForward);
+        rightSolenoid.set(DoubleSolenoid.Value.kForward);
+        grabbing = false;
     }
 
     public boolean grabbing() {

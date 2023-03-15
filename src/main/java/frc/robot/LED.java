@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class LED {
-private AddressableLED m_led;
+  private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
   // Store what the last hue of the first pixel is
   private int m_rainbowFirstPixelHue;
@@ -24,7 +24,7 @@ private AddressableLED m_led;
     // Set the data
     m_led.setData(m_ledBuffer);
     m_led.start();
-}
+  }
 
   public void rainbow() {
     // For every pixel
@@ -45,52 +45,53 @@ private AddressableLED m_led;
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       m_ledBuffer.setRGB(i, 128, 0, 128);
-   }
-   
-   m_led.setData(m_ledBuffer);
+    }
+
+    m_led.setData(m_ledBuffer);
   }
 
   public void purpleFade() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 64 + (int)(64*Math.cos(t*Math.PI/36)), 0, 64 + (int)(64*Math.cos(t*Math.PI/36)));
-   }
-   
-   m_led.setData(m_ledBuffer);
+      m_ledBuffer.setRGB(i, 64 + (int) (64 * Math.cos(t * Math.PI / 36)), 0,
+          64 + (int) (64 * Math.cos(t * Math.PI / 36)));
+    }
+
+    m_led.setData(m_ledBuffer);
   }
 
-  public void purpleChaser(int number, int size){
-      if(size > m_ledBuffer.getLength()/(number*2)){
-        size = m_ledBuffer.getLength()/(number*2);
-      }
+  public void purpleChaser(int number, int size) {
+    if (size > m_ledBuffer.getLength() / (number * 2)) {
+      size = m_ledBuffer.getLength() / (number * 2);
+    }
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      if((i + t) % (m_ledBuffer.getLength()/(number)) < size){
+      if ((i + t) % (m_ledBuffer.getLength() / (number)) < size) {
         m_ledBuffer.setRGB(i, 128, 0, 128);
-      }else{
+      } else {
         m_ledBuffer.setRGB(i, 0, 0, 0);
       }
-   }
-   
-   m_led.setData(m_ledBuffer);
+    }
+
+    m_led.setData(m_ledBuffer);
   }
 
-  public void greenSwitcher(){
+  public void greenSwitcher() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      m_ledBuffer.setRGB(i,0,128*((i+t/10)%2),0);
+      m_ledBuffer.setRGB(i, 0, 128 * ((i + t / 10) % 2), 0);
     }
   }
 
   public void runLED() {
-    if(Drivetrain.aligning){
+    if (Drivetrain.aligning) {
       greenSwitcher();
-    }else if(Drivetrain.balanced){
+    } else if (Drivetrain.balanced) {
       rainbow();
-    }else if(DriverStation.isAutonomousEnabled()){
+    } else if (DriverStation.isAutonomousEnabled()) {
       purpleFade();
-    }else if(DriverStation.isTeleopEnabled()){
+    } else if (DriverStation.isTeleopEnabled()) {
       purpleChaser(2, 50);
-    }else{
+    } else {
       purpleSolid();
     }
     m_led.setData(m_ledBuffer);

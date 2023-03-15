@@ -15,15 +15,13 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Drivetrain {
     private final WPI_VictorSPX frontLeftMotor = new WPI_VictorSPX(2);
     private final WPI_VictorSPX backLeftMotor = new WPI_VictorSPX(1);
     private final WPI_VictorSPX frontRightMotor = new WPI_VictorSPX(3);
     private final WPI_VictorSPX backRightMotor = new WPI_VictorSPX(4);
-    
+
     // TEMPORARY SCORING MOTOR: REMOVE ME
     // private final WPI_VictorSPX scoringMotor = new WPI_VictorSPX(5);
     public static boolean balanced = false;
@@ -59,6 +57,7 @@ public class Drivetrain {
     private Controllers controllers;
 
     private final double driveDeadzone = 0.1;
+    private final double slowForwardSpeed = -0.4;
     private final double autoBalanceMaxPower = 0.55;
     private final double autoBalanceMinPower = 0.35;
 
@@ -70,10 +69,9 @@ public class Drivetrain {
         // left was true, right was false
         leftMotorGroup.setInverted(false);
         rightMotorGroup.setInverted(true);
-        
+
         m_leftEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
         m_rightEncoder.setDistancePerPulse(-(2 * Math.PI * kWheelRadius / kEncoderResolution) * kGearRatio);
-
 
         resetEncoders();
 
@@ -166,33 +164,22 @@ public class Drivetrain {
      **/
     public void startRotate(boolean counterclockwise) {
         startRotate(1, counterclockwise);
-    };
-
-    public void driveDistance() {
-
-    }
-
-    public void driveAutoLimelight() {
-        double leftDrive = -limelight.limelightSteeringAlign();
-        double rightDrive = limelight.limelightSteeringAlign();
-
-        drive(leftDrive, rightDrive);
     }
 
     public double gyroDrive() {
         double power = -0.5 * gyro.gyroAdjust();
 
-            balanced = false;
+        balanced = false;
 
-            if (power > 0) {
-                power = Math.min(power, autoBalanceMaxPower);
-                power = Math.max(power, autoBalanceMinPower);
-            } else if (power < 0) {
-                power = Math.min(power, -autoBalanceMinPower);
-                power = Math.max(power, -autoBalanceMaxPower);
-            }else{
-                balanced = true;
-            }
+        if (power > 0) {
+            power = Math.min(power, autoBalanceMaxPower);
+            power = Math.max(power, autoBalanceMinPower);
+        } else if (power < 0) {
+            power = Math.min(power, -autoBalanceMinPower);
+            power = Math.max(power, -autoBalanceMaxPower);
+        } else {
+            balanced = true;
+        }
         return power;
 
     }
@@ -207,7 +194,16 @@ public class Drivetrain {
             rightDrive = limelight.limelightSteeringAlign();
             aligning = true;
             // System.out.println(limelight.calculateLimelightAngle());
-        }else {
+        } else if (controllers.slowForwardDriveLeft() || controllers.slowForwardDriveRight()) {
+            // sets to low gear
+            gearshiftInit();
+            leftDrive = slowForwardSpeed;
+            rightDrive = slowForwardSpeed;
+        } else if (controllers.gyroBalance1() || controllers.gyroBalance2()) {
+            leftDrive = gyroDrive();
+            rightDrive = gyroDrive();
+            // System.out.println(gyroDrive());
+        } else {
             aligning = false;
             leftDrive = -controllers.getLeftDrive();
             rightDrive = -controllers.getRightDrive();
@@ -217,10 +213,11 @@ public class Drivetrain {
     }
 
     public void gearshift() {
-        // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for auto)
-        if (controllers.gearshiftButtonLeft() || controllers.gearshiftButtonRight()) {
+        // kForward is a lower, gentler gear, kReverse is a high gear (use kForward for
+        // auto)
+        if (controllers.gearshiftButtonLeft2() || controllers.gearshiftButtonRight2()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kForward);
-        } else if (controllers.downshiftButtonLeft() || controllers.downshiftButtonRight()) {
+        } else if (controllers.downshiftButtonLeft2() || controllers.downshiftButtonRight2()) {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kReverse);
         } else {
             gearshiftSolenoid.set(DoubleSolenoid.Value.kOff);

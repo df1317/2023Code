@@ -14,7 +14,7 @@ public class Controllers {
     // temporary button for temporary testing temporary temporary!.
     public boolean LLalignButton = joyL.getButtonOutput(3);
 
-    public void update(){
+    public void update() {
         joyE.update();
         joyL.update();
         joyR.update();
@@ -75,20 +75,44 @@ public class Controllers {
         return joyE.onButtonPress(2);
     }
 
-    public boolean gearshiftButtonLeft() {
-        return joyL.onButtonPress(6);
+    /*
+     * public boolean gearshiftButtonLeft1() {
+     * return joyL.onButtonPress(6);
+     * }
+     */
+
+    public boolean gearshiftButtonLeft2() {
+        return joyL.onButtonPress(8);
     }
 
-    public boolean gearshiftButtonRight() {
-        return joyR.onButtonPress(6);
+    /*
+     * public boolean gearshiftButtonRight1() {
+     * return joyR.onButtonPress(6);
+     * }
+     */
+
+    public boolean gearshiftButtonRight2() {
+        return joyR.onButtonPress(8);
     }
 
-    public boolean downshiftButtonLeft() {
-        return joyL.onButtonPress(4);
+    /*
+     * public boolean downshiftButtonLeft1() {
+     * return joyL.onButtonPress(4);
+     * }
+     */
+
+    public boolean downshiftButtonLeft2() {
+        return joyL.onButtonPress(10);
     }
 
-    public boolean downshiftButtonRight() {
-        return joyR.onButtonPress(4);
+    /*
+     * public boolean downshiftButtonRight1() {
+     * return joyR.onButtonPress(4);
+     * }
+     */
+
+    public boolean downshiftButtonRight2() {
+        return joyR.onButtonPress(10);
     }
 
     public boolean turretTrigger() {
@@ -115,5 +139,21 @@ public class Controllers {
 
     public boolean lowScoreAlignButton() {
         return joyE.getRawButton(12);
+    }
+
+    public boolean slowForwardDriveLeft() {
+        return joyL.getRawButton(2);
+    }
+
+    public boolean slowForwardDriveRight() {
+        return joyR.getRawButton(2);
+    }
+
+    public boolean gyroBalance1() {
+        return joyL.getRawButton(4);
+    }
+
+    public boolean gyroBalance2() {
+        return joyL.getRawButton(12);
     }
 }
