@@ -3,6 +3,8 @@ package frc.robot;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
@@ -15,6 +17,7 @@ public class Arm {
     private final RelativeEncoder axisEncoder = axisMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
     private final RelativeEncoder extensionEncoder = extensionMotor.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor,
             42);
+    private Timer timer2 = new Timer();
 
     private Controllers controllers;
     private Claw claw;
@@ -198,13 +201,14 @@ public class Arm {
                 claw.releaseClaw();
                 if (!claw.grabbing()) {
                     drivetrain.resetEncoders();
+                    timer2.restart();
                     i++;
                 }
               break;
             case 3:
-              drivetrain.drive(0.45, 0.45);
-              System.out.println(" le: " + drivetrain.getLeftEncoder());
-              if(Math.abs(drivetrain.getLeftEncoder()) > 0.5){
+            //   drivetrain.drive(0.45, 0.45);
+              System.out.println("time " + timer2.get());
+              if(Math.abs(timer2.get()) > 1){
                 continueToTrajectory = true;
                   i++;
               }
