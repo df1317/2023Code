@@ -31,7 +31,7 @@ public class Arm {
     private final double extendPower = 1;
     private final double retractPower = -1;
 
-    private final double axisHighScorePosition = -79;
+    private final double axisHighScorePosition = -82;
     private final double axisMidScorePosition = -72;
     private final double axisLowScorePosition = -32;
     private final double axisCollectionPosition = -11;
@@ -189,6 +189,7 @@ public class Arm {
                 }
                 if (atExtensionPosition(extensionFull)) {
                     extensionMotor.set(0);
+                    drivetrain.resetEncoders();
                     i++;
                 }
                 break;
@@ -196,12 +197,25 @@ public class Arm {
             case 2:
                 claw.releaseClaw();
                 if (!claw.grabbing()) {
-                    continueToTrajectory = true;
+                    drivetrain.resetEncoders();
                     i++;
                 }
               break;
-
             case 3:
+              drivetrain.drive(0.45, 0.45);
+              System.out.println(" le: " + drivetrain.getLeftEncoder());
+              if(Math.abs(drivetrain.getLeftEncoder()) > 0.5){
+                continueToTrajectory = true;
+                  i++;
+              }
+              break;
+            case 4:
+                rotateTo(-94);
+                if(atAxisPosition(-94)){
+                    i++;
+                }
+                break;
+            case 5:
                 extendTo(extensionNone);
                 if (atExtensionPosition(extensionNone)) {
                     extensionMotor.set(0);
@@ -210,7 +224,7 @@ public class Arm {
                 }
                 break;
 
-            case 4:
+            case 6:
                 rotateTo(axisLowScorePosition);
                 if (atAxisPosition(axisLowScorePosition)) {
                     i++;

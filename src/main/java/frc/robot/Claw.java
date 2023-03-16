@@ -28,8 +28,8 @@ public class Claw {
     }
 
     public void grabCube() {
-        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-        rightSolenoid.set(DoubleSolenoid.Value.kForward);
+        leftSolenoid.set(DoubleSolenoid.Value.kForward);
+        rightSolenoid.set(DoubleSolenoid.Value.kReverse);
         grabbing = true;
 
     }
