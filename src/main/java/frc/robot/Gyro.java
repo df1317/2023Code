@@ -7,7 +7,7 @@ public class Gyro {
     private static final ADIS16448_IMU gyro = new ADIS16448_IMU();
 
     public double gyroDriveAdjustment = 0;
-    private final double gyroDeadzoneDegrees = 4;
+    private final double gyroDeadzoneDegrees = 5.5;
 
     // Control drive system automatically,
     // driving in reverse direction of pitch/roll angle,

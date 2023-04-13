@@ -58,8 +58,8 @@ public class Drivetrain {
 
     private final double driveDeadzone = 0.1;
     private final double slowForwardSpeed = -0.4;
-    private final double autoBalanceMaxPower = 0.50;
-    private final double autoBalanceMinPower = 0.30;
+    private final double autoBalanceMaxPower = 0.48;
+    private final double autoBalanceMinPower = 0.2;
 
     public Drivetrain(Controllers controllers, Limelight limelight) {
 
