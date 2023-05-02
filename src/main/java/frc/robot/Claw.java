@@ -12,7 +12,7 @@ public class Claw {
 
     // TODO: add gearshift
     DoubleSolenoid leftSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 1, 0);
-    DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4, 5);
+    DoubleSolenoid rightSolenoid = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 5, 4);
 
     private boolean grabbing = true;
 
